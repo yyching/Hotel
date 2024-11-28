@@ -6,6 +6,7 @@
     <title>@ViewBag.Title</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <link rel="stylesheet" href="/css/app.css" asp-append-version="true">
+    <link rel="stylesheet" href="/css/HeaderFooter.css" asp-append-version="true">
     @RenderSection("head", false)
 </head>
 <body>
@@ -16,12 +17,12 @@
     <nav>
         <a href="/">Index</a>
         <a href="/Home/Detail">Detail</a>
-        <a href="/Home/LoginRegister">Login</a>
+        <a href="/LoginRegister/LoginRegister">Login</a>
         <div></div>
     </nav>
 
     <main>
-        <h1>@ViewBag.Title</h1>
+        @* <h1>@ViewBag.Title</h1> *@
         @RenderBody()
     </main>
 
