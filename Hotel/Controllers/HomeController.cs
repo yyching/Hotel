@@ -15,4 +15,9 @@ public class HomeController : Controller
     {
         return View();
     }
+
+    public IActionResult LoginRegister()
+    {
+        return View();
+    }
 }
