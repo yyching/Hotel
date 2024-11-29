@@ -11,7 +11,7 @@ public class ProfileController : Controller
         this.db = db;
     }
 
-    public IActionResult Profile()
+    public IActionResult LoginRegister()
     {
         return View();
     }
