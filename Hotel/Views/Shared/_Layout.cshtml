@@ -4,22 +4,35 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
+    <!-- icon Link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
-    <link rel="stylesheet" href="/css/app.css" asp-append-version="true">
-    <link rel="stylesheet" href="/css/HeaderFooter.css" asp-append-version="true">
+    <link rel="stylesheet" href="/css/Index.css" asp-append-version="true">
+    <script src="/js/homepage.js" defer></script>
     @RenderSection("head", false)
 </head>
 <body>
-    <header>
-        <h1><a href="/">Database SELECT</a></h1>
+    <header class="header-section">
+        <div class="navbar">
+            <div class="logo">
+                <a href="/">EASYSTAYS</a>
+            </div>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/">Room</a>
+                <a href="/">Service</a>
+            </div>
+            <div class="nav-user">
+                <a href="/Profile/Profile" class="login-button">Profile</a>
+                <a href="/Profile/LoginRegister" class="login-button">Login</a>
+            </div>
+        </div>
+        <div class="header-content">
+            <p class="welcome-text">EASYSTAYS</p>
+            <h1 class="header-heading">Where Comfort and Memories Are Made</h1>
+        </div>
     </header>
-
-    <nav>
-        <a href="/">Index</a>
-        <a href="/Home/Detail">Detail</a>
-        <a href="/LoginRegister/LoginRegister">Login</a>
-        <div></div>
-    </nav>
 
     <main>
         @* <h1>@ViewBag.Title</h1> *@
@@ -27,8 +40,26 @@
     </main>
 
     <footer>
-        Developed by <b>BAE SUZY</b> &middot;
-        Copyrighted &copy; @DateTime.Today.Year
+        <div class="footer-container">
+            <div class="footer-left">
+                <p>Follow Our Social Media:</p>
+                <ul>
+                    <li><a href="#" class="social-icon"><i class="fab fa-facebook"></i></a></li>
+                    <li><a href="#" class="social-icon"><i class="fab fa-instagram"></i></a></li>
+                </ul>
+            </div>
+
+            <div class="footer-center">
+                <p>Have any question?</p>
+                <p>Email: <a href="mailto:info@example.com">info@example.com</a></p>
+                <p>Phone: <a href="tel:+1234567890">+1234567890</a></p>
+            </div>
+
+            <div class="footer-right">
+                <img src="/img/HomePage/LOGO.jpg" alt="Company Logo" class="footer-logo">
+                <p>&copy; 2024 EASYSTAYS MALAYSIA</p>
+            </div>
+        </div>
     </footer>
 
     <script src="/js/jquery.min.js"></script>

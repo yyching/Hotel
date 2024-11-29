@@ -2,12 +2,413 @@
     ViewBag.Title = "Home | Index";
 }
 
-<table class="table">
-    <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Gender</th>
-        <th>Program</th>
-        <th></th>
-    </tr>
-</table>
+<!-- Booking Section -->
+<section class="booking-section">
+    <form class="booking-form">
+        <div class="form-group">
+            <label for="check-in">Check In</label>
+            <input type="date" id="check-in" name="check-in">
+        </div>
+        <div class="form-group">
+            <label for="check-out">Check Out</label>
+            <input type="date" id="check-out" name="check-out">
+        </div>
+        <div class="form-group">
+            <label for="adults">Adults</label>
+            <input type="number" id="adults" name="adults">
+        </div>
+        <div class="form-group">
+            <label for="children">Children</label>
+            <input type="number" id="children" name="children">
+        </div>
+        <button type="submit" class="btn">Check Availability</button>
+    </form>
+</section>
+
+<!-- About Us Section -->
+<div class="about-us-container">
+    <div class="about-us-text">
+        <h2>ABOUT US</h2>
+        <p>
+            EASYSTAYS MALAYSIA is a renowned hotel chain with multiple branches across Malaysia. We aim to provide a
+            comfortable and memorable stay for all our guests, whether traveling for business or leisure.
+        </p>
+        <p>
+            With locations in major cities and scenic destinations, we offer a range of services and accommodations
+            tailored to your needs. Experience the best of Malaysia with EASYSTAYS.
+        </p>
+    </div>
+    <div class="about-us-images">
+        <img src="/img/HomePage/about_us2.jpg" alt="Image 1" class="about-us-image">
+        <img src="/img/HomePage/about_us1.jpg" alt="Image 2" class="about-us-image">
+    </div>
+</div>
+
+<!---Our Service-->
+<section class="services">
+    <h2 class="services-title">Discover Our Services</h2>
+    <div class="service-container">
+        <div class="service-item">
+            <i class="fas fa-clock service-icon"></i>
+            <h3>24/7 Availability</h3>
+            <p>
+                Our services are available around the clock, 365 days a year, ensuring that you have access to
+                everything you need at any time.
+            </p>
+        </div>
+        <div class="service-item">
+            <i class="fas fa-wifi service-icon"></i>
+            <h3>Free Wi-Fi</h3>
+            <p>
+                Stay connected with complimentary high-speed internet access available throughout the hotel for all
+                guests.
+            </p>
+        </div>
+        <div class="service-item">
+            <i class="fas fa-utensils service-icon"></i>
+            <h3>Food and Drink</h3>
+            <p>
+                Enjoy delicious meals and refreshing drinks from our on-site restaurant and bar, catering to all
+                tastes and preferences.
+            </p>
+        </div>
+        <div class="service-item">
+            <i class="fas fa-car service-icon"></i>
+            <h3>Car Rental</h3>
+            <p>
+                Explore the city at your convenience with our car rental service, offering a range of vehicles to
+                suit your needs.
+            </p>
+        </div>
+        <div class="service-item">
+            <i class="fas fa-parking service-icon"></i>
+            <h3>Parking</h3>
+            <p>
+                We offer both valet and self-parking options, ensuring convenient and secure parking for your vehicle
+                during your stay.
+            </p>
+        </div>
+        <div class="service-item">
+            <i class="fas fa-hospital service-icon"></i>
+            <h3>Medical Service</h3>
+            <p>
+                For your peace of mind, we provide 24/7 access to medical assistance, including doctor-on-call and
+                first-aid services.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!---Our Restaurant-->
+<div class="hero">
+    <h1>Our Restaurant Menu</h1>
+    <p>
+        Experience a culinary journey through our carefully crafted selection of dishes, featuring both traditional
+        favorites and innovative creations prepared with the finest ingredients.
+    </p>
+
+
+    <nav class="menu-nav">
+        <a href="#" data-section="mains">MAINS</a>
+        <a href="#" data-section="desserts">DESSERTS</a>
+        <a href="#" data-section="drinks">DRINKS</a>
+    </nav>
+
+    <section id="mains" class="menu-section">
+        <h2>MAINS</h2>
+        <div class="menu-grid">
+            <div class="menu-item">
+                <div class="price">RM20.00</div>
+                <h3 class="item-title">Murgh Tikka Masala</h3>
+                <p class="item-description">
+                    Tender chicken marinated in aromatic spices, grilled to perfection and
+                    served in a rich, creamy tomato sauce with fresh herbs.
+                </p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM35.00</div>
+                <h3 class="item-title">Fish Moilee</h3>
+                <p class="item-description">
+                    Fresh catch of the day cooked in a delicate coconut curry with turmeric,
+                    ginger, and curry leaves, served with steamed rice.
+                </p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM18.00</div>
+                <h3 class="item-title">Mediterranean Pasta</h3>
+                <p class="item-description">
+                    Al dente pasta tossed with sun-dried tomatoes, olives, artichokes, and
+                    fresh basil in extra virgin olive oil.
+                </p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM28.00</div>
+                <h3 class="item-title">Grilled Ribeye Steak</h3>
+                <p class="item-description">
+                    Premium aged beef grilled to your preference, served with roasted
+                    vegetables and red wine reduction.
+                </p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM16.00</div>
+                <h3 class="item-title">Buddha Bowl</h3>
+                <p class="item-description">
+                    Quinoa base topped with roasted chickpeas, avocado, mixed vegetables,
+                    and tahini dressing.
+                </p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM22.00</div>
+                <h3 class="item-title">Duck Confit</h3>
+                <p class="item-description">
+                    Slow-cooked duck leg served with crispy potato, seasonal vegetables, and
+                    orange reduction sauce.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="desserts" class="menu-section">
+        <h2>DESSERTS</h2>
+        <div class="menu-grid">
+            <div class="menu-item">
+                <div class="price">RM10.00</div>
+                <h3 class="item-title">French Toast Combo</h3>
+                <p class="item-description">
+                    Brioche bread dipped in vanilla custard, grilled golden brown, served
+                    with maple syrup and fresh berries.
+                </p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM9.00</div>
+                <h3 class="item-title">Crème Brûlée</h3>
+                <p class="item-description">
+                    Classic vanilla bean custard with a perfectly caramelized sugar crust.
+                </p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM8.00</div>
+                <h3 class="item-title">Tiramisu</h3>
+                <p class="item-description">
+                    Layers of coffee-soaked ladyfingers and mascarpone cream, dusted with
+                    cocoa powder.
+                </p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM11.00</div>
+                <h3 class="item-title">Chocolate Lava Cake</h3>
+                <p class="item-description">
+                    Warm chocolate cake with a molten center, served with vanilla ice cream.
+                </p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM7.50</div>
+                <h3 class="item-title">Apple Tart</h3>
+                <p class="item-description">
+                    Buttery pastry filled with caramelized apples and cinnamon, served warm
+                    with crème anglaise.
+                </p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM8.50</div>
+                <h3 class="item-title">Cheesecake</h3>
+                <p class="item-description">New York style cheesecake with berry compote and fresh mint.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="drinks" class="menu-section">
+        <h2>DRINKS</h2>
+        <div class="menu-grid">
+            <div class="menu-item">
+                <div class="price">RM12.00</div>
+                <h3 class="item-title">Signature Martini</h3>
+                <p class="item-description">
+                    Premium vodka or gin with your choice of classic or contemporary
+                    preparations.
+                </p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM9.00</div>
+                <h3 class="item-title">Craft Beer Selection</h3>
+                <p class="item-description">
+                    Rotating selection of local and international craft beers. Ask your
+                    server for today's options.
+                </p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM14.00</div>
+                <h3 class="item-title">Aged Old Fashioned</h3>
+                <p class="item-description">
+                    Bourbon, aromatic bitters, and raw sugar with orange zest and luxury
+                    cherry.
+                </p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM8.00</div>
+                <h3 class="item-title">Fresh Juice Spritzer</h3>
+                <p class="item-description">Seasonal fresh juices mixed with sparkling water and herbs.</p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM6.00</div>
+                <h3 class="item-title">Artisan Coffee</h3>
+                <p class="item-description">Single-origin coffee prepared using your preferred brewing method.</p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM7.00</div>
+                <h3 class="item-title">Luxury Tea Selection</h3>
+                <p class="item-description">
+                    Premium loose leaf teas from around the world, served in a traditional
+                    teapot.
+                </p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!---Room-->
+<div class="room-grid">
+    <div class="room-card">
+        <div class="room-image" style="background-image: url('/img/HomePage/RoomImg/single.jpg')"></div>
+        <div class="room-overlay">
+            <h2 class="room-title">Single Room</h2>
+            <div class="room-price">199$/Pernight</div>
+        </div>
+        <div class="room-details">
+            <h2 class="room-title">Single Room</h2>
+            <div class="room-price">199$/Pernight</div>
+            <div class="detail-item">Size: 25 ft</div>
+            <div class="detail-item">Capacity: Max person 1</div>
+            <div class="detail-item">Bed: Double Bed</div>
+            <div class="detail-item">Services: Wifi, Television, Bathroom</div>
+            <button class="more-details">MORE DETAILS</button>
+        </div>
+    </div>
+
+    <div class="room-card">
+        <div class="room-image" style="background-image: url('/img/HomePage/RoomImg/double.jpg')"></div>
+        <div class="room-overlay">
+            <h2 class="room-title">Double Room</h2>
+            <div class="room-price">159$/Pernight</div>
+        </div>
+        <div class="room-details">
+            <h2 class="room-title">Double Room</h2>
+            <div class="room-price">159$/Pernight</div>
+            <div class="detail-item">Size: 30 ft</div>
+            <div class="detail-item">Capacity: Max person 2</div>
+            <div class="detail-item">Bed: King Beds</div>
+            <div class="detail-item">Services: Wifi, Television, Bathroom</div>
+            <button class="more-details">MORE DETAILS</button>
+        </div>
+    </div>
+
+    <div class="room-card">
+        <div class="room-image" style="background-image: url('/img/HomePage/RoomImg/family.jpg')"></div>
+        <div class="room-overlay">
+            <h2 class="room-title">Family Room</h2>
+            <div class="room-price">198$/Pernight</div>
+        </div>
+        <div class="room-details">
+            <h2 class="room-title">Family Room</h2>
+            <div class="room-price">198$/Pernight</div>
+            <div class="detail-item">Size: 35 ft</div>
+            <div class="detail-item">Capacity: Max person 5</div>
+            <div class="detail-item">Bed: Queen Bed</div>
+            <div class="detail-item">Services: Wifi, Television, Bathroom, Mini Bar</div>
+            <button class="more-details">MORE DETAILS</button>
+        </div>
+    </div>
+
+    <div class="room-card">
+        <div class="room-image" style="background-image: url('/img/HomePage/RoomImg/Premium\ King.jpg')"></div>
+        <div class="room-overlay">
+            <h2 class="room-title">Premium King Room</h2>
+            <div class="room-price">299$/Pernight</div>
+        </div>
+        <div class="room-details">
+            <h2 class="room-title">Premium King Room</h2>
+            <div class="room-price">299$/Pernight</div>
+            <div class="detail-item">Size: 45 ft</div>
+            <div class="detail-item">Capacity: Max person 6</div>
+            <div class="detail-item">Bed: King Bed + 2 Single Beds</div>
+            <div class="detail-item">Services: Wifi, Television, Bathroom, Mini Bar, Balcony</div>
+            <button class="more-details">MORE DETAILS</button>
+        </div>
+    </div>
+
+    <div class="room-card">
+        <div class="room-image" style="background-image: url('/img/HomePage/RoomImg/single_nature.jpg')"></div>
+        <div class="room-overlay">
+            <h2 class="room-title">Single Room</h2>
+            <div class="room-price">199$/Pernight</div>
+        </div>
+        <div class="room-details">
+            <h2 class="room-title">Single Room</h2>
+            <div class="room-price">199$/Pernight</div>
+            <div class="detail-item">Size: 25 ft</div>
+            <div class="detail-item">Capacity: Max person 1</div>
+            <div class="detail-item">Bed: Double Bed</div>
+            <div class="detail-item">Services: Wifi, Television, Bathroom</div>
+            <button class="more-details">MORE DETAILS</button>
+        </div>
+    </div>
+
+    <div class="room-card">
+        <div class="room-image" style="background-image: url('/img/HomePage/RoomImg/double_nature.jpg')"></div>
+        <div class="room-overlay">
+            <h2 class="room-title">Double Room</h2>
+            <div class="room-price">159$/Pernight</div>
+        </div>
+        <div class="room-details">
+            <h2 class="room-title">Double Room</h2>
+            <div class="room-price">159$/Pernight</div>
+            <div class="detail-item">Size: 30 ft</div>
+            <div class="detail-item">Capacity: Max person 2</div>
+            <div class="detail-item">Bed: King Beds</div>
+            <div class="detail-item">Services: Wifi, Television, Bathroom</div>
+            <button class="more-details">MORE DETAILS</button>
+        </div>
+    </div>
+
+    <div class="room-card">
+        <div class="room-image" style="background-image: url('/img/HomePage/RoomImg/family_nature.jpg')"></div>
+        <div class="room-overlay">
+            <h2 class="room-title">Family Room</h2>
+            <div class="room-price">198$/Pernight</div>
+        </div>
+        <div class="room-details">
+            <h2 class="room-title">Family Room</h2>
+            <div class="room-price">198$/Pernight</div>
+            <div class="detail-item">Size: 35 ft</div>
+            <div class="detail-item">Capacity: Max person 5</div>
+            <div class="detail-item">Bed: Queen Bed</div>
+            <div class="detail-item">Services: Wifi, Television, Bathroom, Mini Bar</div>
+            <button class="more-details">MORE DETAILS</button>
+        </div>
+    </div>
+
+    <div class="room-card">
+        <div class="room-image" style="background-image: url('/img/HomePage/RoomImg/premingking_nature.jpg')"></div>
+        <div class="room-overlay">
+            <h2 class="room-title">Premium King Room</h2>
+            <div class="room-price">299$/Pernight</div>
+        </div>
+        <div class="room-details">
+            <h2 class="room-title">Premium King Room</h2>
+            <div class="room-price">299$/Pernight</div>
+            <div class="detail-item">Size: 45 ft</div>
+            <div class="detail-item">Capacity: Max person 6</div>
+            <div class="detail-item">Bed: King Bed + 2 Single Beds</div>
+            <div class="detail-item">Services: Wifi, Television, Bathroom, Mini Bar, Balcony</div>
+            <button class="more-details">MORE DETAILS</button>
+        </div>
+    </div>
+</div>
+
+<!-- Book Section -->
+<div class="book-section">
+    <div class="book-content">
+        <h1>A Best Place To Stay. Book Now!</h1>
+        <button class="book-button">Book Now</button>
+    </div>
+</div>
