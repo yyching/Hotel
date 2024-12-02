@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hotel.Models;
@@ -47,7 +48,11 @@ public class Category
     [MaxLength(50)]
     public string CategoryName { get; set; }
     public string Theme { get; set; }
+    public int Size { get; set; }
+    public string Capacity { get; set; }
     public string Description { get; set; }
+    public string Services { get; set; }
+    public double PricePerNight { get; set; }
     public string RoomImage { get; set; }
 
     // Navigation
@@ -61,7 +66,6 @@ public class Room
     public string RoomID { get; set; }
     [MaxLength(10)]
     public string RoomNumber { get; set; }
-    public double PricePerNight { get; set; }
     [MaxLength(15)]
     public string AvailabilityStatus { get; set; }
 

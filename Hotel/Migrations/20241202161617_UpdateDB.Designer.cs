@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.Migrations
 {
     [DbContext(typeof(DB))]
-    [Migration("20241202050708_CreateDB")]
-    partial class CreateDB
+    [Migration("20241202161617_UpdateDB")]
+    partial class UpdateDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,6 +71,10 @@ namespace Hotel.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
+                    b.Property<string>("Capacity")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CategoryName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -80,9 +84,19 @@ namespace Hotel.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("PricePerNight")
+                        .HasColumnType("float");
+
                     b.Property<string>("RoomImage")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Services")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Size")
+                        .HasColumnType("int");
 
                     b.Property<string>("Theme")
                         .IsRequired()
@@ -134,9 +148,6 @@ namespace Hotel.Migrations
                     b.Property<string>("CategoryID")
                         .IsRequired()
                         .HasColumnType("nvarchar(10)");
-
-                    b.Property<double>("PricePerNight")
-                        .HasColumnType("float");
 
                     b.Property<string>("RoomNumber")
                         .IsRequired()
