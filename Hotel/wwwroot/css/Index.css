@@ -12,7 +12,7 @@ html {
     position: relative;
     height: 600px;
     width: auto;
-    background-image: url('/img/HomePage/KLView.jpg');
+    background-image: url('../img/HomePage/KLView.jpg');
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -61,12 +61,12 @@ html {
             color: black;
         }
 
-.nav-user {
+.nav-login {
     padding-right: 50px;
     font-weight: bold;
 }
 
-    .nav-user a:hover {
+    .nav-login a:hover {
         color: black;
     }
 
@@ -220,7 +220,7 @@ select {
 }
 
 /* Menu Items */
-.hero {
+.food-section {
     background-image: url('/img/HomePage/restaurant.jpg');
     background-size: cover;
     background-attachment: fixed;
@@ -231,8 +231,8 @@ select {
     position: relative;
 }
 
-    .hero h1,
-    .hero p {
+    .food-section h1,
+    .food-section p {
         position: relative;
         z-index: 2;
     }
@@ -429,12 +429,13 @@ select {
 .more-details {
     margin-top: 1rem;
     margin-right: 80px;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.5rem;
+    text-decoration: none;
+    text-align: center;
     background: #ffd700;
     color: black;
     border: none;
     border-radius: 4px;
-    cursor: pointer;
 }
 
     .more-details:hover {
@@ -445,7 +446,7 @@ select {
 .book-section {
     position: relative;
     height: 300px;
-    background: url('/img/HomePage/book.jpg') no-repeat center center;
+    background: url('../img/HomePage/book.jpg') no-repeat center center;
     background-size: cover;
     display: flex;
     align-items: center;

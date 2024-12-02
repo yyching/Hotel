@@ -1,8 +1,15 @@
 ﻿@{
     Layout = "_Layout";
+<<<<<<< Updated upstream
     ViewBag.Title = "Home | Index";
 }
 <script src="/js/homepage.js" defer></script>
+=======
+    ViewBag.Title = "EASYSTAYS";
+}
+<link rel="stylesheet" href="/css/Index.css" asp-append-version="true">
+<script src="/js/HomePage.js" defer></script>
+>>>>>>> Stashed changes
 
 <!-- Booking Section -->
 <section class="booking-section">
@@ -41,8 +48,8 @@
         </p>
     </div>
     <div class="about-us-images">
-        <img src="/img/HomePage/about_us2.jpg" alt="Image 1" class="about-us-image">
-        <img src="/img/HomePage/about_us1.jpg" alt="Image 2" class="about-us-image">
+        <img src="img/HomePage/about_us2.jpg" alt="Image 1" class="about-us-image">
+        <img src="img/HomePage/about_us1.jpg" alt="Image 2" class="about-us-image">
     </div>
 </div>
 
@@ -68,18 +75,15 @@
         </div>
         <div class="service-item">
             <i class="fas fa-utensils service-icon"></i>
-            <h3>Food and Drink</h3>
-            <p>
-                Enjoy delicious meals and refreshing drinks from our on-site restaurant and bar, catering to all
-                tastes and preferences.
-            </p>
+            <h3>Breakfast, Lunch, Dinner</h3>
+            <p>Savor a variety of cuisines with our carefully prepared breakfast, lunch, and dinner options, available at our on-site restaurant to suit all preferences.</p>
         </div>
         <div class="service-item">
-            <i class="fas fa-car service-icon"></i>
-            <h3>Car Rental</h3>
+            <i class="fas fa-bed service-icon"></i>
+            <h3>Add-On Services</h3>
             <p>
-                Explore the city at your convenience with our car rental service, offering a range of vehicles to
-                suit your needs.
+                Customize your stay by adding extra items like beds, sheets, and pillows to your room for additional
+                comfort.
             </p>
         </div>
         <div class="service-item">
@@ -91,182 +95,133 @@
             </p>
         </div>
         <div class="service-item">
-            <i class="fas fa-hospital service-icon"></i>
-            <h3>Medical Service</h3>
-            <p>
-                For your peace of mind, we provide 24/7 access to medical assistance, including doctor-on-call and
-                first-aid services.
-            </p>
+            <i class="fas fa-user-md service-icon"></i>
+            <h3>Wellness Facilities</h3>
+            <p>Enhance your well-being with access to our on-site wellness facilities, including relaxation areas.</p>
         </div>
     </div>
 </section>
 
 <!---Our Restaurant-->
-<div class="hero">
-    <h1>Our Restaurant Menu</h1>
-    <p>
-        Experience a culinary journey through our carefully crafted selection of dishes, featuring both traditional
-        favorites and innovative creations prepared with the finest ingredients.
-    </p>
-
+<div class="food-section">
+    <h1>Our Food Menu</h1>
+    <p>Discover a delightful selection of dishes carefully crafted to suit every meal of the day, whether you're looking for a hearty breakfast, a satisfying lunch, or a delicious dinner.</p>
 
     <nav class="menu-nav">
-        <a href="#" data-section="mains">MAINS</a>
-        <a href="#" data-section="desserts">DESSERTS</a>
-        <a href="#" data-section="drinks">DRINKS</a>
+        <a href="#" data-section="breakfast">BREAKFAST</a>
+        <a href="#" data-section="lunch">LUNCH</a>
+        <a href="#" data-section="dinner">DINNER</a>
     </nav>
 
-    <section id="mains" class="menu-section">
-        <h2>MAINS</h2>
-        <div class="menu-grid">
-            <div class="menu-item">
-                <div class="price">RM20.00</div>
-                <h3 class="item-title">Murgh Tikka Masala</h3>
-                <p class="item-description">
-                    Tender chicken marinated in aromatic spices, grilled to perfection and
-                    served in a rich, creamy tomato sauce with fresh herbs.
-                </p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM35.00</div>
-                <h3 class="item-title">Fish Moilee</h3>
-                <p class="item-description">
-                    Fresh catch of the day cooked in a delicate coconut curry with turmeric,
-                    ginger, and curry leaves, served with steamed rice.
-                </p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM18.00</div>
-                <h3 class="item-title">Mediterranean Pasta</h3>
-                <p class="item-description">
-                    Al dente pasta tossed with sun-dried tomatoes, olives, artichokes, and
-                    fresh basil in extra virgin olive oil.
-                </p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM28.00</div>
-                <h3 class="item-title">Grilled Ribeye Steak</h3>
-                <p class="item-description">
-                    Premium aged beef grilled to your preference, served with roasted
-                    vegetables and red wine reduction.
-                </p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM16.00</div>
-                <h3 class="item-title">Buddha Bowl</h3>
-                <p class="item-description">
-                    Quinoa base topped with roasted chickpeas, avocado, mixed vegetables,
-                    and tahini dressing.
-                </p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM22.00</div>
-                <h3 class="item-title">Duck Confit</h3>
-                <p class="item-description">
-                    Slow-cooked duck leg served with crispy potato, seasonal vegetables, and
-                    orange reduction sauce.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <section id="desserts" class="menu-section">
-        <h2>DESSERTS</h2>
-        <div class="menu-grid">
-            <div class="menu-item">
-                <div class="price">RM10.00</div>
-                <h3 class="item-title">French Toast Combo</h3>
-                <p class="item-description">
-                    Brioche bread dipped in vanilla custard, grilled golden brown, served
-                    with maple syrup and fresh berries.
-                </p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM9.00</div>
-                <h3 class="item-title">Crème Brûlée</h3>
-                <p class="item-description">
-                    Classic vanilla bean custard with a perfectly caramelized sugar crust.
-                </p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM8.00</div>
-                <h3 class="item-title">Tiramisu</h3>
-                <p class="item-description">
-                    Layers of coffee-soaked ladyfingers and mascarpone cream, dusted with
-                    cocoa powder.
-                </p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM11.00</div>
-                <h3 class="item-title">Chocolate Lava Cake</h3>
-                <p class="item-description">
-                    Warm chocolate cake with a molten center, served with vanilla ice cream.
-                </p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM7.50</div>
-                <h3 class="item-title">Apple Tart</h3>
-                <p class="item-description">
-                    Buttery pastry filled with caramelized apples and cinnamon, served warm
-                    with crème anglaise.
-                </p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM8.50</div>
-                <h3 class="item-title">Cheesecake</h3>
-                <p class="item-description">New York style cheesecake with berry compote and fresh mint.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="drinks" class="menu-section">
-        <h2>DRINKS</h2>
+    <section id="breakfast" class="menu-section">
+        <h2>BREAKFAST</h2>
         <div class="menu-grid">
             <div class="menu-item">
                 <div class="price">RM12.00</div>
-                <h3 class="item-title">Signature Martini</h3>
-                <p class="item-description">
-                    Premium vodka or gin with your choice of classic or contemporary
-                    preparations.
-                </p>
+                <h3 class="item-title">Classic Omelette</h3>
+                <p class="item-description">Fluffy eggs filled with cheese, fresh vegetables, and herbs, served with toast.</p>
             </div>
             <div class="menu-item">
-                <div class="price">RM9.00</div>
-                <h3 class="item-title">Craft Beer Selection</h3>
-                <p class="item-description">
-                    Rotating selection of local and international craft beers. Ask your
-                    server for today's options.
-                </p>
+                <div class="price">RM15.00</div>
+                <h3 class="item-title">Pancake Stack</h3>
+                <p class="item-description">Golden pancakes drizzled with maple syrup and served with seasonal fruits.</p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM10.00</div>
+                <h3 class="item-title">Avocado Toast</h3>
+                <p class="item-description">Fresh avocado spread on toasted sourdough, topped with chili flakes and lemon.</p>
             </div>
             <div class="menu-item">
                 <div class="price">RM14.00</div>
-                <h3 class="item-title">Aged Old Fashioned</h3>
-                <p class="item-description">
-                    Bourbon, aromatic bitters, and raw sugar with orange zest and luxury
-                    cherry.
-                </p>
+                <h3 class="item-title">Breakfast Burrito</h3>
+                <p class="item-description">Scrambled eggs, sausage, and cheese wrapped in a warm tortilla.</p>
             </div>
             <div class="menu-item">
-                <div class="price">RM8.00</div>
-                <h3 class="item-title">Fresh Juice Spritzer</h3>
-                <p class="item-description">Seasonal fresh juices mixed with sparkling water and herbs.</p>
+                <div class="price">RM13.00</div>
+                <h3 class="item-title">French Toast</h3>
+                <p class="item-description">Thick slices of bread dipped in a vanilla custard and grilled to perfection.</p>
             </div>
             <div class="menu-item">
-                <div class="price">RM6.00</div>
-                <h3 class="item-title">Artisan Coffee</h3>
-                <p class="item-description">Single-origin coffee prepared using your preferred brewing method.</p>
+                <div class="price">RM16.00</div>
+                <h3 class="item-title">Granola Bowl</h3>
+                <p class="item-description">Crunchy granola with yogurt, honey, and fresh fruits.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="lunch" class="menu-section">
+        <h2>LUNCH</h2>
+        <div class="menu-grid">
+            <div class="menu-item">
+                <div class="price">RM18.00</div>
+                <h3 class="item-title">Grilled Chicken Salad</h3>
+                <p class="item-description">Grilled chicken breast on a bed of mixed greens, with balsamic dressing.</p>
             </div>
             <div class="menu-item">
-                <div class="price">RM7.00</div>
-                <h3 class="item-title">Luxury Tea Selection</h3>
-                <p class="item-description">
-                    Premium loose leaf teas from around the world, served in a traditional
-                    teapot.
-                </p>
+                <div class="price">RM22.00</div>
+                <h3 class="item-title">Club Sandwich</h3>
+                <p class="item-description">Layered sandwich with turkey, bacon, lettuce, tomato, and mayo, served with fries.</p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM25.00</div>
+                <h3 class="item-title">Seafood Pasta</h3>
+                <p class="item-description">Al dente pasta tossed with fresh seafood in a light garlic sauce.</p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM20.00</div>
+                <h3 class="item-title">Veggie Burger</h3>
+                <p class="item-description">Plant-based burger patty with lettuce, tomato, and special sauce, served with fries.</p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM19.00</div>
+                <h3 class="item-title">Tom Yum Soup</h3>
+                <p class="item-description">Spicy and sour Thai soup with shrimp, mushrooms, and fragrant herbs.</p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM18.00</div>
+                <h3 class="item-title">Quiche Lorraine</h3>
+                <p class="item-description">Savory tart filled with eggs, cream, bacon, and cheese.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="dinner" class="menu-section">
+        <h2>DINNER</h2>
+        <div class="menu-grid">
+            <div class="menu-item">
+                <div class="price">RM30.00</div>
+                <h3 class="item-title">Grilled Salmon</h3>
+                <p class="item-description">Fresh salmon fillet grilled to perfection, served with steamed vegetables.</p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM28.00</div>
+                <h3 class="item-title">Beef Steak</h3>
+                <p class="item-description">Juicy ribeye steak cooked to your liking, served with roasted potatoes and sauce.</p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM20.00</div>
+                <h3 class="item-title">Vegetarian Stir-Fry</h3>
+                <p class="item-description">Crispy vegetables stir-fried in a savory soy-based sauce, served with rice.</p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM35.00</div>
+                <h3 class="item-title">Roast Lamb</h3>
+                <p class="item-description">Slow-cooked lamb with garlic, rosemary, and a side of mashed potatoes.</p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM26.00</div>
+                <h3 class="item-title">Shrimp Scampi</h3>
+                <p class="item-description">Juicy shrimp sautéed in garlic butter, served with pasta or rice.</p>
+            </div>
+            <div class="menu-item">
+                <div class="price">RM32.00</div>
+                <h3 class="item-title">Duck Breast</h3>
+                <p class="item-description">Seared duck breast served with a berry reduction and seasonal vegetables.</p>
             </div>
         </div>
     </section>
 </div>
+
 
 <!---Room-->
 <div class="room-grid">
@@ -283,7 +238,7 @@
             <div class="detail-item">Capacity: Max person 1</div>
             <div class="detail-item">Bed: Double Bed</div>
             <div class="detail-item">Services: Wifi, Television, Bathroom</div>
-            <button class="more-details">MORE DETAILS</button>
+            <a href="/Room/RoomPage" class="more-details" target="_blank">MORE DETAILS</a>
         </div>
     </div>
 
@@ -300,7 +255,7 @@
             <div class="detail-item">Capacity: Max person 2</div>
             <div class="detail-item">Bed: King Beds</div>
             <div class="detail-item">Services: Wifi, Television, Bathroom</div>
-            <button class="more-details">MORE DETAILS</button>
+            <a href="/Room/RoomPage" class="more-details" target="_blank">MORE DETAILS</a>
         </div>
     </div>
 
@@ -317,7 +272,7 @@
             <div class="detail-item">Capacity: Max person 5</div>
             <div class="detail-item">Bed: Queen Bed</div>
             <div class="detail-item">Services: Wifi, Television, Bathroom, Mini Bar</div>
-            <button class="more-details">MORE DETAILS</button>
+            <a href="/Room/RoomPage" class="more-details" target="_blank">MORE DETAILS</a>
         </div>
     </div>
 
@@ -334,7 +289,7 @@
             <div class="detail-item">Capacity: Max person 6</div>
             <div class="detail-item">Bed: King Bed + 2 Single Beds</div>
             <div class="detail-item">Services: Wifi, Television, Bathroom, Mini Bar, Balcony</div>
-            <button class="more-details">MORE DETAILS</button>
+            <a href="/Room/RoomPage" class="more-details" target="_blank">MORE DETAILS</a>
         </div>
     </div>
 
@@ -351,7 +306,7 @@
             <div class="detail-item">Capacity: Max person 1</div>
             <div class="detail-item">Bed: Double Bed</div>
             <div class="detail-item">Services: Wifi, Television, Bathroom</div>
-            <button class="more-details">MORE DETAILS</button>
+            <a href="/Room/RoomPage" class="more-details" target="_blank">MORE DETAILS</a>
         </div>
     </div>
 
@@ -368,7 +323,7 @@
             <div class="detail-item">Capacity: Max person 2</div>
             <div class="detail-item">Bed: King Beds</div>
             <div class="detail-item">Services: Wifi, Television, Bathroom</div>
-            <button class="more-details">MORE DETAILS</button>
+            <a href="/Room/RoomPage" class="more-details" target="_blank">MORE DETAILS</a>
         </div>
     </div>
 
@@ -385,7 +340,7 @@
             <div class="detail-item">Capacity: Max person 5</div>
             <div class="detail-item">Bed: Queen Bed</div>
             <div class="detail-item">Services: Wifi, Television, Bathroom, Mini Bar</div>
-            <button class="more-details">MORE DETAILS</button>
+            <a href="/Room/RoomPage" class="more-details" target="_blank">MORE DETAILS</a>
         </div>
     </div>
 
@@ -402,7 +357,7 @@
             <div class="detail-item">Capacity: Max person 6</div>
             <div class="detail-item">Bed: King Bed + 2 Single Beds</div>
             <div class="detail-item">Services: Wifi, Television, Bathroom, Mini Bar, Balcony</div>
-            <button class="more-details">MORE DETAILS</button>
+            <a href="/Room/RoomPage" class="more-details" target="_blank">MORE DETAILS</a>
         </div>
     </div>
 </div>

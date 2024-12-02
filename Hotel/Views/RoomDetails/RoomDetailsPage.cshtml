@@ -1,0 +1,272 @@
+﻿@{
+    Layout = "_Layout2";
+    ViewBag.Title = "Room Details";
+}
+<link rel="stylesheet" href="/css/roomdetails.css" asp-append-version="true">
+<script src="/js/roomdetails.js" defer></script>
+
+<!-- Room Section -->
+<div class="room-container">
+    <div class="room-image">
+        <img src="/img/HomePage/RoomImg/double.jpg" alt="Room Image">
+    </div>
+    <div class="room-details">
+        <h1>Deluxe Room</h1>
+        <p><strong>Price:</strong> $120/night</p>
+        <p><strong>Size:</strong> 35 sqm</p>
+        <p><strong>Capacity:</strong> 2 Adults</p>
+        <p><strong>Bed:</strong> King-size</p>
+    </div>
+</div>
+
+<!-- Details Section -->
+<div class="details-section">
+
+    <div class="description">
+        <h2>Description</h2>
+        <p>
+            This cozy and modern place is perfect for your getaway. It features
+            a fully equipped kitchen, comfortable bedrooms, and scenic balcony views.
+            Enjoy free Wi-Fi, air conditioning, and top-notch security features.
+        </p>
+    </div>
+
+    <div class="more-images">
+        <h2>More Images</h2>
+        <div class="image-grid">
+            <img src="/img/HomePage/RoomImg/double.jpg" alt="Image 1">
+            <img src="/img/HomePage/RoomImg/double_nature.jpg" alt="Image 2">
+            <img src="/img/HomePage/RoomImg/family.jpg" alt="Image 3">
+            <img src="/img/HomePage/RoomImg/family_nature.jpg" alt="Image 4">
+            <img src="/img/HomePage/RoomImg/premingking_nature.jpg" alt="Image 5">
+            <img src="/img/HomePage/RoomImg/Premium King.jpg" alt="Image 6">
+            <img src="/img/HomePage/RoomImg/single.jpg" alt="Image 6">
+            <img src="/img/HomePage/RoomImg/single_nature.jpg" alt="Image 6">
+        </div>
+    </div>
+
+    <div class="place-offers">
+        <h2>What this place offers</h2>
+        <div class="offers-grid">
+            <div class="offer-item">
+                <span>Kitchen</span>
+            </div>
+            <div class="offer-item">
+                <span>Free parking on premises</span>
+            </div>
+            <div class="offer-item">
+                <span>TV</span>
+            </div>
+            <div class="offer-item">
+                <span>Private patio or balcony</span>
+            </div>
+            <div class="offer-item">
+                <span>Wifi</span>
+            </div>
+            <div class="offer-item">
+                <span>Air Conditioning</span>
+            </div>
+            <div class="offer-item">
+                <span>Bathroom</span>
+            </div>
+            <div class="offer-item">
+                <span>Exterior security cameras on property</span>
+            </div>
+            <div class="offer-item crossed">
+                <span>Carbon monoxide alarm</span>
+            </div>
+            <div class="offer-item crossed">
+                <span>Smoke alarm</span>
+            </div>
+            <div class="offer-item crossed">
+                <span>Non-smoking room</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="service-container">
+
+    <!-- Calendar Section -->
+    <h1 class="hotel-booking">Hotel Booking</h1>
+    <input type="text" id="date-picker" placeholder="Select your Check-in and Check-out dates">
+
+    <!-- Food Section -->
+    <div class="food-section">
+        <h1 class="hotel-booking">Our Food Menu</h1>
+
+        <nav class="menu-nav">
+            <a href="#breakfast" data-section="breakfast">BREAKFAST</a>
+            <a href="#lunch" data-section="lunch">LUNCH</a>
+            <a href="#dinner" data-section="dinner">DINNER</a>
+        </nav>
+
+        <!-- Breakfast Section -->
+        <section id="breakfast" class="menu-section">
+            <h2>BREAKFAST</h2>
+            <form class="menu-grid">
+                <div class="menu-item">
+                    <input type="checkbox" id="classic-omelette" name="breakfast[]" value="Classic Omelette">
+                    <label for="classic-omelette">
+                        <div class="price">RM12.00</div>
+                        <h3>Classic Omelette</h3>
+                    </label>
+                </div>
+                <div class="menu-item">
+                    <input type="checkbox" id="pancake-stack" name="breakfast[]" value="Pancake Stack">
+                    <label for="pancake-stack">
+                        <div class="price">RM15.00</div>
+                        <h3>Pancake Stack</h3>
+                    </label>
+                </div>
+                <div class="menu-item">
+                    <input type="checkbox" id="avocado-toast" name="breakfast[]" value="Avocado Toast">
+                    <label for="avocado-toast">
+                        <div class="price">RM10.00</div>
+                        <h3>Avocado Toast</h3>
+                    </label>
+                </div>
+                <div class="menu-item">
+                    <input type="checkbox" id="breakfast-burrito" name="breakfast[]" value="Breakfast Burrito">
+                    <label for="breakfast-burrito">
+                        <div class="price">RM14.00</div>
+                        <h3>Breakfast Burrito</h3>
+                    </label>
+                </div>
+                <div class="menu-item">
+                    <input type="checkbox" id="french-toast" name="breakfast[]" value="French Toast">
+                    <label for="french-toast">
+                        <div class="price">RM13.00</div>
+                        <h3>French Toast</h3>
+                    </label>
+                </div>
+                <div class="menu-item">
+                    <input type="checkbox" id="granola-bowl" name="breakfast[]" value="Granola Bowl">
+                    <label for="granola-bowl">
+                        <div class="price">RM16.00</div>
+                        <h3>Granola Bowl</h3>
+                    </label>
+                </div>
+            </form>
+        </section>
+
+        <!-- Lunch Section -->
+        <section id="lunch" class="menu-section">
+            <h2>LUNCH</h2>
+            <form class="menu-grid">
+                <div class="menu-item">
+                    <input type="checkbox" id="grilled-chicken-salad" name="lunch[]" value="Grilled Chicken Salad">
+                    <label for="grilled-chicken-salad">
+                        <div class="price">RM18.00</div>
+                        <h3>Grilled Chicken Salad</h3>
+                    </label>
+                </div>
+                <div class="menu-item">
+                    <input type="checkbox" id="club-sandwich" name="lunch[]" value="Club Sandwich">
+                    <label for="club-sandwich">
+                        <div class="price">RM22.00</div>
+                        <h3>Club Sandwich</h3>
+                    </label>
+                </div>
+                <div class="menu-item">
+                    <input type="checkbox" id="seafood-pasta" name="lunch[]" value="Seafood Pasta">
+                    <label for="seafood-pasta">
+                        <div class="price">RM25.00</div>
+                        <h3>Seafood Pasta</h3>
+                    </label>
+                </div>
+                <div class="menu-item">
+                    <input type="checkbox" id="veggie-burger" name="lunch[]" value="Veggie Burger">
+                    <label for="veggie-burger">
+                        <div class="price">RM20.00</div>
+                        <h3>Veggie Burger</h3>
+                    </label>
+                </div>
+                <div class="menu-item">
+                    <input type="checkbox" id="tom-yum-soup" name="lunch[]" value="Tom Yum Soup">
+                    <label for="tom-yum-soup">
+                        <div class="price">RM19.00</div>
+                        <h3>Tom Yum Soup</h3>
+                    </label>
+                </div>
+                <div class="menu-item">
+                    <input type="checkbox" id="quiche-lorraine" name="lunch[]" value="Quiche Lorraine">
+                    <label for="quiche-lorraine">
+                        <div class="price">RM18.00</div>
+                        <h3>Quiche Lorraine</h3>
+                    </label>
+                </div>
+            </form>
+        </section>
+
+        <!-- Dinner Section -->
+        <section id="dinner" class="menu-section">
+            <h2>DINNER</h2>
+            <form class="menu-grid">
+                <div class="menu-item">
+                    <input type="checkbox" id="grilled-salmon" name="dinner[]" value="Grilled Salmon">
+                    <label for="grilled-salmon">
+                        <div class="price">RM30.00</div>
+                        <h3>Grilled Salmon</h3>
+                    </label>
+                </div>
+                <div class="menu-item">
+                    <input type="checkbox" id="beef-steak" name="dinner[]" value="Beef Steak">
+                    <label for="beef-steak">
+                        <div class="price">RM28.00</div>
+                        <h3>Beef Steak</h3>
+                    </label>
+                </div>
+                <div class="menu-item">
+                    <input type="checkbox" id="vegetarian-stir-fry" name="dinner[]" value="Vegetarian Stir-Fry">
+                    <label for="vegetarian-stir-fry">
+                        <div class="price">RM20.00</div>
+                        <h3>Vegetarian Stir-Fry</h3>
+                    </label>
+                </div>
+                <div class="menu-item">
+                    <input type="checkbox" id="roast-lamb" name="dinner[]" value="Roast Lamb">
+                    <label for="roast-lamb">
+                        <div class="price">RM35.00</div>
+                        <h3>Roast Lamb</h3>
+                    </label>
+                </div>
+                <div class="menu-item">
+                    <input type="checkbox" id="shrimp-scampi" name="dinner[]" value="Shrimp Scampi">
+                    <label for="shrimp-scampi">
+                        <div class="price">RM26.00</div>
+                        <h3>Shrimp Scampi</h3>
+                    </label>
+                </div>
+                <div class="menu-item">
+                    <input type="checkbox" id="duck-breast" name="dinner[]" value="Duck Breast">
+                    <label for="duck-breast">
+                        <div class="price">RM32.00</div>
+                        <h3>Duck Breast</h3>
+                    </label>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <!-- Add-On Services Section -->
+    <div class="addon-section">
+        <h1 class="hotel-booking">Add-On Services</h1>
+
+        <div class="addon-item">
+            <label for="extra-bed">Extra Bed (RM50.00)</label>
+            <input type="number" id="extra-bed" min="0" value="0">
+        </div>
+        <div class="addon-item">
+            <label for="extra-sheets">Extra Sheets (RM15.00)</label>
+            <input type="number" id="extra-sheets" min="0" value="0">
+        </div>
+        <div class="addon-item">
+            <label for="extra-pillows">Extra Pillows (RM10.00)</label>
+            <input type="number" id="extra-pillows" min="0" value="0">
+        </div>
+
+        <a href="/Payment/PaymentPage" class="book-btn" id="book-btn">Book Now</a>
+    </div>
+</div>

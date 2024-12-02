@@ -18,13 +18,13 @@
     });
 
     // Show the first section (MAINS) by default
-    document.getElementById("mains").classList.add("active");
+    document.getElementById("breakfast").classList.add("active");
 });
 
 
 
 const roomGrid = document.querySelector('.room-grid');
-const scrollSpeed = 8;
+const scrollSpeed = 5;
 
 roomGrid.addEventListener('wheel', (event) => {
     event.preventDefault();

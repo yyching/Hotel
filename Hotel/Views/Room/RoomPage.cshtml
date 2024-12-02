@@ -1,0 +1,150 @@
+﻿@{
+    Layout = "_Layout";
+    ViewBag.Title = "Room";
+}
+<link rel="stylesheet" href="/css/room.css" asp-append-version="true">
+<script src="/js/room.js" defer></script>
+
+<!-- Booking Section -->
+<section class="booking-section">
+    <form class="booking-form">
+        <div class="form-group">
+            <label for="check-in">Check In</label>
+            <input type="date" id="check-in" name="check-in">
+        </div>
+        <div class="form-group">
+            <label for="check-out">Check Out</label>
+            <input type="date" id="check-out" name="check-out">
+        </div>
+        <div class="form-group">
+            <label for="adults">Adults</label>
+            <input type="number" id="adults" name="adults">
+        </div>
+        <div class="form-group">
+            <label for="children">Children</label>
+            <input type="number" id="children" name="children">
+        </div>
+        <button type="submit" class="btn">Check Availability</button>
+    </form>
+</section>
+
+
+<!-- Filter Section -->
+<div class="main-container">
+    <div class="filter-container">
+
+        <div class="search-bar">
+            <input type="text" placeholder="Search Hotel" id="search-bar">
+        </div>
+
+        <div class="filter-group">
+            <h3>Price</h3>
+            <div class="price-input">
+                <div class="field">
+                    <span>Min</span>
+                    <input type="number" class="input-min" value="100">
+                </div>
+                <div class="separator">-</div>
+                <div class="field">
+                    <span>Max</span>
+                    <input type="number" class="input-max" value="500">
+                </div>
+            </div>
+            <div class="slider">
+                <div class="progress"></div>
+            </div>
+            <div class="range-input">
+                <input type="range" class="range-min" min="100" max="500" value="100" step="10">
+                <input type="range" class="range-max" min="100" max="500" value="500" step="10">
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <h3>Theme</h3>
+            <div class="filter-item">
+                <input type="checkbox" id="theme-city" class="filter-checkbox" checked>
+                <label for="theme-city">City</label>
+            </div>
+            <div class="filter-item">
+                <input type="checkbox" id="theme-nature" class="filter-checkbox" checked>
+                <label for="theme-nature">Nature</label>
+            </div>
+        </div>
+        <div class="filter-group">
+            <h3>Room Type</h3>
+            <div class="filter-item">
+                <input type="checkbox" id="single-room" class="filter-checkbox">
+                <label for="single-room">Single Room</label>
+            </div>
+            <div class="filter-item">
+                <input type="checkbox" id="double-room" class="filter-checkbox">
+                <label for="double-room">Double Room</label>
+            </div>
+            <div class="filter-item">
+                <input type="checkbox" id="family-room" class="filter-checkbox">
+                <label for="family-room">Family Room</label>
+            </div>
+            <div class="filter-item">
+                <input type="checkbox" id="premium-king-room" class="filter-checkbox">
+                <label for="premium-king-room">Premium King Room</label>
+            </div>
+        </div>
+
+        <div class="clear-all-container">
+            <button id="clear-all" class="clear-button">Clear All</button>
+        </div>
+    </div>
+
+    <!-- Hotel Table -->
+    <div class="content-container">
+        <div class="hotel-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Hotel Image</th>
+                        <th>Hotel Name</th>
+                        <th>Size</th>
+                        <th>Capacity</th>
+                        <th>Price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><img src="/img/HomePage/RoomImg/single.jpg" alt="Hotel 1" class="hotel-image"></td>
+                        <td>Hotel Paradise</td>
+                        <td>300 sq. ft.</td>
+                        <td>2 Adults, 1 Child</td>
+                        <td>$150/night</td>
+                        <td><a href="/RoomDetails/RoomDetailsPage" class="book-btn" target="_blank">Book Now</a></td>
+                    </tr>
+                    <tr>
+                        <td><img src="/img/HomePage/RoomImg/double.jpg" alt="Hotel 2" class="hotel-image"></td>
+                        <td>Grand Luxury Hotel</td>
+                        <td>500 sq. ft.</td>
+                        <td>4 Adults</td>
+                        <td>$250/night</td>
+                        <td><a href="/RoomDetails/RoomDetailsPage" class="book-btn" target="_blank">Book Now</a></td>
+                    </tr>
+                    <tr>
+                        <td><img src="/img/HomePage/RoomImg/family.jpg" alt="Hotel 3" class="hotel-image"></td>
+                        <td>Cozy Retreat</td>
+                        <td>200 sq. ft.</td>
+                        <td>2 Adults</td>
+                        <td>$120/night</td>
+                        <td><a href="/RoomDetails/RoomDetailsPage" class="book-btn" target="_blank">Book Now</a></td>
+                    </tr>
+                    <tr>
+                        <td><img src="/img/HomePage/RoomImg/Premium King.jpg" alt="Hotel 4" class="hotel-image"></td>
+                        <td>Cozy Retreat</td>
+                        <td>200 sq. ft.</td>
+                        <td>2 Adults</td>
+                        <td>$120/night</td>
+                        <td><a href="/RoomDetails/RoomDetailsPage" class="book-btn" target="_blank">Book Now</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
