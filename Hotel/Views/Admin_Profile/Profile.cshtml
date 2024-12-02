@@ -1,0 +1,39 @@
+﻿@{
+    Layout = "_NavigationBar";
+    ViewBag.Title = "Admin Profile";
+}
+<link href="/css/profile.css" rel="stylesheet" />
+
+<div style="justify-items: center;">
+    <div class="profile-card">
+        <div class="profile-left">
+            <img src="/images/icon.jpg" alt="Profile Picture" class="profile-pic">
+            <h2 class="profile-name">John Doe</h2>
+            <p class="profile-role">Web Developer</p>
+        </div>
+        <div class="profile-right">
+            <h3>Profile Details</h3>
+            <p><strong>Name:</strong> John Doe</p>
+            <p><strong>Age:</strong> 35</p>
+            <p><strong>Mobile:</strong> +91 XXXXXXXXXX</p>
+            <p><strong>Email:</strong> john@example.com</p>
+            <p><strong>Address:</strong> 123 Main St, Anytown, USA</p>
+            <div class="button-container">
+                <button class="btn" data-get="/">Edit Profile</button>
+                <button class="btn">Change Password</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).on('click', '[data-get]', function (e) {
+    e.preventDefault();
+    const url = e.target.dataset.get;
+    if (url) {
+        location.href = url;
+    } else {
+        console.warn('No URL found in data-get attribute');
+    }
+});
+
+</script>

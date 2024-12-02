@@ -1,0 +1,52 @@
+﻿@{
+    Layout = "_NavigationBar";
+    ViewBag.Title = "Edit Admin Profile";
+}
+<link href="/css/profile.css" rel="stylesheet" />
+
+<div style="justify-items: center;">
+    <div class="profile-card">
+        <div class="profile-left">
+            <button class="back-button">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <!-- Current Profile Picture -->
+            <label for="profile-pic-upload" class="profile-pic-label">
+                <img src="/images/icon.jpg" alt="Profile Picture" class="profile-pic">
+                <span class="edit-icon">✎</span>
+            </label>
+            <input type="file" id="profile-pic-upload" name="profile-pic" accept="image/*" class="file-input" hidden>
+
+            <h2 class="profile-name">John Doe</h2>
+            <p class="profile-role">Web Developer</p>
+        </div>
+        <div class="profile-right">
+            <h3>Profile Details</h3>
+            <form>
+                <div class="form-group">
+                    <label for="name"><strong>Name:</strong></label>
+                    <input type="text" id="name" name="name" value="John Doe" class="input-field">
+                </div>
+                <div class="form-group">
+                    <label for="age"><strong>Age:</strong></label>
+                    <input type="number" id="age" name="age" value="35" class="input-field">
+                </div>
+                <div class="form-group">
+                    <label for="mobile"><strong>Mobile:</strong></label>
+                    <input type="text" id="mobile" name="mobile" value="+91 XXXXXXXXXX" class="input-field">
+                </div>
+                <div class="form-group">
+                    <label for="email"><strong>Email:</strong></label>
+                    <input type="email" id="email" name="email" value="john@example.com" class="input-field">
+                </div>
+                <div class="form-group">
+                    <label for="address"><strong>Address:</strong></label>
+                    <input type="text" id="address" name="address" value="123 Main St, Anytown, USA" class="input-field">
+                </div>
+                <div class="button-container">
+                    <button type="submit" class="btn">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

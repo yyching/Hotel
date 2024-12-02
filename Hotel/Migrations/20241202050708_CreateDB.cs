@@ -17,6 +17,7 @@ namespace Hotel.Migrations
                 {
                     CategoryID = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     CategoryName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Theme = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RoomImage = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },

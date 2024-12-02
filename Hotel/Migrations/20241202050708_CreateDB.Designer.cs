@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.Migrations
 {
     [DbContext(typeof(DB))]
-    [Migration("20241126154035_CreateDB")]
+    [Migration("20241202050708_CreateDB")]
     partial class CreateDB
     {
         /// <inheritdoc />
@@ -81,6 +81,10 @@ namespace Hotel.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RoomImage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Theme")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

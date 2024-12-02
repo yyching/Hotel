@@ -1,0 +1,87 @@
+﻿/* General Table Styling */
+.table-responsive {
+    margin-top: 60px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: left;
+}
+
+/* Header Styling */
+.table thead {
+    background-color: #343a40;
+    color: #ffffff;
+}
+
+.table thead th {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Row Styling */
+.table tbody tr {
+    border-bottom: 1px solid #dddddd;
+    background-color: whitesmoke;
+}
+
+.table tbody tr:hover {
+    background-color: honeydew;
+    cursor: pointer;
+    transform: scale(1.03);
+    transition: transform 0.3s ease;
+}
+
+.table tbody tr:last-of-type {
+    border-bottom: 2px solid #343a40;
+}
+
+.table tbody td {
+    padding: 12px 15px;
+}
+
+/* Button Styling */
+.btn {
+    padding: 5px 10px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+.btn-danger:hover {
+    background-color: #a71d2a;
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .table {
+        font-size: 14px;
+    }
+
+    .btn {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+}
