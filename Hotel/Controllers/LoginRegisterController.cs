@@ -15,5 +15,15 @@ namespace Hotel.Controllers
         {
             return View();
         }
+
+        public IActionResult RPassword()
+        {
+            return View();
+        }
+
+        public IActionResult SEmail()
+        {
+            return View();
+        }
     }
 }

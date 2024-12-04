@@ -67,13 +67,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(90vh - 60px);
+    height: calc(85vh - 60px);
     gap: 40px;
-}
-
-.sidebar {
-    flex: 0 0 150px;
-    height: 350px
 }
 
 /* Profile Content Layout */
@@ -143,7 +138,7 @@
 }
 
     .form-group label {
-        flex: 0 0 80px; /* Fixed width for labels */
+        flex: 0 0 120px; /* Fixed width for labels */
         text-align: right; /* Align label text to the right */
         font-size: 14px;
         color: #333;
@@ -191,7 +186,8 @@
     border-radius: 3px;
     cursor: pointer;
     font-size: 14px;
-    align-self: flex-start; /* Align button to the left */
+    align-self:center;
+    width: 150px;
 }
 
     .save-btn:hover {
