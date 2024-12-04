@@ -2,3 +2,58 @@
     Layout = "_Layout2";
     ViewBag.Title = "Profile | LoginRegister";
 }
+<link rel="stylesheet" href="/css/Account.css" asp-append-version="true">
+
+<div class="profile-container">
+    <aside class="sidebar">
+        <h1>My Account</h1>
+        <ul>
+            <li>Profile</li>
+            <li>Change Password</li>
+            <li>My Booking</li>
+        </ul>
+    </aside>
+    <main class="content">
+        <h2>My Profile</h2>
+        <div class="profile-content">
+            <form class="profile-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" value="raynoldtai123" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" value="">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="text" id="phone" value="********33">
+                </div>
+                <div class="form-group">
+                    <label for="dob">Birthday</label>
+                    <div class="dob">
+                        <select id="day">
+                            <option value="">Day</option>
+                        </select>
+                        <select id="month">
+                            <option value="">Month</option>
+                        </select>
+                        <select id="year">
+                            <option value="">Year</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="save-btn">Save</button>
+            </form>
+            <div class="profile-picture">
+                <div class="picture-placeholder">D</div>
+                <button>Choose Picture</button>
+                <p>File size: Max 1MB<br>File format: JPEG, PNG</p>
+            </div>
+        </div>
+    </main>
+</div>

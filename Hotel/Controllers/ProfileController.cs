@@ -15,4 +15,9 @@ public class ProfileController : Controller
     {
         return View();
     }
+
+    public IActionResult Account()
+    {
+        return View();
+    }
 }
