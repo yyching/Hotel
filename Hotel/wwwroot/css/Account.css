@@ -72,14 +72,8 @@
 }
 
 .sidebar {
-    flex: 0 0 200px; /* Fixed width for the sidebar */
-    background-color: #f9f9f9;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    justify-content: flex-start;
-    height: 800px
+    flex: 0 0 150px;
+    height: 350px
 }
 
 /* Profile Content Layout */

@@ -11,11 +11,6 @@ public class ProfileController : Controller
         this.db = db;
     }
 
-    public IActionResult LoginRegister()
-    {
-        return View();
-    }
-
     public IActionResult Account()
     {
         return View();
