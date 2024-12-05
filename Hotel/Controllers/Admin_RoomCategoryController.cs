@@ -4,9 +4,19 @@ namespace Hotel.Controllers
 {
     public class Admin_RoomCategoryController : Controller
     {
+
+        private readonly DB db;
+
+        public Admin_RoomCategoryController(DB db)
+        {
+            this.db = db;
+        }
+
         public IActionResult RoomCategory()
         {
-            return View();
+            var m = db.Categories;
+
+            return View(m);
         }
     }
 }

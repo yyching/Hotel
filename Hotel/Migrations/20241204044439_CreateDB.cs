@@ -18,8 +18,14 @@ namespace Hotel.Migrations
                     CategoryID = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     CategoryName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Theme = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Size = table.Column<int>(type: "int", nullable: false),
+                    Capacity = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Bed = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RoomImage = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Services = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PricePerNight = table.Column<double>(type: "float", nullable: false),
+                    RoomImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -31,7 +37,8 @@ namespace Hotel.Migrations
                 columns: table => new
                 {
                     ServiceTypeID = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    ServiceTypeName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    ServiceTypeName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -48,7 +55,8 @@ namespace Hotel.Migrations
                     Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     Role = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    UserImage = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    UserImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -61,8 +69,8 @@ namespace Hotel.Migrations
                 {
                     RoomID = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     RoomNumber = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    PricePerNight = table.Column<double>(type: "float", nullable: false),
                     AvailabilityStatus = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CategoryID = table.Column<string>(type: "nvarchar(10)", nullable: false)
                 },
                 constraints: table =>
@@ -86,6 +94,7 @@ namespace Hotel.Migrations
                     UnitPrice = table.Column<double>(type: "float", nullable: false),
                     ServiceImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ServiceDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ServiceTypeID = table.Column<string>(type: "nvarchar(10)", nullable: false)
                 },
                 constraints: table =>
@@ -107,6 +116,7 @@ namespace Hotel.Migrations
                     RatingValue = table.Column<int>(type: "int", nullable: false),
                     ReviewText = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ReviewDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserID = table.Column<string>(type: "nvarchar(10)", nullable: false)
                 },
                 constraints: table =>

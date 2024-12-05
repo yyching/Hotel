@@ -41,7 +41,7 @@ namespace Hotel.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<string>("ServiceID")
+                    b.Property<string>("ServiceBookingID")
                         .HasColumnType("nvarchar(10)");
 
                     b.Property<double>("TotalAmount")
@@ -55,7 +55,7 @@ namespace Hotel.Migrations
 
                     b.HasIndex("RoomID");
 
-                    b.HasIndex("ServiceID");
+                    b.HasIndex("ServiceBookingID");
 
                     b.HasIndex("UserID");
 
@@ -67,6 +67,10 @@ namespace Hotel.Migrations
                     b.Property<string>("CategoryID")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("Bed")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Capacity")
                         .IsRequired()
@@ -95,6 +99,10 @@ namespace Hotel.Migrations
                     b.Property<int>("Size")
                         .HasColumnType("int");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Theme")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -120,6 +128,10 @@ namespace Hotel.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UserID")
                         .IsRequired()
                         .HasColumnType("nvarchar(10)");
@@ -137,11 +149,6 @@ namespace Hotel.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<string>("AvailabilityStatus")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
                     b.Property<string>("CategoryID")
                         .IsRequired()
                         .HasColumnType("nvarchar(10)");
@@ -150,6 +157,11 @@ namespace Hotel.Migrations
                         .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.HasKey("RoomID");
 
@@ -164,13 +176,6 @@ namespace Hotel.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<int>("Qty")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ServiceDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ServiceImage")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -184,6 +189,10 @@ namespace Hotel.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(10)");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<double>("UnitPrice")
                         .HasColumnType("float");
 
@@ -192,6 +201,23 @@ namespace Hotel.Migrations
                     b.HasIndex("ServiceTypeID");
 
                     b.ToTable("Services");
+                });
+
+            modelBuilder.Entity("Hotel.Models.ServiceBooking", b =>
+                {
+                    b.Property<string>("ServiceBookingID")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("ServiceID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(10)");
+
+                    b.HasKey("ServiceBookingID");
+
+                    b.HasIndex("ServiceID");
+
+                    b.ToTable("ServiceBooking");
                 });
 
             modelBuilder.Entity("Hotel.Models.ServiceType", b =>
@@ -204,6 +230,10 @@ namespace Hotel.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ServiceTypeID");
 
@@ -241,6 +271,10 @@ namespace Hotel.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UserImage")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -258,9 +292,9 @@ namespace Hotel.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hotel.Models.Service", "Service")
+                    b.HasOne("Hotel.Models.ServiceBooking", "ServiceBooking")
                         .WithMany()
-                        .HasForeignKey("ServiceID");
+                        .HasForeignKey("ServiceBookingID");
 
                     b.HasOne("Hotel.Models.User", "User")
                         .WithMany("Bookings")
@@ -270,7 +304,7 @@ namespace Hotel.Migrations
 
                     b.Navigation("Room");
 
-                    b.Navigation("Service");
+                    b.Navigation("ServiceBooking");
 
                     b.Navigation("User");
                 });
@@ -306,6 +340,17 @@ namespace Hotel.Migrations
                         .IsRequired();
 
                     b.Navigation("ServiceType");
+                });
+
+            modelBuilder.Entity("Hotel.Models.ServiceBooking", b =>
+                {
+                    b.HasOne("Hotel.Models.Service", "Service")
+                        .WithMany()
+                        .HasForeignKey("ServiceID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Service");
                 });
 
             modelBuilder.Entity("Hotel.Models.Category", b =>
