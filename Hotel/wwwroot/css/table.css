@@ -9,6 +9,7 @@
     margin: 20px 0;
     font-size: 16px;
     text-align: left;
+    text-align: center;
 }
 
 /* Header Styling */
@@ -45,6 +46,11 @@
     padding: 12px 15px;
 }
 
+.table-danger {
+    background-color: #dc3545 !important;
+    color: white !important;
+}
+
 /* Button Styling */
 .btn {
     padding: 5px 10px;
@@ -72,6 +78,16 @@
 .btn-danger:hover {
     background-color: #a71d2a;
 }
+
+.btn-success {
+    background-color: #28a745;
+    color: #ffffff;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
 
 
 /* Responsive Design */

@@ -1,0 +1,21 @@
+User :
+ADM001	Admin	admin@gmail.com	123456	0123456789	Admin	icon.jpg	Active
+USR001	Lisa	lisa@gmail.com	123456	0123456789	Member 	icon.jpg	Active
+USR002	IU	iu@gmail.com	123456	0123456789	Member 	icon.jpg	Active
+
+Category :
+RCT001	Single Room	City	35	2 Adults	King-size	This cozy and modern place is perfect for your getaway. It features a fully equipped kitchen, comfortable bedrooms, and scenic balcony views. Enjoy free Wi-Fi, air conditioning, and top-notch security features.	Kitchen, Free parking on premises, TV, Private patio or balcony, Wifi, Air Conditioning, Bathroom, Exterior security cameras on property	120	-	Active
+
+Room :
+ROM001	AF001-G	Active	RCT001
+
+Service Type :
+SRT001	Breakfast	Active
+SRT002	Lunch	Active
+SRT003	Dinner	Active
+
+Service :
+SRV001	Classic Omelette	12	-	Active	SRT001
+SRV002	Pancake Stack	15	-	Active	SRT001
+SRV003	Grilled Chicken Salad	18	-	Active	SRT002
+SRV004	Grilled Salmon	30	-	Active	SRT003

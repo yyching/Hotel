@@ -16,6 +16,7 @@ public class DB : DbContext
     public DbSet<Booking> Bookings { get; set; }
     public DbSet<ServiceType> ServiceTypes { get; set; }
     public DbSet<Service> Services { get; set; }
+    public DbSet<ServiceBooking> ServiceBooking { get; set; }
 }
 
 public class User
@@ -34,6 +35,7 @@ public class User
     [MaxLength(50)]
     public string Role { get; set; }
     public string UserImage { get; set; }
+    public string Status { get; set; }
 
     // Navigation
     public List<Review> Reviews { get; set; }
@@ -50,10 +52,12 @@ public class Category
     public string Theme { get; set; }
     public int Size { get; set; }
     public string Capacity { get; set; }
+    public string Bed { get; set; }
     public string Description { get; set; }
     public string Services { get; set; }
     public double PricePerNight { get; set; }
     public string RoomImage { get; set; }
+    public string Status { get; set; }
 
     // Navigation
     public List<Room> Rooms { get; set; }
@@ -67,7 +71,7 @@ public class Room
     [MaxLength(10)]
     public string RoomNumber { get; set; }
     [MaxLength(15)]
-    public string AvailabilityStatus { get; set; }
+    public string Status { get; set; }
 
     // Foreign Key
     public string CategoryID { get; set; }
@@ -85,6 +89,7 @@ public class Review
     public int RatingValue { get; set; }
     public string ReviewText { get; set; }
     public DateTime ReviewDate { get; set; }
+    public string Status { get; set; }
 
     // Foreign Key
     public string UserID { get; set; }
@@ -106,12 +111,12 @@ public class Booking
     // Foreign Key
     public string UserID { get; set; }
     public string RoomID { get; set; }
-    public string? ServiceID { get; set; }
+    public string? ServiceBookingID { get; set; }
 
     // Navigation
     public User User { get; set; }
     public Room Room { get; set; }
-    public Service Service { get; set; }
+    public ServiceBooking ServiceBooking { get; set; }
 }
 
 public class ServiceType
@@ -121,6 +126,7 @@ public class ServiceType
     public string ServiceTypeID { get; set; }
     [MaxLength(50)]
     public string ServiceTypeName { get; set; }
+    public string Status { get; set; }
 
     // Navigation
     public List<Service> Services { get; set; }
@@ -133,14 +139,26 @@ public class Service
     public string ServiceID { get; set; }
     [MaxLength(100)]
     public string ServiceName { get; set; }
-    public int Qty { get; set; }
     public double UnitPrice { get; set; }
     public string ServiceImage { get; set; }
-    public string ServiceDescription { get; set; }
+    public string Status { get; set; }
 
     // Foreign Key
     public string ServiceTypeID { get; set; }
 
     // Navigation
     public ServiceType ServiceType { get; set; }
+}
+
+public class ServiceBooking 
+{
+    // Column
+    [Key, MaxLength(10)]
+    public string ServiceBookingID { get; set; }
+
+    // Foreign Key
+    public string ServiceID { get; set; }
+
+    // Navigation Properties
+    public Service Service { get; set; }
 }
