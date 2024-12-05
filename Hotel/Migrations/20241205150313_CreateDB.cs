@@ -69,8 +69,7 @@ namespace Hotel.Migrations
                 {
                     RoomID = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     RoomNumber = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    AvailabilityStatus = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
                     CategoryID = table.Column<string>(type: "nvarchar(10)", nullable: false)
                 },
                 constraints: table =>
@@ -90,10 +89,8 @@ namespace Hotel.Migrations
                 {
                     ServiceID = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     ServiceName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Qty = table.Column<int>(type: "int", nullable: false),
                     UnitPrice = table.Column<double>(type: "float", nullable: false),
                     ServiceImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ServiceDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ServiceTypeID = table.Column<string>(type: "nvarchar(10)", nullable: false)
                 },
@@ -131,6 +128,25 @@ namespace Hotel.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ServiceBooking",
+                columns: table => new
+                {
+                    ServiceBookingID = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Qty = table.Column<int>(type: "int", nullable: false),
+                    ServiceID = table.Column<string>(type: "nvarchar(10)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServiceBooking", x => x.ServiceBookingID);
+                    table.ForeignKey(
+                        name: "FK_ServiceBooking_Services_ServiceID",
+                        column: x => x.ServiceID,
+                        principalTable: "Services",
+                        principalColumn: "ServiceID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Bookings",
                 columns: table => new
                 {
@@ -141,7 +157,7 @@ namespace Hotel.Migrations
                     TotalAmount = table.Column<double>(type: "float", nullable: false),
                     UserID = table.Column<string>(type: "nvarchar(10)", nullable: false),
                     RoomID = table.Column<string>(type: "nvarchar(10)", nullable: false),
-                    ServiceID = table.Column<string>(type: "nvarchar(10)", nullable: true)
+                    ServiceBookingID = table.Column<string>(type: "nvarchar(10)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -153,10 +169,10 @@ namespace Hotel.Migrations
                         principalColumn: "RoomID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Bookings_Services_ServiceID",
-                        column: x => x.ServiceID,
-                        principalTable: "Services",
-                        principalColumn: "ServiceID");
+                        name: "FK_Bookings_ServiceBooking_ServiceBookingID",
+                        column: x => x.ServiceBookingID,
+                        principalTable: "ServiceBooking",
+                        principalColumn: "ServiceBookingID");
                     table.ForeignKey(
                         name: "FK_Bookings_Users_UserID",
                         column: x => x.UserID,
@@ -171,9 +187,9 @@ namespace Hotel.Migrations
                 column: "RoomID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookings_ServiceID",
+                name: "IX_Bookings_ServiceBookingID",
                 table: "Bookings",
-                column: "ServiceID");
+                column: "ServiceBookingID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_UserID",
@@ -189,6 +205,11 @@ namespace Hotel.Migrations
                 name: "IX_Rooms_CategoryID",
                 table: "Rooms",
                 column: "CategoryID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ServiceBooking_ServiceID",
+                table: "ServiceBooking",
+                column: "ServiceID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Services_ServiceTypeID",
@@ -209,13 +230,16 @@ namespace Hotel.Migrations
                 name: "Rooms");
 
             migrationBuilder.DropTable(
-                name: "Services");
+                name: "ServiceBooking");
 
             migrationBuilder.DropTable(
                 name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "Services");
 
             migrationBuilder.DropTable(
                 name: "ServiceTypes");
