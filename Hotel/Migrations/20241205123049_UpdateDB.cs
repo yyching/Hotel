@@ -10,20 +10,20 @@ namespace Hotel.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "ServiceDescription",
-                table: "Services");
+            migrationBuilder.AddColumn<int>(
+                name: "Qty",
+                table: "ServiceBooking",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "ServiceDescription",
-                table: "Services",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
+            migrationBuilder.DropColumn(
+                name: "Qty",
+                table: "ServiceBooking");
         }
     }
 }

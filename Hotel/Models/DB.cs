@@ -155,6 +155,7 @@ public class ServiceBooking
     // Column
     [Key, MaxLength(10)]
     public string ServiceBookingID { get; set; }
+    public int Qty { get; set; }
 
     // Foreign Key
     public string ServiceID { get; set; }

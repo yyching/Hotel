@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.Migrations
 {
     [DbContext(typeof(DB))]
-    [Migration("20241204051301_UpdateDB")]
+    [Migration("20241205123049_UpdateDB")]
     partial class UpdateDB
     {
         /// <inheritdoc />
@@ -211,6 +211,9 @@ namespace Hotel.Migrations
                     b.Property<string>("ServiceBookingID")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
+
+                    b.Property<int>("Qty")
+                        .HasColumnType("int");
 
                     b.Property<string>("ServiceID")
                         .IsRequired()

@@ -209,6 +209,9 @@ namespace Hotel.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
+                    b.Property<int>("Qty")
+                        .HasColumnType("int");
+
                     b.Property<string>("ServiceID")
                         .IsRequired()
                         .HasColumnType("nvarchar(10)");
