@@ -216,6 +216,27 @@ html {
     margin-bottom: 40px;
 }
 
+.quantity-container {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    .quantity-container label {
+        margin-right: 5px;
+        font-size: 20px;
+    }
+
+    .quantity-container input {
+        width: 50px;
+        text-align: center;
+        padding: 5px;
+        font-size: 20px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
 .menu-nav {
     display: flex;
     justify-content: center;
