@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<Service>
+
+@{
     Layout = "_Layout2";
     ViewBag.Title = "Room Details";
 }
@@ -87,7 +89,6 @@
     </div>
 </div>
 
-
 <div class="service-container">
 
     <!-- Calendar Section -->
@@ -99,227 +100,92 @@
         <h1 class="hotel-booking">Our Food Menu</h1>
 
         <nav class="menu-nav">
-            <a href="#breakfast" data-section="breakfast">BREAKFAST</a>
-            <a href="#lunch" data-section="lunch">LUNCH</a>
-            <a href="#dinner" data-section="dinner">DINNER</a>
+            @foreach (var p in ViewBag.ServiceTypes)
+            {
+                <a href="?ServiceTypeID=@p.ServiceTypeID" data-section="@p.ServiceTypeName">@p.ServiceTypeName</a>
+            }
         </nav>
 
+        @* @foreach (var p in ViewBag.ServiceTypes) *@
+        @* { *@
+        @*     <a href="?ServiceTypeID=@p.ServiceTypeID">@p.ServiceTypeName</a> *@
+        @* } *@
+
+        @* @foreach (var s in Model) *@
+        @* { *@
+        @*     <div class="menu-item"> *@
+        @*         <input type="checkbox" id="classic-omelette" name="breakfast[]" value="Classic Omelette"> *@
+        @*         <label for="classic-omelette"> *@
+        @*             <div class="price">@s.UnitPrice</div> *@
+        @*             <h3>@s.ServiceName</h3> *@
+        @*         </label> *@
+        @*         <div class="quantity-container"> *@
+        @*             <label for="classic-omelette-qty">Qty:</label> *@
+        @*             <input type="number" id="classic-omelette-qty" name="classic-omelette-qty" min="0" value="0"> *@
+        @*         </div> *@
+        @*     </div> *@
+        @* } *@
+
         <!-- Breakfast Section -->
-        <section id="breakfast" class="menu-section">
+        <section id="Breakfast" class="menu-section">
             <h2>BREAKFAST</h2>
             <form class="menu-grid">
-                <div class="menu-item">
-                    <input type="checkbox" id="classic-omelette" name="breakfast[]" value="Classic Omelette">
-                    <label for="classic-omelette">
-                        <div class="price">RM12.00</div>
-                        <h3>Classic Omelette</h3>
-                    </label>
-                    <div class="quantity-container">
-                        <label for="classic-omelette-qty">Qty:</label>
-                        <input type="number" id="classic-omelette-qty" name="classic-omelette-qty" min="0" value="0">
+                @foreach (var s in Model)
+                {
+                    <div class="menu-item">
+                        <input type="checkbox" id="classic-omelette" name="breakfast[]" value="Classic Omelette">
+                        <label for="classic-omelette">
+                            <div class="price">@s.UnitPrice</div>
+                            <h3>@s.ServiceName</h3>
+                        </label>
+                        <div class="quantity-container">
+                            <label for="classic-omelette-qty">Qty:</label>
+                            <input type="number" id="classic-omelette-qty" name="classic-omelette-qty" min="0" value="0">
+                        </div>
                     </div>
-                </div>
-                <div class="menu-item">
-                    <input type="checkbox" id="pancake-stack" name="breakfast[]" value="Pancake Stack">
-                    <label for="pancake-stack">
-                        <div class="price">RM15.00</div>
-                        <h3>Pancake Stack</h3>
-                    </label>
-                    <div class="quantity-container">
-                        <label for="pancake-stack-qty">Qty:</label>
-                        <input type="number" id="pancake-stack-qty" name="pancake-stack-qty" min="0" value="0">
-                    </div>
-                </div>
-                <div class="menu-item">
-                    <input type="checkbox" id="avocado-toast" name="breakfast[]" value="Avocado Toast">
-                    <label for="avocado-toast">
-                        <div class="price">RM10.00</div>
-                        <h3>Avocado Toast</h3>
-                    </label>
-                    <div class="quantity-container">
-                        <label for="avocado-toast-qty">Qty:</label>
-                        <input type="number" id="avocado-toast-qty" name="avocado-toast-qty" min="0" value="0">
-                    </div>
-                </div>
-                <div class="menu-item">
-                    <input type="checkbox" id="breakfast-burrito" name="breakfast[]" value="Breakfast Burrito">
-                    <label for="breakfast-burrito">
-                        <div class="price">RM14.00</div>
-                        <h3>Breakfast Burrito</h3>
-                    </label>
-                    <div class="quantity-container">
-                        <label for="breakfast-burrito-qty">Qty:</label>
-                        <input type="number" id="classic-omelette-qty" name="classic-omelette-qty" min="0" value="0">
-                    </div>
-                </div>
-                <div class="menu-item">
-                    <input type="checkbox" id="french-toast" name="breakfast[]" value="French Toast">
-                    <label for="french-toast">
-                        <div class="price">RM13.00</div>
-                        <h3>French Toast</h3>
-                    </label>
-                    <div class="quantity-container">
-                        <label for="french-toast-qty">Qty:</label>
-                        <input type="number" id="french-toast-qty" name="french-toast-qty" min="0" value="0">
-                    </div>
-                </div>
-                <div class="menu-item">
-                    <input type="checkbox" id="granola-bowl" name="breakfast[]" value="Granola Bowl">
-                    <label for="granola-bowl">
-                        <div class="price">RM16.00</div>
-                        <h3>Granola Bowl</h3>
-                    </label>
-                    <div class="quantity-container">
-                        <label for="granola-bowl-qty">Qty:</label>
-                        <input type="number" id="granola-bowl-qty" name="granola-bowl-qty" min="0" value="0">
-                    </div>
-                </div>
+                }
             </form>
         </section>
 
         <!-- Lunch Section -->
-        <section id="lunch" class="menu-section">
+        <section id="Lunch" class="menu-section">
             <h2>LUNCH</h2>
             <form class="menu-grid">
-                <div class="menu-item">
-                    <input type="checkbox" id="grilled-chicken-salad" name="lunch[]" value="Grilled Chicken Salad">
-                    <label for="grilled-chicken-salad">
-                        <div class="price">RM18.00</div>
-                        <h3>Grilled Chicken Salad</h3>
-                    </label>
-                    <div class="quantity-container">
-                        <label for="grilled-chicken-salad-qty">Qty:</label>
-                        <input type="number" id="grilled-chicken-salad-qty" name="grilled-chicken-salad-qty" min="0" value="0">
+                @foreach (var s in Model)
+                {
+                    <div class="menu-item">
+                        <input type="checkbox" id="classic-omelette" name="breakfast[]" value="Classic Omelette">
+                        <label for="classic-omelette">
+                            <div class="price">@s.UnitPrice</div>
+                            <h3>@s.ServiceName</h3>
+                        </label>
+                        <div class="quantity-container">
+                            <label for="classic-omelette-qty">Qty:</label>
+                            <input type="number" id="classic-omelette-qty" name="classic-omelette-qty" min="0" value="0">
+                        </div>
                     </div>
-                </div>
-                <div class="menu-item">
-                    <input type="checkbox" id="club-sandwich" name="lunch[]" value="Club Sandwich">
-                    <label for="club-sandwich">
-                        <div class="price">RM22.00</div>
-                        <h3>Club Sandwich</h3>
-                    </label>
-                    <div class="quantity-container">
-                        <label for="club-sandwich-qty">Qty:</label>
-                        <input type="number" id="club-sandwich-qty" name="club-sandwich-qty" min="0" value="0">
-                    </div>
-                </div>
-                <div class="menu-item">
-                    <input type="checkbox" id="seafood-pasta" name="lunch[]" value="Seafood Pasta">
-                    <label for="seafood-pasta">
-                        <div class="price">RM25.00</div>
-                        <h3>Seafood Pasta</h3>
-                    </label>
-                    <div class="quantity-container">
-                        <label for="seafood-pasta-qty">Qty:</label>
-                        <input type="number" id="seafood-pasta-qty" name="seafood-pasta-qty" min="0" value="0">
-                    </div>
-                </div>
-                <div class="menu-item">
-                    <input type="checkbox" id="veggie-burger" name="lunch[]" value="Veggie Burger">
-                    <label for="veggie-burger">
-                        <div class="price">RM20.00</div>
-                        <h3>Veggie Burger</h3>
-                    </label>
-                    <div class="quantity-container">
-                        <label for="veggie-burger-qty">Qty:</label>
-                        <input type="number" id="veggie-burger-qty" name="veggie-burger-qty" min="0" value="0">
-                    </div>
-                </div>
-                <div class="menu-item">
-                    <input type="checkbox" id="tom-yum-soup" name="lunch[]" value="Tom Yum Soup">
-                    <label for="tom-yum-soup">
-                        <div class="price">RM19.00</div>
-                        <h3>Tom Yum Soup</h3>
-                    </label>
-                    <div class="quantity-container">
-                        <label for="tom-yum-soup-qty">Qty:</label>
-                        <input type="number" id="tom-yum-soup-qty" name="tom-yum-soup-qty" min="0" value="0">
-                    </div>
-                </div>
-                <div class="menu-item">
-                    <input type="checkbox" id="quiche-lorraine" name="lunch[]" value="Quiche Lorraine">
-                    <label for="quiche-lorraine">
-                        <div class="price">RM18.00</div>
-                        <h3>Quiche Lorraine</h3>
-                    </label>
-                    <div class="quantity-container">
-                        <label for="quiche-lorraine-qty">Qty:</label>
-                        <input type="number" id="quiche-lorraine-qty" name="quiche-lorraine-qty" min="0" value="0">
-                    </div>
-                </div>
+                }
             </form>
         </section>
 
         <!-- Dinner Section -->
-        <section id="dinner" class="menu-section">
+        <section id="Dinner" class="menu-section">
             <h2>DINNER</h2>
             <form class="menu-grid">
-                <div class="menu-item">
-                    <input type="checkbox" id="grilled-salmon" name="dinner[]" value="Grilled Salmon">
-                    <label for="grilled-salmon">
-                        <div class="price">RM30.00</div>
-                        <h3>Grilled Salmon</h3>
-                    </label>
-                    <div class="quantity-container">
-                        <label for="grilled-salmon-qty">Qty:</label>
-                        <input type="number" id="grilled-salmon-qty" name="grilled-salmon-qty" min="0" value="0">
+                @foreach (var s in Model)
+                {
+                    <div class="menu-item">
+                        <input type="checkbox" id="classic-omelette" name="breakfast[]" value="Classic Omelette">
+                        <label for="classic-omelette">
+                            <div class="price">@s.UnitPrice</div>
+                            <h3>@s.ServiceName</h3>
+                        </label>
+                        <div class="quantity-container">
+                            <label for="classic-omelette-qty">Qty:</label>
+                            <input type="number" id="classic-omelette-qty" name="classic-omelette-qty" min="0" value="0">
+                        </div>
                     </div>
-                </div>
-                <div class="menu-item">
-                    <input type="checkbox" id="beef-steak" name="dinner[]" value="Beef Steak">
-                    <label for="beef-steak">
-                        <div class="price">RM28.00</div>
-                        <h3>Beef Steak</h3>
-                    </label>
-                    <div class="quantity-container">
-                        <label for="beef-steak-qty">Qty:</label>
-                        <input type="number" id="beef-steak-qty" name="beef-steak-qty" min="0" value="0">
-                    </div>
-                </div>
-                <div class="menu-item">
-                    <input type="checkbox" id="vegetarian-stir-fry" name="dinner[]" value="Vegetarian Stir-Fry">
-                    <label for="vegetarian-stir-fry">
-                        <div class="price">RM20.00</div>
-                        <h3>Vegetarian Stir-Fry</h3>
-                    </label>
-                    <div class="quantity-container">
-                        <label for="vegetarian-stir-fry-qty">Qty:</label>
-                        <input type="number" id="vegetarian-stir-fry-qty" name="vegetarian-stir-fry-qty" min="0" value="0">
-                    </div>
-                </div>
-                <div class="menu-item">
-                    <input type="checkbox" id="roast-lamb" name="dinner[]" value="Roast Lamb">
-                    <label for="roast-lamb">
-                        <div class="price">RM35.00</div>
-                        <h3>Roast Lamb</h3>
-                    </label>
-                    <div class="quantity-container">
-                        <label for="roast-lamb-qty">Qty:</label>
-                        <input type="number" id="roast-lamb-qty" name="roast-lamb-qty" min="0" value="0">
-                    </div>
-                </div>
-                <div class="menu-item">
-                    <input type="checkbox" id="shrimp-scampi" name="dinner[]" value="Shrimp Scampi">
-                    <label for="shrimp-scampi">
-                        <div class="price">RM26.00</div>
-                        <h3>Shrimp Scampi</h3>
-                    </label>
-                    <div class="quantity-container">
-                        <label for="shrimp-scampi-qty">Qty:</label>
-                        <input type="number" id="shrimp-scampi-qty" name="shrimp-scampi-qty" min="0" value="0">
-                    </div>
-                </div>
-                <div class="menu-item">
-                    <input type="checkbox" id="duck-breast" name="dinner[]" value="Duck Breast">
-                    <label for="duck-breast">
-                        <div class="price">RM32.00</div>
-                        <h3>Duck Breast</h3>
-                    </label>
-                    <div class="quantity-container">
-                        <label for="duck-breast-qty">Qty:</label>
-                        <input type="number" id="duck-breast-qty" name="duck-breast-qty" min="0" value="0">
-                    </div>
-                </div>
+                }
             </form>
         </section>
     </div>

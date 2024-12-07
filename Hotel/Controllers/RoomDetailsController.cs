@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hotel.Controllers;
 
@@ -11,8 +12,12 @@ public class RoomDetailsController : Controller
         this.db = db;
     }
 
-    public IActionResult RoomDetailsPage()
+    public IActionResult RoomDetailsPage(string? ServiceTypeID)
     {
-        return View();
+        ViewBag.ServiceTypes = db.ServiceTypes;
+
+        var m = db.Services.Where(s => s.ServiceTypeID == ServiceTypeID);
+
+        return View(m);
     }
 }
