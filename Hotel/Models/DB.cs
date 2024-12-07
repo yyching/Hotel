@@ -140,7 +140,7 @@ public class Service
     [MaxLength(100)]
     public string ServiceName { get; set; }
     public double UnitPrice { get; set; }
-    public string ServiceImage { get; set; }
+    public string ServiceDescription { get; set; }
     public string Status { get; set; }
 
     // Foreign Key
