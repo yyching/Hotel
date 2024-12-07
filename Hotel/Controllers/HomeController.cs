@@ -11,8 +11,12 @@ public class HomeController : Controller
         this.db = db; 
     }
 
-    public IActionResult Index()
+    public IActionResult Index(string? ServiceTypeID)
     {
-        return View();
+        ViewBag.ServiceTypes = db.ServiceTypes;
+
+        var m = db.Services.Where(s => s.ServiceTypeID == ServiceTypeID);
+
+        return View(m);
     }
 }

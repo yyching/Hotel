@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<Service>
+
+@{
     Layout = "_Layout";
     ViewBag.Title = "EASYSTAYS";
 }
@@ -106,6 +108,21 @@
         <a href="#" data-section="lunch">LUNCH</a>
         <a href="#" data-section="dinner">DINNER</a>
     </nav>
+
+    @foreach (var p in ViewBag.ServiceTypes)
+    {
+        <a href="?ServiceTypeID=@p.ServiceTypeID">@p.ServiceTypeName</a>
+    }
+
+    @foreach (var s in Model)
+    {
+        <div class="menu-item">
+            <div class="price">RM @s.UnitPrice</div>
+            <h3 class="item-title">@s.ServiceName</h3>
+            <p class="item-description">@s.ServiceName</p>
+        </div>
+    }
+
 
     <section id="breakfast" class="menu-section">
         <h2>BREAKFAST</h2>
