@@ -12,12 +12,8 @@ public class RoomDetailsController : Controller
         this.db = db;
     }
 
-    public IActionResult RoomDetailsPage(string? ServiceTypeID)
+    public IActionResult RoomDetailsPage()
     {
-        ViewBag.ServiceTypes = db.ServiceTypes;
-
-        var m = db.Services.Where(s => s.ServiceTypeID == ServiceTypeID);
-
-        return View(m);
+        return View();
     }
 }
