@@ -5,7 +5,7 @@
     ViewBag.Title = "EASYSTAYS";
 }
 <link rel="stylesheet" href="/css/Index.css" asp-append-version="true">
-<script src="/js/HomePage.js" defer></script>
+@* <script src="/js/HomePage.js" defer></script> *@
 
 <!-- Booking Section -->
 <section class="booking-section">
@@ -104,15 +104,11 @@
     <p>Discover a delightful selection of dishes carefully crafted to suit every meal of the day, whether you're looking for a hearty breakfast, a satisfying lunch, or a delicious dinner.</p>
 
     <nav class="menu-nav">
-        <a href="#" data-section="breakfast">BREAKFAST</a>
-        <a href="#" data-section="lunch">LUNCH</a>
-        <a href="#" data-section="dinner">DINNER</a>
+        @foreach (var p in ViewBag.ServiceTypes)
+        {
+            <a href="?ServiceTypeID=@p.ServiceTypeID">@p.ServiceTypeName</a>
+        }
     </nav>
-
-    @foreach (var p in ViewBag.ServiceTypes)
-    {
-        <a href="?ServiceTypeID=@p.ServiceTypeID">@p.ServiceTypeName</a>
-    }
 
     @foreach (var s in Model)
     {
@@ -123,113 +119,8 @@
         </div>
     }
 
-
-    <section id="breakfast" class="menu-section">
-        <h2>BREAKFAST</h2>
-        <div class="menu-grid">
-            <div class="menu-item">
-                <div class="price">RM12.00</div>
-                <h3 class="item-title">Classic Omelette</h3>
-                <p class="item-description">Fluffy eggs filled with cheese, fresh vegetables, and herbs, served with toast.</p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM15.00</div>
-                <h3 class="item-title">Pancake Stack</h3>
-                <p class="item-description">Golden pancakes drizzled with maple syrup and served with seasonal fruits.</p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM10.00</div>
-                <h3 class="item-title">Avocado Toast</h3>
-                <p class="item-description">Fresh avocado spread on toasted sourdough, topped with chili flakes and lemon.</p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM14.00</div>
-                <h3 class="item-title">Breakfast Burrito</h3>
-                <p class="item-description">Scrambled eggs, sausage, and cheese wrapped in a warm tortilla.</p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM13.00</div>
-                <h3 class="item-title">French Toast</h3>
-                <p class="item-description">Thick slices of bread dipped in a vanilla custard and grilled to perfection.</p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM16.00</div>
-                <h3 class="item-title">Granola Bowl</h3>
-                <p class="item-description">Crunchy granola with yogurt, honey, and fresh fruits.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="lunch" class="menu-section">
-        <h2>LUNCH</h2>
-        <div class="menu-grid">
-            <div class="menu-item">
-                <div class="price">RM18.00</div>
-                <h3 class="item-title">Grilled Chicken Salad</h3>
-                <p class="item-description">Grilled chicken breast on a bed of mixed greens, with balsamic dressing.</p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM22.00</div>
-                <h3 class="item-title">Club Sandwich</h3>
-                <p class="item-description">Layered sandwich with turkey, bacon, lettuce, tomato, and mayo, served with fries.</p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM25.00</div>
-                <h3 class="item-title">Seafood Pasta</h3>
-                <p class="item-description">Al dente pasta tossed with fresh seafood in a light garlic sauce.</p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM20.00</div>
-                <h3 class="item-title">Veggie Burger</h3>
-                <p class="item-description">Plant-based burger patty with lettuce, tomato, and special sauce, served with fries.</p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM19.00</div>
-                <h3 class="item-title">Tom Yum Soup</h3>
-                <p class="item-description">Spicy and sour Thai soup with shrimp, mushrooms, and fragrant herbs.</p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM18.00</div>
-                <h3 class="item-title">Quiche Lorraine</h3>
-                <p class="item-description">Savory tart filled with eggs, cream, bacon, and cheese.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="dinner" class="menu-section">
-        <h2>DINNER</h2>
-        <div class="menu-grid">
-            <div class="menu-item">
-                <div class="price">RM30.00</div>
-                <h3 class="item-title">Grilled Salmon</h3>
-                <p class="item-description">Fresh salmon fillet grilled to perfection, served with steamed vegetables.</p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM28.00</div>
-                <h3 class="item-title">Beef Steak</h3>
-                <p class="item-description">Juicy ribeye steak cooked to your liking, served with roasted potatoes and sauce.</p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM20.00</div>
-                <h3 class="item-title">Vegetarian Stir-Fry</h3>
-                <p class="item-description">Crispy vegetables stir-fried in a savory soy-based sauce, served with rice.</p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM35.00</div>
-                <h3 class="item-title">Roast Lamb</h3>
-                <p class="item-description">Slow-cooked lamb with garlic, rosemary, and a side of mashed potatoes.</p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM26.00</div>
-                <h3 class="item-title">Shrimp Scampi</h3>
-                <p class="item-description">Juicy shrimp sautéed in garlic butter, served with pasta or rice.</p>
-            </div>
-            <div class="menu-item">
-                <div class="price">RM32.00</div>
-                <h3 class="item-title">Duck Breast</h3>
-                <p class="item-description">Seared duck breast served with a berry reduction and seasonal vegetables.</p>
-            </div>
-        </div>
+    <section class="menu-section">
+       
     </section>
 </div>
 
