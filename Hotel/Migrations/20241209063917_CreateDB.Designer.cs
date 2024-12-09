@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.Migrations
 {
     [DbContext(typeof(DB))]
-    [Migration("20241205150313_CreateDB")]
+    [Migration("20241209063917_CreateDB")]
     partial class CreateDB
     {
         /// <inheritdoc />
@@ -179,7 +179,11 @@ namespace Hotel.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<string>("ServiceImage")
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ServiceDescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -188,9 +192,9 @@ namespace Hotel.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("ServiceTypeID")
+                    b.Property<string>("ServiceType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -200,8 +204,6 @@ namespace Hotel.Migrations
                         .HasColumnType("float");
 
                     b.HasKey("ServiceID");
-
-                    b.HasIndex("ServiceTypeID");
 
                     b.ToTable("Services");
                 });
@@ -224,26 +226,6 @@ namespace Hotel.Migrations
                     b.HasIndex("ServiceID");
 
                     b.ToTable("ServiceBooking");
-                });
-
-            modelBuilder.Entity("Hotel.Models.ServiceType", b =>
-                {
-                    b.Property<string>("ServiceTypeID")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("ServiceTypeName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ServiceTypeID");
-
-                    b.ToTable("ServiceTypes");
                 });
 
             modelBuilder.Entity("Hotel.Models.User", b =>
@@ -337,17 +319,6 @@ namespace Hotel.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Hotel.Models.Service", b =>
-                {
-                    b.HasOne("Hotel.Models.ServiceType", "ServiceType")
-                        .WithMany("Services")
-                        .HasForeignKey("ServiceTypeID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ServiceType");
-                });
-
             modelBuilder.Entity("Hotel.Models.ServiceBooking", b =>
                 {
                     b.HasOne("Hotel.Models.Service", "Service")
@@ -367,11 +338,6 @@ namespace Hotel.Migrations
             modelBuilder.Entity("Hotel.Models.Room", b =>
                 {
                     b.Navigation("Bookings");
-                });
-
-            modelBuilder.Entity("Hotel.Models.ServiceType", b =>
-                {
-                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("Hotel.Models.User", b =>

@@ -33,16 +33,20 @@ namespace Hotel.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ServiceTypes",
+                name: "Services",
                 columns: table => new
                 {
-                    ServiceTypeID = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    ServiceTypeName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    ServiceID = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    ServiceName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    UnitPrice = table.Column<double>(type: "float", nullable: false),
+                    ServiceDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ServiceType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Category = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServiceTypes", x => x.ServiceTypeID);
+                    table.PrimaryKey("PK_Services", x => x.ServiceID);
                 });
 
             migrationBuilder.CreateTable(
@@ -84,24 +88,21 @@ namespace Hotel.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Services",
+                name: "ServiceBooking",
                 columns: table => new
                 {
-                    ServiceID = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    ServiceName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    UnitPrice = table.Column<double>(type: "float", nullable: false),
-                    ServiceImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ServiceTypeID = table.Column<string>(type: "nvarchar(10)", nullable: false)
+                    ServiceBookingID = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Qty = table.Column<int>(type: "int", nullable: false),
+                    ServiceID = table.Column<string>(type: "nvarchar(10)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Services", x => x.ServiceID);
+                    table.PrimaryKey("PK_ServiceBooking", x => x.ServiceBookingID);
                     table.ForeignKey(
-                        name: "FK_Services_ServiceTypes_ServiceTypeID",
-                        column: x => x.ServiceTypeID,
-                        principalTable: "ServiceTypes",
-                        principalColumn: "ServiceTypeID",
+                        name: "FK_ServiceBooking_Services_ServiceID",
+                        column: x => x.ServiceID,
+                        principalTable: "Services",
+                        principalColumn: "ServiceID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -124,25 +125,6 @@ namespace Hotel.Migrations
                         column: x => x.UserID,
                         principalTable: "Users",
                         principalColumn: "UserID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ServiceBooking",
-                columns: table => new
-                {
-                    ServiceBookingID = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Qty = table.Column<int>(type: "int", nullable: false),
-                    ServiceID = table.Column<string>(type: "nvarchar(10)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ServiceBooking", x => x.ServiceBookingID);
-                    table.ForeignKey(
-                        name: "FK_ServiceBooking_Services_ServiceID",
-                        column: x => x.ServiceID,
-                        principalTable: "Services",
-                        principalColumn: "ServiceID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -210,11 +192,6 @@ namespace Hotel.Migrations
                 name: "IX_ServiceBooking_ServiceID",
                 table: "ServiceBooking",
                 column: "ServiceID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Services_ServiceTypeID",
-                table: "Services",
-                column: "ServiceTypeID");
         }
 
         /// <inheritdoc />
@@ -240,9 +217,6 @@ namespace Hotel.Migrations
 
             migrationBuilder.DropTable(
                 name: "Services");
-
-            migrationBuilder.DropTable(
-                name: "ServiceTypes");
         }
     }
 }

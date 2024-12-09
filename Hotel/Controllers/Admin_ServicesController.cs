@@ -14,7 +14,7 @@ namespace Hotel.Controllers
 
         public IActionResult Services()
         {
-            var m = db.Services.Include(sr => sr.ServiceType);
+            var m = db.Services;
 
             return View(m);
         }

@@ -14,7 +14,6 @@ public class DB : DbContext
     public DbSet<Room> Rooms { get; set; }
     public DbSet<Review> Reviews { get; set; }
     public DbSet<Booking> Bookings { get; set; }
-    public DbSet<ServiceType> ServiceTypes { get; set; }
     public DbSet<Service> Services { get; set; }
     public DbSet<ServiceBooking> ServiceBooking { get; set; }
 }
@@ -119,19 +118,6 @@ public class Booking
     public ServiceBooking ServiceBooking { get; set; }
 }
 
-public class ServiceType
-{
-    // Column
-    [Key, MaxLength(10)]
-    public string ServiceTypeID { get; set; }
-    [MaxLength(50)]
-    public string ServiceTypeName { get; set; }
-    public string Status { get; set; }
-
-    // Navigation
-    public List<Service> Services { get; set; }
-}
-
 public class Service
 {
     // Column
@@ -141,13 +127,9 @@ public class Service
     public string ServiceName { get; set; }
     public double UnitPrice { get; set; }
     public string ServiceDescription { get; set; }
+    public string ServiceType { get; set; }
+    public string Category { get; set; }
     public string Status { get; set; }
-
-    // Foreign Key
-    public string ServiceTypeID { get; set; }
-
-    // Navigation
-    public ServiceType ServiceType { get; set; }
 }
 
 public class ServiceBooking 
