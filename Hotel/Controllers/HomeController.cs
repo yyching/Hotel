@@ -24,4 +24,24 @@ public class HomeController : Controller
     {
         return View();
     }
+
+    public IActionResult Account()
+    {
+        return View();
+    }
+
+    public IActionResult CPassword()
+    {
+        return View();
+    }
+
+    public IActionResult RoomDetailsPage()
+    {
+        return View();
+    }
+
+    public IActionResult RoomPage()
+    {
+        return View();
+    }
 }
