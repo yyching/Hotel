@@ -1,0 +1,34 @@
+﻿@model RegisterVM
+
+<div class="title">Signup</div>
+<form method="post">
+    <div class="input-boxes">
+        <div class="input-box">
+            <i class="fas fa-user"></i>
+            <input asp-for="Name">
+            <span asp-validation-for="Name"></span>
+        </div>
+        <div class="input-box">
+            <i class="fas fa-envelope"></i>
+            <input asp-for="Email" autofocus>
+            <span asp-validation-for="Email"></span>
+        </div>
+        <div class="input-box">
+            <i class="fas fa-envelope"></i>
+            <input asp-for="PhoneNumber" autofocus>
+            <span asp-validation-for="PhoneNumber"></span>
+        </div>
+        <div class="input-box">
+            <i class="fas fa-lock"></i>
+            <input asp-for="Password">
+            <span asp-validation-for="Password"></span>
+        </div>
+        <div class="input-box">
+            <i class="fas fa-lock"></i>
+            <input asp-for="Confirm">
+            <span asp-validation-for="Confirm"></span>
+        </div>
+        <button class="button input-box">Login</button>
+        <div class="text sign-up-text">Already have an account? <label for="flip">Login now</label></div>
+    </div>
+</form>

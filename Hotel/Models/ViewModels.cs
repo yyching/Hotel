@@ -40,7 +40,9 @@ public class RegisterVM
     [StringLength(100)]
     public string Name { get; set; }
 
-    public IFormFile Photo { get; set; }
+    [StringLength(11, MinimumLength = 10)]
+    [RegularExpression(@"^\d{10,11}$")]
+    public string? PhoneNumber { get; set; }
 }
 
 public class UpdatePasswordVM

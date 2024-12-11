@@ -22,6 +22,11 @@ namespace Hotel.Controllers
             return View();
         }
 
+        public IActionResult _Login()
+        {
+            return View();
+        }
+
         // POST: Account/Login
         [HttpPost]
         public IActionResult Login(LoginVM vm, string? returnURL)
@@ -64,14 +69,14 @@ namespace Hotel.Controllers
         }
 
         // GET: Account/Register
-        public IActionResult Register()
+        public IActionResult _Register()
         {
             return View();
         }
 
         // POST: Account/Register
         [HttpPost]
-        public IActionResult Register(RegisterVM vm)
+        public IActionResult _Register(RegisterVM vm)
         {
             if (ModelState.IsValid("Email") &&
                 db.Users.Any(u => u.Email == vm.Email))
@@ -79,15 +84,30 @@ namespace Hotel.Controllers
                 ModelState.AddModelError("Email", "Duplicated Email.");
             }
 
-            if (ModelState.IsValid("Photo"))
-            {
-                var err = hp.ValidatePhoto(vm.Photo);
-                if (err != "") ModelState.AddModelError("Photo", err);
-            }
-
             if (ModelState.IsValid)
             {
-                // Insert member
+                // Generate random UserID in the format USR000
+                var random = new Random();
+                string newUserID = "USR" + random.Next(100, 999).ToString();
+
+                // Ensure the random UserID is unique
+                while (db.Users.Any(u => u.UserID == newUserID))
+                {
+                    newUserID = "USR" + random.Next(100, 999).ToString();
+                }
+
+                // Insert new member
+                db.Users.Add(new()
+                {
+                    UserID = newUserID,
+                    Name = vm.Name,
+                    Email = vm.Email,
+                    Password = vm.Password,
+                    PhoneNumber = vm.PhoneNumber,
+                    Role = "Member",
+                    Status = "Active",
+                    UserImage = null
+                });
 
                 db.SaveChanges();
 
