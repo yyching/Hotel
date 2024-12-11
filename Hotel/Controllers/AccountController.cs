@@ -98,6 +98,7 @@ namespace Hotel.Controllers
             return View(vm);
         }
 
+        // Account/Profile
         [Authorize]
         [Authorize(Roles = "Member")]
         public IActionResult Profile()
@@ -140,7 +141,12 @@ namespace Hotel.Controllers
 
                 if (vm.Photo != null)
                 {
-                    hp.DeletePhoto(m.UserImage, "photos");
+                    // Delete old photo if it exists
+                    if (!string.IsNullOrEmpty(m.UserImage))
+                    {
+                        hp.DeletePhoto(m.UserImage, "photos");
+                    }
+
                     m.UserImage = hp.SavePhoto(vm.Photo, "photos");
                 }
 
