@@ -22,6 +22,7 @@ namespace Hotel.Controllers
             return View();
         }
 
+
         public IActionResult _Login()
         {
             return View();
