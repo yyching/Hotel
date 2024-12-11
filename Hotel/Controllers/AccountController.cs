@@ -135,6 +135,8 @@ namespace Hotel.Controllers
             if (ModelState.IsValid)
             {
                 m.Name = vm.Name;
+                m.Email = vm.Email;
+                m.PhoneNumber = vm.PhoneNumber;
 
                 if (vm.Photo != null)
                 {
@@ -148,7 +150,9 @@ namespace Hotel.Controllers
                 return RedirectToAction();
             }
 
+            vm.Name = m.Name;
             vm.Email = m.Email;
+            vm.PhoneNumber = m.PhoneNumber;
             vm.UserImage = m.UserImage;
             return View(vm);
         }

@@ -88,35 +88,29 @@ public class Helper
     public void SignIn(string email, string role, bool rememberMe)
     {
         // (1) Claim, identity and principal
-        // TODO
         List<Claim> claims = 
         [
             new(ClaimTypes.Name, email),
             new(ClaimTypes.Role, role),
         ];
 
-        // TODO
         ClaimsIdentity identity = new(claims, "Cookies");
 
-        // TODO
         ClaimsPrincipal principal = new(identity);
 
         // (2) Remember me (authentication properties)
-        // TODO
         AuthenticationProperties properties = new()
         {
             IsPersistent = rememberMe,
         };
 
         // (3) Sign in
-        // TODO
         ct.HttpContext.SignInAsync(principal, properties);
     }
 
     public void SignOut()
     {
         // Sign out
-        // TODO
         ct.HttpContext.SignOutAsync();
     }
 

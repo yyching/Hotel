@@ -17,7 +17,7 @@
     </aside>
     <main class="content">
         <h2>My Profile</h2>
-        <form class="profile-content">
+        <form class="profile-content" method="post">
             <div class="profile-form">
                 <div class="form-group">
                     <label asp-for="Name"></label>
@@ -40,10 +40,10 @@
             <div class="profile-picture">
                 <label asp-for="Photo"></label>
                 <label class="upload">
-                    <input asp-for="Photo" accept="image/jpeg,image/png" type="file" hidden>
+                    <input asp-for="Photo" accept="image/jpeg,image/png" hidden>
                     <img src="/photos/@Model.UserImage" class="picture-placeholder">
                 </label>
-                <span asp-validation-for="Photo" class="text-danger"></span>
+                <span asp-validation-for="Photo"></span>
             </div>
         </form>
     </main>
