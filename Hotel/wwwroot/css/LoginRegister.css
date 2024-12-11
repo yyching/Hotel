@@ -176,12 +176,12 @@
     width: calc(100% / 2 - 25px);
 }
 
-.forms .form-content .title {
-    position: relative;
-    font-size: 24px;
-    font-weight: 500;
-    color: #333;
-}
+    .forms .form-content .title {
+        position: relative;
+        font-size: 24px;
+        font-weight: 500;
+        color: #333;
+    }
 
     .forms .form-content .title:before {
         content: '';
