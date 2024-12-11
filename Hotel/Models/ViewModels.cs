@@ -23,9 +23,16 @@ public class LoginVM
 public class RegisterVM
 {
     [StringLength(100)]
+    public string Name { get; set; }
+
+    [StringLength(100)]
     [EmailAddress]
     [Remote("CheckEmail", "Account", ErrorMessage = "Duplicated {0}.")]
     public string Email { get; set; }
+
+    [StringLength(11, MinimumLength = 10)]
+    [RegularExpression(@"^\d{10,11}$")]
+    public string? PhoneNumber { get; set; }
 
     [StringLength(100, MinimumLength = 5)]
     [DataType(DataType.Password)]
@@ -36,13 +43,6 @@ public class RegisterVM
     [DataType(DataType.Password)]
     [Display(Name = "Confirm Password")]
     public string Confirm { get; set; }
-
-    [StringLength(100)]
-    public string Name { get; set; }
-
-    [StringLength(11, MinimumLength = 10)]
-    [RegularExpression(@"^\d{10,11}$")]
-    public string? PhoneNumber { get; set; }
 }
 
 public class UpdatePasswordVM

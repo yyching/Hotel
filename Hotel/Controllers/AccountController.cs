@@ -70,14 +70,14 @@ namespace Hotel.Controllers
         }
 
         // GET: Account/Register
-        public IActionResult _Register()
+        public IActionResult Register()
         {
             return View();
         }
 
         // POST: Account/Register
         [HttpPost]
-        public IActionResult _Register(RegisterVM vm)
+        public IActionResult Register(RegisterVM vm)
         {
             if (ModelState.IsValid("Email") &&
                 db.Users.Any(u => u.Email == vm.Email))
