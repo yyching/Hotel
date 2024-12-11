@@ -99,9 +99,58 @@ namespace Hotel.Controllers
         }
 
         [Authorize]
+        [Authorize(Roles = "Member")]
         public IActionResult Profile()
         {
-            return View();
+            // Get member record based on email (PK)
+            var m = db.Users.FirstOrDefault(u => u.Email == User.Identity!.Name);
+            if (m == null) return RedirectToAction("Index", "Home");
+
+            var vm = new UpdateProfileVM
+            {
+                Email = m.Email,
+                Name = m.Name,
+                PhoneNumber = m.PhoneNumber,
+                UserImage = m.UserImage,
+            };
+
+            return View(vm);
+        }
+
+        // POST: Account/UpdateProfile
+        [Authorize(Roles = "Member")]
+        [HttpPost]
+        public IActionResult Profile(UpdateProfileVM vm)
+        {
+            // Get member record based on email (PK)
+            var m = db.Users.FirstOrDefault(u => u.Email == User.Identity!.Name);
+            if (m == null) return RedirectToAction("Index", "Home");
+
+            if (vm.Photo != null)
+            {
+                var err = hp.ValidatePhoto(vm.Photo);
+                if (err != "") ModelState.AddModelError("Photo", err);
+            }
+
+            if (ModelState.IsValid)
+            {
+                m.Name = vm.Name;
+
+                if (vm.Photo != null)
+                {
+                    hp.DeletePhoto(m.UserImage, "photos");
+                    m.UserImage = hp.SavePhoto(vm.Photo, "photos");
+                }
+
+                db.SaveChanges();
+
+                TempData["Info"] = "Profile updated.";
+                return RedirectToAction();
+            }
+
+            vm.Email = m.Email;
+            vm.UserImage = m.UserImage;
+            return View(vm);
         }
 
         [Authorize]

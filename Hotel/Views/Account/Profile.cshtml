@@ -1,4 +1,6 @@
-﻿@{
+﻿@model UpdateProfileVM
+
+@{
     Layout = "_Layout2";
     ViewBag.Title = "Profile";
 }
@@ -15,45 +17,34 @@
     </aside>
     <main class="content">
         <h2>My Profile</h2>
-        <div class="profile-content">
-            <form class="profile-form">
+        <form class="profile-content">
+            <div class="profile-form">
                 <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" value="raynoldtai123" disabled>
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" autofocus>
+                    <span asp-validation-for="Name"></span>
                 </div>
                 <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" placeholder="Enter your name">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" autofocus>
+                    <span asp-validation-for="Email"></span>
                 </div>
                 <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" value="">
+                    <label asp-for="PhoneNumber"></label>
+                    <input asp-for="PhoneNumber" autofocus>
+                    <span asp-validation-for="PhoneNumber"></span>
                 </div>
-                <div class="form-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="text" id="phone" value="********33">
-                </div>
-                <div class="form-group">
-                    <label for="dob">Birthday</label>
-                    <div class="dob">
-                        <select id="day">
-                            <option value="">Day</option>
-                        </select>
-                        <select id="month">
-                            <option value="">Month</option>
-                        </select>
-                        <select id="year">
-                            <option value="">Year</option>
-                        </select>
-                    </div>
-                </div>
-                <button type="submit" class="save-btn">Save</button>
-            </form>
-            <div class="profile-picture">
-                <div class="picture-placeholder">D</div>
-                <button>Choose Picture</button>
-                <p>File size: Max 1MB<br>File format: JPEG, PNG</p>
+                <button class="save-btn">Save</button>
             </div>
-        </div>
+
+            <div class="profile-picture">
+                <label asp-for="Photo"></label>
+                <label class="upload">
+                    <input asp-for="Photo" accept="image/jpeg,image/png" type="file" hidden>
+                    <img src="/photos/@Model.UserImage" class="picture-placeholder">
+                </label>
+                <span asp-validation-for="Photo" class="text-danger"></span>
+            </div>
+        </form>
     </main>
 </div>

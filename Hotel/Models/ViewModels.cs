@@ -64,12 +64,18 @@ public class UpdatePasswordVM
 
 public class UpdateProfileVM
 {
-    public string? Email { get; set; }
+    [StringLength(100)]
+    public string? Name { get; set; }
 
     [StringLength(100)]
-    public string Name { get; set; }
+    [EmailAddress]
+    public string? Email { get; set; }
 
-    public string? PhotoURL { get; set; }
+    [StringLength(11, MinimumLength = 10)]
+    [RegularExpression(@"^\d{10,11}$")]
+    public string? PhoneNumber { get; set; }
+
+    public string? UserImage { get; set; }
 
     public IFormFile? Photo { get; set; }
 }
