@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Hotel.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateDb : Migration
+    public partial class CreateDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,7 +22,6 @@ namespace Hotel.Migrations
                     Capacity = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Bed = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Services = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PricePerNight = table.Column<double>(type: "float", nullable: false),
                     RoomImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false)

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.Migrations
 {
     [DbContext(typeof(DB))]
-    [Migration("20241212154034_CreateDb")]
-    partial class CreateDb
+    [Migration("20241212183038_CreateDB")]
+    partial class CreateDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -92,10 +92,6 @@ namespace Hotel.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("RoomImage")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Services")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
