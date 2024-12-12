@@ -11,9 +11,14 @@
                 <div class="col-md-12">
                     <div class="overview-wrap">
                         <h2 class="title-1">@ViewBag.Title</h2>
-                        <button class="au-btn au-btn-icon au-btn--blue">
-                            <i class="zmdi zmdi-plus"></i>add item
-                        </button>
+                        <div>
+                            <a class="au-btn au-btn-icon au-btn--blue" href="/Admin/AddRoomCategory">
+                                <i class="zmdi zmdi-plus"></i>add item
+                            </a>
+                            <a class="au-btn au-btn-icon au-btn--green">
+                                <i class="zmdi zmdi-plus"></i>Import
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -47,8 +52,15 @@
                     <td>@ct.PricePerNight</td>
                     <td>@ct.Status</td>
                     <td>
-                        <button class="btn btn-primary btn-sm">Edit</button>
-                        <button class="btn btn-danger btn-sm">Terminate</button>
+                        <button data-get="/Admin/UpdateRoomCategory/@ct.CategoryID" class="btn btn-primary btn-sm">Edit</button>
+                        @if (ct.Status == "Active")
+                        {
+                            <button data-post="/Admin/TerminateRoomCategory/@ct.CategoryID" class="btn btn-danger btn-sm">Terminate</button>
+                        }
+                        else if (ct.Status == "Terminate")
+                        {
+                            <button data-post="/Admin/ActivateRoomCategory/@ct.CategoryID" class="btn btn-success btn-sm">Activate</button>
+                        }
                     </td>
                 </tr>
             }

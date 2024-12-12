@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Hotel.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateDB : Migration
+    public partial class CreateDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,7 +15,7 @@ namespace Hotel.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    CategoryID = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    CategoryID = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CategoryName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Theme = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Size = table.Column<int>(type: "int", nullable: false),
@@ -36,7 +36,7 @@ namespace Hotel.Migrations
                 name: "Services",
                 columns: table => new
                 {
-                    ServiceID = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    ServiceID = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     ServiceName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     UnitPrice = table.Column<double>(type: "float", nullable: false),
                     ServiceDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -53,7 +53,7 @@ namespace Hotel.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    UserID = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    UserID = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -71,10 +71,10 @@ namespace Hotel.Migrations
                 name: "Rooms",
                 columns: table => new
                 {
-                    RoomID = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    RoomID = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     RoomNumber = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Status = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    CategoryID = table.Column<string>(type: "nvarchar(10)", nullable: false)
+                    CategoryID = table.Column<string>(type: "nvarchar(100)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -91,9 +91,9 @@ namespace Hotel.Migrations
                 name: "ServiceBooking",
                 columns: table => new
                 {
-                    ServiceBookingID = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    ServiceBookingID = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Qty = table.Column<int>(type: "int", nullable: false),
-                    ServiceID = table.Column<string>(type: "nvarchar(10)", nullable: false)
+                    ServiceID = table.Column<string>(type: "nvarchar(100)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -110,12 +110,12 @@ namespace Hotel.Migrations
                 name: "Reviews",
                 columns: table => new
                 {
-                    ReviewID = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    ReviewID = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     RatingValue = table.Column<int>(type: "int", nullable: false),
                     ReviewText = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ReviewDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserID = table.Column<string>(type: "nvarchar(10)", nullable: false)
+                    UserID = table.Column<string>(type: "nvarchar(100)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -132,14 +132,14 @@ namespace Hotel.Migrations
                 name: "Bookings",
                 columns: table => new
                 {
-                    BookingID = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    BookingID = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     BookingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CheckInDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CheckOutDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalAmount = table.Column<double>(type: "float", nullable: false),
-                    UserID = table.Column<string>(type: "nvarchar(10)", nullable: false),
-                    RoomID = table.Column<string>(type: "nvarchar(10)", nullable: false),
-                    ServiceBookingID = table.Column<string>(type: "nvarchar(10)", nullable: true)
+                    UserID = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    RoomID = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    ServiceBookingID = table.Column<string>(type: "nvarchar(100)", nullable: true)
                 },
                 constraints: table =>
                 {

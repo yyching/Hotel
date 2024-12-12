@@ -1,0 +1,69 @@
+﻿@model AddRoomCategoryVM
+
+@{
+    Layout = "_NavigationBar";
+    ViewBag.Title = "Add Room Category";
+}
+
+<link href="/css/_Insert.css" rel="stylesheet" asp-append-version="true" />
+
+<div class="container">
+    <h1>Add Room Category</h1>
+    <form method="post" class="form" enctype="multipart/form-data">
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="categoryName">Category Name</label>
+                <input asp-for="categoryName" placeholder="Enter Category Name" required>
+                <span asp-validation-for="categoryName"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="theme">Theme</label>
+                <input asp-for="theme" placeholder="Enter Theme">
+                <span asp-validation-for="theme"></span>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="size">Size</label>
+                <input asp-for="size" placeholder="Enter Size in Sq Ft">
+                <span asp-validation-for="size"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="capacity">Capacity</label>
+                <input asp-for="capacity" placeholder="Enter Capacity">
+                <span asp-validation-for="capacity"></span>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="bed">Bed Type</label>
+                <input asp-for="bed" placeholder="Enter Bed Type">
+                <span asp-validation-for="bed"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="price">Price (Per Night)</label>
+                <input asp-for="price" placeholder="Enter Price" required>
+                <span asp-validation-for="price"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-group">
+                <label asp-for="description">Desciption</label>
+                <input asp-for="description" placeholder="Enter Description">
+                <span asp-validation-for="description"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Photo"></label>
+            <label class="upload">
+                <input asp-for="Photo" accept="image/jpeg,image/png" hidden>
+                <img src="/images/photo.jpg" class="picture-placeholder">
+            </label>
+            <span asp-validation-for="Photo"></span>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">Add Category</button>
+            <button type="reset" class="btn-reset">Reset</button>
+        </div>
+    </form>
+</div>
