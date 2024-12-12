@@ -89,3 +89,37 @@ public class SendEmailVM
     [EmailAddress]
     public string Email { get; set; }
 }
+
+public class AddRoomCategoryVM 
+{
+    [StringLength(100)]
+    public string categoryName { get; set; }
+    [StringLength(100)]
+    public string theme { get; set; }
+    public int size { get; set; }
+    [StringLength(100)]
+    public string capacity { get; set; }
+    [StringLength(100)]
+    public string bed { get; set; }
+    public double price { get; set; }
+    public string description { get; set; }
+    public IFormFile? Photo { get; set; }
+}
+
+public class UpdateRoomCategoryVM
+{
+    public string categoryID { get; set; }
+    [StringLength(100)]
+    public string categoryName { get; set; }
+    [StringLength(100)]
+    public string theme { get; set; }
+    public int size { get; set; }
+    [StringLength(100)]
+    public string capacity { get; set; }
+    [StringLength(100)]
+    public string bed { get; set; }
+    public double price { get; set; }
+    public string description { get; set; }
+    public string? roomImage { get; set; }
+    public IFormFile? Photo { get; set; }
+}

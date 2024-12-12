@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.Migrations
 {
     [DbContext(typeof(DB))]
-    [Migration("20241210051816_CreateDB")]
-    partial class CreateDB
+    [Migration("20241212154034_CreateDb")]
+    partial class CreateDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,8 +28,8 @@ namespace Hotel.Migrations
             modelBuilder.Entity("Hotel.Models.Booking", b =>
                 {
                     b.Property<string>("BookingID")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime>("BookingDate")
                         .HasColumnType("datetime2");
@@ -42,17 +42,17 @@ namespace Hotel.Migrations
 
                     b.Property<string>("RoomID")
                         .IsRequired()
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ServiceBookingID")
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<double>("TotalAmount")
                         .HasColumnType("float");
 
                     b.Property<string>("UserID")
                         .IsRequired()
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("BookingID");
 
@@ -68,8 +68,8 @@ namespace Hotel.Migrations
             modelBuilder.Entity("Hotel.Models.Category", b =>
                 {
                     b.Property<string>("CategoryID")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Bed")
                         .IsRequired()
@@ -118,8 +118,8 @@ namespace Hotel.Migrations
             modelBuilder.Entity("Hotel.Models.Review", b =>
                 {
                     b.Property<string>("ReviewID")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("RatingValue")
                         .HasColumnType("int");
@@ -137,7 +137,7 @@ namespace Hotel.Migrations
 
                     b.Property<string>("UserID")
                         .IsRequired()
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("ReviewID");
 
@@ -149,12 +149,12 @@ namespace Hotel.Migrations
             modelBuilder.Entity("Hotel.Models.Room", b =>
                 {
                     b.Property<string>("RoomID")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("CategoryID")
                         .IsRequired()
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("RoomNumber")
                         .IsRequired()
@@ -176,8 +176,8 @@ namespace Hotel.Migrations
             modelBuilder.Entity("Hotel.Models.Service", b =>
                 {
                     b.Property<string>("ServiceID")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Category")
                         .IsRequired()
@@ -211,15 +211,15 @@ namespace Hotel.Migrations
             modelBuilder.Entity("Hotel.Models.ServiceBooking", b =>
                 {
                     b.Property<string>("ServiceBookingID")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("Qty")
                         .HasColumnType("int");
 
                     b.Property<string>("ServiceID")
                         .IsRequired()
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("ServiceBookingID");
 
@@ -231,8 +231,8 @@ namespace Hotel.Migrations
             modelBuilder.Entity("Hotel.Models.User", b =>
                 {
                     b.Property<string>("UserID")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Email")
                         .IsRequired()
