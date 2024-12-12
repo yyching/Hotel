@@ -41,11 +41,6 @@ namespace Hotel.Controllers
                 ModelState.AddModelError("", "Login credentials not matched.");
             }
 
-            if (u.UserID == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             if (ModelState.IsValid)
             {
                 TempData["Info"] = "Login successfully.";
