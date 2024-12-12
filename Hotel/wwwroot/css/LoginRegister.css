@@ -8,6 +8,11 @@
     font-family: "Poppins", sans-serif;
 }
 
+body {
+    background-image: url('../img/HomePage/login_img.jpg');
+    background-size: cover;
+}
+
 /* Header Section */
 .navbar {
     position: relative;
@@ -74,7 +79,7 @@
     background: #fff;
     border: 2px solid #ddd;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 3px;
+    padding: 1px;
 }
 
     /* Form box styles */
@@ -95,7 +100,7 @@
 
 .login .form-details {
     padding: 0 40px;
-    background-color: black;
+    background-color: #4d4d4d;
     background-position: center;
     background-size: cover;
 }

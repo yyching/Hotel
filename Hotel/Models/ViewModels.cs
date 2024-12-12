@@ -83,7 +83,7 @@ public class UpdateProfileVM
     public IFormFile? Photo { get; set; }
 }
 
-public class ResetPasswordVM
+public class SendEmailVM
 {
     [StringLength(100)]
     [EmailAddress]

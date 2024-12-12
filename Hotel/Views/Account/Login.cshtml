@@ -16,16 +16,16 @@
             <h2>LOGIN</h2>
             <form method="post">
                 <div class="input-field">
-                    <input asp-for="Email" autofocus />
+                    <input asp-for="Email" />
                     <span asp-validation-for="Email"></span>
-                    <label>Email</label>
+                    <label asp-for="Email"></label>
                 </div>
                 <div class="input-field">
                     <input asp-for="Password" />
                     <span asp-validation-for="Password"></span>
-                    <label>Password</label>
+                    <label asp-for="Password"></label>
                 </div>
-                <a href="SEmail" class="forgot-pass-link">Forgot password?</a>
+                <a href="SendEmail" class="forgot-pass-link">Forgot password?</a>
                 <button type="submit">Log In</button>
             </form>
             <div class="bottom-link">

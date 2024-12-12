@@ -13,4 +13,14 @@ public static class Extensions
     {
         return ms.GetFieldValidationState(key) == ModelValidationState.Valid;
     }
+
+    public static DateOnly ToDateOnly(this DateTime dt)
+    {
+        return DateOnly.FromDateTime(dt);
+    }
+
+    public static TimeOnly ToTimeOnly(this DateTime dt)
+    {
+        return TimeOnly.FromDateTime(dt);
+    }
 }

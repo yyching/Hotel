@@ -1,4 +1,8 @@
-﻿using System.Reflection;
+﻿using System.Net.Mail;
+using System.Reflection;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,13 +21,9 @@ namespace Hotel.Controllers
             this.hp = hp;
         }
 
+
+        // GET: Account/Login
         public IActionResult Login()
-        {
-            return View();
-        }
-
-
-        public IActionResult _Login()
         {
             return View();
         }
@@ -32,7 +32,7 @@ namespace Hotel.Controllers
         [HttpPost]
         public IActionResult Login(LoginVM vm, string? returnURL)
         {
-            // (1) Get user (admin or member) record based on email (PK)
+            // (1) Get user record based on email
             var u = db.Users.FirstOrDefault(user => user.Email == vm.Email);
 
             // (2) Custom validation -> verify password
@@ -41,12 +41,17 @@ namespace Hotel.Controllers
                 ModelState.AddModelError("", "Login credentials not matched.");
             }
 
+            if (u.UserID == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             if (ModelState.IsValid)
             {
                 TempData["Info"] = "Login successfully.";
 
                 // (3) Sign in
-                hp.SignIn(u!.Email, u.Role, vm.RememberMe);
+                hp.SignIn(u!.Email, u.Role, vm.RememberMe, u.UserID);
 
                 // (4) Handle return URL
                 if (string.IsNullOrEmpty(returnURL))
@@ -130,8 +135,11 @@ namespace Hotel.Controllers
         [Authorize(Roles = "Member")]
         public IActionResult Profile()
         {
-            // Get member record based on email (PK)
-            var m = db.Users.FirstOrDefault(u => u.Email == User.Identity!.Name);
+            var userId = User.FindFirst("UserID")?.Value;
+            if (string.IsNullOrEmpty(userId)) return RedirectToAction("Index", "Home");
+
+            // Get member record based on UserID
+            var m = db.Users.FirstOrDefault(u => u.UserID == userId);
             if (m == null) return RedirectToAction("Index", "Home");
 
             var vm = new UpdateProfileVM
@@ -150,7 +158,6 @@ namespace Hotel.Controllers
         [HttpPost]
         public IActionResult Profile(UpdateProfileVM vm)
         {
-            // Get member record based on email (PK)
             var m = db.Users.FirstOrDefault(u => u.Email == User.Identity!.Name);
             if (m == null) return RedirectToAction("Index", "Home");
 
@@ -201,7 +208,6 @@ namespace Hotel.Controllers
         [HttpPost]
         public IActionResult UpdatePassword(UpdatePasswordVM vm)
         {
-            // Get user (admin or member) record based on email (PK)
             var u = db.Users.Find(User.Identity!.Name);
             if (u == null) return RedirectToAction("Index", "Home");
 
@@ -224,14 +230,80 @@ namespace Hotel.Controllers
             return View();
         }
 
-        public IActionResult RPassword()
+        // GET Account/SendEmail
+        public IActionResult SendEmail()
         {
             return View();
         }
 
-        public IActionResult SEmail()
+        // POST Account/SendEmail
+        [HttpPost]
+        public IActionResult SendEmail(SendEmailVM vm)
+        {
+            var u = db.Users.SingleOrDefault(user => user.Email == vm.Email);
+
+            if (u == null)
+            {
+                ModelState.AddModelError("Email", "Email not found.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                // Send reset password email
+                SendResetPasswordEmail(u);
+
+                TempData["Info"] = $"Password reset. Check your email.";
+                return RedirectToAction();
+            }
+
+            return View();
+        }
+
+        private void SendResetPasswordEmail(User u)
+        {
+            var mail = new MailMessage();
+            mail.To.Add(new MailAddress(u.Email, u.Name));
+            mail.Subject = "Reset Password";
+            mail.IsBodyHtml = true;
+
+            var url = Url.Action("ResetPassword", "Account", null, "https");
+
+            // Generate File Path
+            string path;
+            if (u.UserImage == "")
+            {
+                path = Path.Combine(en.WebRootPath, "img/HomePage", "LOGO.jpg");
+            }
+            else
+            {
+                // Default or other roles (adjust as necessary)
+                path = Path.Combine(en.WebRootPath, "photos", u.UserImage);
+            }
+
+            var att = new Attachment(path);
+            mail.Attachments.Add(att);
+            att.ContentId = "photo";
+
+            mail.Body = $@"
+            <img src='cid:photo' style='width: 200px; height: 200px;
+                                        border: 1px solid #333'>
+            <p>Dear {u.Name},<p>
+            <p>Your password has been reset to:</p>
+            <p>
+                Please <a href='{url}'>ResetPassword</a>
+                with your new password.
+            </p>
+            <p>From, 🐱 Super Admin</p>
+        ";
+
+            hp.SendEmail(mail);
+        }
+
+        public IActionResult ResetPassword()
         {
             return View();
         }
+
+
     }
 }

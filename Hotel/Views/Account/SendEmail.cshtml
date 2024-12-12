@@ -1,4 +1,6 @@
-﻿@{
+﻿@model SendEmailVM
+
+@{
     Layout = "_Layout2";
     ViewBag.Title = "Login";
 }
@@ -14,8 +16,9 @@
             <h2>RESET PASSWORD</h2>
             <form method="post">
                 <div class="input-field">
-
-                    <label>Email</label>
+                    <input asp-for="Email"/>
+                    <span asp-validation-for="Email"></span>
+                    <label asp-for="Email"></label>
                 </div>
                 <button type="submit">Submit</button>
             </form>
