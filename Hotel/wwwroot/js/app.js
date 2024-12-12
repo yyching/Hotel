@@ -51,7 +51,7 @@ $('[data-uncheck]').on('click', e => {
 // Row checkable (AJAX-supported)
 $(document).on('click', '[data-checkable]', e => {
     if ($(e.target).is(':input,a')) return;
-
+    
     $(e.currentTarget)
         .find(':checkbox')
         .prop('checked', (i, v) => !v);

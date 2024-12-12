@@ -103,7 +103,7 @@ namespace Hotel.Controllers
                     UserID = newUserID,
                     Name = vm.Name,
                     Email = vm.Email,
-                    Password = vm.Password,
+                    Password = hp.HashPassword(vm.Password),
                     PhoneNumber = vm.PhoneNumber,
                     Role = "Member",
                     Status = "Active",

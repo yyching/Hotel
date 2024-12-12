@@ -2,62 +2,35 @@
 
 @{
     Layout = "_Layout2";
-    ViewBag.Title = "LoginRegister";
+    ViewBag.Title = "Login";
 }
 <link rel="stylesheet" href="/css/LoginRegister.css" asp-append-version="true">
 
-<div class="main-container">
-
-    <div class="container">
-        <input type="checkbox" id="flip">
-        <div class="cover">
-            <div class="front">
-                <img src="images/frontImg.jpg" alt="">
-                <div class="text">
-                    <span class="text-1">Every new friend is a <br> new adventure</span>
-                    <span class="text-2">Let's get connected</span>
-                </div>
-            </div>
-            <div class="back">
-                <div class="text">
-                    <span class="text-1">Complete miles of journey <br> with one step</span>
-                    <span class="text-2">Let's get started</span>
-                </div>
-            </div>
+<div class="form-popup">
+    <div class="form-box login">
+        <div class="form-details">
+            <h2>Welcome Back</h2>
+            <p>Please log in using your personal information to stay connected with us.</p>
         </div>
-        <div class="forms">
-            <div class="form-content">
-                <div class="login-form">
-                    <div class="title">Login</div>
-                    <form method="post">
-                        <div class="input-boxes">
-                            <div class="input-box">
-                                <i class="fas fa-envelope"></i>
-                                <input asp-for="Email" autofocus />
-                                <span asp-validation-for="Email"></span>
-                            </div>
-                            <div class="input-box">
-                                <i class="fas fa-lock"></i>
-                                <input asp-for="Password" />
-                                <span asp-validation-for="Password"></span>
-                            </div>
-                            <div class="text">
-                                <input asp-for="RememberMe" /> Remember Me
-                            </div>
-                            <div class="text">
-                                <a href="#">Forgot password?</a>
-                            </div>
-
-                            <button class="button input-box">Login</button>
-                            <div class="text sign-up-text">
-                                Don't have an account? <label for="flip">Sign up now</label>
-                            </div>
-                        </div>
-                    </form>
+        <div class="form-content">
+            <h2>LOGIN</h2>
+            <form method="post">
+                <div class="input-field">
+                    <input asp-for="Email" autofocus />
+                    <span asp-validation-for="Email"></span>
+                    <label>Email</label>
                 </div>
-                <div class="signup-form">
-                    <partial name="Register">
+                <div class="input-field">
+                    <input asp-for="Password" />
+                    <span asp-validation-for="Password"></span>
+                    <label>Password</label>
                 </div>
+                <a href="SEmail" class="forgot-pass-link">Forgot password?</a>
+                <button type="submit">Log In</button>
+            </form>
+            <div class="bottom-link">
+                Don't have an account?
+                <a href="Register" id="signup-link">Signup</a>
             </div>
         </div>
     </div>

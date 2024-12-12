@@ -32,6 +32,7 @@ public class RegisterVM
 
     [StringLength(11, MinimumLength = 10)]
     [RegularExpression(@"^\d{10,11}$")]
+    [Display(Name = "Phone Number")]
     public string? PhoneNumber { get; set; }
 
     [StringLength(100, MinimumLength = 5)]
@@ -42,7 +43,7 @@ public class RegisterVM
     [Compare("Password")]
     [DataType(DataType.Password)]
     [Display(Name = "Confirm Password")]
-    public string Confirm { get; set; }
+    public string ConfirmPassword { get; set; }
 }
 
 public class UpdatePasswordVM
