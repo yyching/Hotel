@@ -69,6 +69,12 @@ namespace Hotel.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        // GET: Account/CheckEmail
+        public bool CheckEmail(string email)
+        {
+            return !db.Users.Any(u => u.Email == email);
+        }
+
         // GET: Account/Register
         public IActionResult Register()
         {
@@ -107,7 +113,7 @@ namespace Hotel.Controllers
                     PhoneNumber = vm.PhoneNumber,
                     Role = "Member",
                     Status = "Active",
-                    UserImage = null
+                    UserImage = ""
                 });
 
                 db.SaveChanges();
