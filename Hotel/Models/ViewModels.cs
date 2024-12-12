@@ -63,6 +63,9 @@ public class UpdatePasswordVM
     [DataType(DataType.Password)]
     [Display(Name = "Confirm Password")]
     public string Confirm { get; set; }
+
+    public string? UserImage { get; set; }
+    public string Name { get; set; }
 }
 
 public class UpdateProfileVM

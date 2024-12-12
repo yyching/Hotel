@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Hotel.Models;
 
 namespace Hotel.Controllers
 {
@@ -153,7 +154,11 @@ namespace Hotel.Controllers
         [HttpPost]
         public IActionResult Profile(UpdateProfileVM vm)
         {
-            var m = db.Users.FirstOrDefault(u => u.Email == User.Identity!.Name);
+            var userId = User.FindFirst("UserID")?.Value;
+            if (string.IsNullOrEmpty(userId)) return RedirectToAction("Index", "Home");
+
+            // Get member record based on UserID
+            var m = db.Users.FirstOrDefault(u => u.UserID == userId);
             if (m == null) return RedirectToAction("Index", "Home");
 
             if (vm.Photo != null)
@@ -195,7 +200,21 @@ namespace Hotel.Controllers
         [Authorize]
         public IActionResult UpdatePassword()
         {
-            return View();
+            var userId = User.FindFirst("UserID")?.Value;
+            if (string.IsNullOrEmpty(userId)) return RedirectToAction("Index", "Home");
+
+            // Get member record based on UserID
+            var m = db.Users.FirstOrDefault(u => u.UserID == userId);
+            if (m == null) return RedirectToAction("Index", "Home");
+
+            var vm = new UpdatePasswordVM
+            {
+                Name = m.Name, // User's name from the database
+                UserImage = m.UserImage // User's image (path) from the database
+            };
+
+            // Pass the ViewModel to the view
+            return View(vm);
         }
 
         // POST: Account/UpdatePassword
@@ -203,11 +222,15 @@ namespace Hotel.Controllers
         [HttpPost]
         public IActionResult UpdatePassword(UpdatePasswordVM vm)
         {
-            var u = db.Users.Find(User.Identity!.Name);
-            if (u == null) return RedirectToAction("Index", "Home");
+            var userId = User.FindFirst("UserID")?.Value;
+            if (string.IsNullOrEmpty(userId)) return RedirectToAction("Index", "Home");
+
+            // Get member record based on UserID
+            var m = db.Users.FirstOrDefault(u => u.UserID == userId);
+            if (m == null) return RedirectToAction("Index", "Home");
 
             // If current password not matched
-            if (!hp.VerifyPassword(u.Password, vm.Current))
+            if (!hp.VerifyPassword(m.Password, vm.Current))
             {
                 ModelState.AddModelError("Current", "Current Password not matched.");
             }
@@ -215,7 +238,7 @@ namespace Hotel.Controllers
             if (!ModelState.IsValid)
             {
                 // Update user password (hash)
-                u.Password = hp.HashPassword(vm.New);
+                m.Password = hp.HashPassword(vm.New);
                 db.SaveChanges();
 
                 TempData["Info"] = "Password updated.";
