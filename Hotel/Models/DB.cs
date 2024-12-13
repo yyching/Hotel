@@ -144,12 +144,16 @@ public class Service
     public string ServiceType { get; set; }
     public string Category { get; set; }
     public string Status { get; set; }
+
+    // Navigation Properties
+    public List<ServiceBooking> ServiceBookings { get; set; }
 }
 
 public class ServiceBooking 
 {
     // Column
-    [Key, MaxLength(100)]
+    public string ID { get; set; }
+    [MaxLength(100)]
     public string ServiceBookingID { get; set; }
     public int Qty { get; set; }
 

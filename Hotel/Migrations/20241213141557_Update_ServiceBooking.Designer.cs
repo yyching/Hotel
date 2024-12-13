@@ -4,6 +4,7 @@ using Hotel.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.Migrations
 {
     [DbContext(typeof(DB))]
-    partial class DBModelSnapshot : ModelSnapshot
+    [Migration("20241213141557_Update_ServiceBooking")]
+    partial class Update_ServiceBooking
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,7 +45,7 @@ namespace Hotel.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ServiceBookingID")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<double>("TotalAmount")
                         .HasColumnType("float");
@@ -203,22 +206,18 @@ namespace Hotel.Migrations
 
             modelBuilder.Entity("Hotel.Models.ServiceBooking", b =>
                 {
-                    b.Property<string>("ID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("ServiceBookingID")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("Qty")
                         .HasColumnType("int");
-
-                    b.Property<string>("ServiceBookingID")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ServiceID")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("ID");
+                    b.HasKey("ServiceBookingID");
 
                     b.HasIndex("ServiceID");
 
