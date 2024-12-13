@@ -15,6 +15,7 @@
     @RenderSection("head", false)
 </head>
 <body>
+    <div class="info">@Html.Raw(TempData["Info"])</div>
     <aside class="menu-sidebar d-none d-lg-block">
         <div class="logo">
             <a href="/Admin/Dashboard">

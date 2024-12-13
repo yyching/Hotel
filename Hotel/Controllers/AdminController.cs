@@ -221,6 +221,12 @@ public class AdminController : Controller
         return View(m);
     }
 
+    // Room - Add | Get
+    public IActionResult AddRoom()
+    {
+        return View();
+    }
+
     // Service
     public IActionResult Services()
     {

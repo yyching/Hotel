@@ -76,3 +76,40 @@ $('.upload input').on('change', e => {
     // Trigger input validation
     $(e.target).valid();
 });
+
+// Dropdown
+(function ($) {
+    try {
+        var menu = $('.js-item-menu');
+        var subMenuIsShowed = -1;
+
+        // Toggle Dropdown
+        menu.on('click', function (e) {
+            e.preventDefault();
+            $('.js-right-sidebar').removeClass("show-sidebar");
+
+            if (menu.index(this) === subMenuIsShowed) {
+                $(this).toggleClass('show-dropdown');
+                subMenuIsShowed = -1;
+            } else {
+                menu.removeClass("show-dropdown");
+                $(this).addClass('show-dropdown');
+                subMenuIsShowed = menu.index(this);
+            }
+        });
+
+        // Prevent propagation on dropdown clicks
+        $(".js-item-menu, .js-dropdown").click(function (event) {
+            event.stopPropagation();
+        });
+
+        // Close dropdowns on body click
+        $("body,html").on("click", function () {
+            menu.removeClass("show-dropdown");
+            subMenuIsShowed = -1;
+        });
+
+    } catch (error) {
+        console.error("An error occurred in dropdown handling:", error);
+    }
+})(jQuery);

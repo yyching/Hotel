@@ -11,6 +11,7 @@
 h1 {
     color: #333;
     margin-bottom: 40px;
+    margin-top: 20px;
 }
 
 .form {
@@ -118,4 +119,27 @@ button {
     height: 100%;
     opacity: 0;
     cursor: pointer;
+}
+
+.title-cancel {
+    display : flex;
+    justify-content: space-between;
+}
+
+.cancel-button {
+    top: 10px !important;
+    left: 10px !important;
+    background: none !important;
+    border: none !important;
+    font-size: 24px !important;
+    cursor: pointer !important;
+    transition: color 0.3s !important;
+    margin-bottom: 40px !important;
+    margin-top: 20px !important;
+    text-decoration: none !important;
+    color: black !important;
+}
+
+.cancel-button:hover {
+    color: #4CAF50 !important;
 }

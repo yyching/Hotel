@@ -126,3 +126,6 @@ public class UpdateRoomCategoryVM
     public string? roomImage { get; set; }
     public IFormFile? Photo { get; set; }
 }
+
+public class AddRoomVM { 
+}
