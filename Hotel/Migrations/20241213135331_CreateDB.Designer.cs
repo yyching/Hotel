@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.Migrations
 {
     [DbContext(typeof(DB))]
-    [Migration("20241212183038_CreateDB")]
+    [Migration("20241213135331_CreateDB")]
     partial class CreateDB
     {
         /// <inheritdoc />
@@ -224,6 +224,25 @@ namespace Hotel.Migrations
                     b.ToTable("ServiceBooking");
                 });
 
+            modelBuilder.Entity("Hotel.Models.Token", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("Expire")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserID")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tokens");
+                });
+
             modelBuilder.Entity("Hotel.Models.User", b =>
                 {
                     b.Property<string>("UserID")
@@ -259,11 +278,16 @@ namespace Hotel.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("TokenId")
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("UserImage")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserID");
+
+                    b.HasIndex("TokenId");
 
                     b.ToTable("Users");
                 });
@@ -326,6 +350,13 @@ namespace Hotel.Migrations
                     b.Navigation("Service");
                 });
 
+            modelBuilder.Entity("Hotel.Models.User", b =>
+                {
+                    b.HasOne("Hotel.Models.Token", null)
+                        .WithMany("user")
+                        .HasForeignKey("TokenId");
+                });
+
             modelBuilder.Entity("Hotel.Models.Category", b =>
                 {
                     b.Navigation("Rooms");
@@ -334,6 +365,11 @@ namespace Hotel.Migrations
             modelBuilder.Entity("Hotel.Models.Room", b =>
                 {
                     b.Navigation("Bookings");
+                });
+
+            modelBuilder.Entity("Hotel.Models.Token", b =>
+                {
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("Hotel.Models.User", b =>
