@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,7 @@ public class DB : DbContext
 
     // DbSets for each entity
     public DbSet<User> Users { get; set; }
+    public DbSet<Token> Tokens { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Room> Rooms { get; set; }
     public DbSet<Review> Reviews { get; set; }
@@ -39,6 +41,19 @@ public class User
     // Navigation
     public List<Review> Reviews { get; set; }
     public List<Booking> Bookings { get; set; }
+}
+
+public class Token
+{
+    [Key, MaxLength(100)]
+    public string Id { get; set; }
+    public DateTime Expire { get; set; }
+    
+    // Foreign Key
+    public string UserID { get; set; }
+
+    // Navigation
+    public User user { get; set; }
 }
 
 public class Category
