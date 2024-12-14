@@ -146,7 +146,6 @@ public class Helper
 
     public void SendEmail(MailMessage mail)
     {
-        // TODO
         string user = cf["Smtp:User"] ?? "";
         string pass = cf["Smtp:Pass"] ?? "";
         string name = cf["Smtp:Name"] ?? "";

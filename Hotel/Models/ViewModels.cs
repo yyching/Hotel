@@ -93,6 +93,22 @@ public class SendEmailVM
     public string Email { get; set; }
 }
 
+public class ResetPasswordVM
+{
+    public string Token { get; set; }
+
+    [StringLength(100, MinimumLength = 5)]
+    [DataType(DataType.Password)]
+    [Display(Name = "New Password")]
+    public string NewPassword { get; set; }
+
+    [StringLength(100, MinimumLength = 5)]
+    [Compare("NewPassword")]
+    [DataType(DataType.Password)]
+    [Display(Name = "Confirm Password")]
+    public string ConfirmPassword { get; set; }
+}
+
 public class AddRoomCategoryVM 
 {
     [StringLength(100)]

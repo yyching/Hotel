@@ -197,6 +197,7 @@ namespace Hotel.Controllers
             return View(vm);
         }
 
+        // GET: Account/UpdatePassword
         [Authorize]
         public IActionResult UpdatePassword()
         {
@@ -209,11 +210,10 @@ namespace Hotel.Controllers
 
             var vm = new UpdatePasswordVM
             {
-                Name = m.Name, // User's name from the database
-                UserImage = m.UserImage // User's image (path) from the database
+                Name = m.Name,
+                UserImage = m.UserImage
             };
 
-            // Pass the ViewModel to the view
             return View(vm);
         }
 
@@ -279,49 +279,87 @@ namespace Hotel.Controllers
 
         private void SendResetPasswordEmail(User u)
         {
+            // Generate a unique token
+            string token = Guid.NewGuid().ToString();
+
+            // Save the token in the database
+            var tokenExpireTime = DateTime.UtcNow.AddHours(1); // Token valid for 1 hour
+            db.Tokens.Add(new Token
+            {
+                Id = token,
+                UserID = u.UserID,
+                Expire = tokenExpireTime
+            });
+            db.SaveChanges();
+
+            // Generate the reset URL with the token
+            var resetUrl = Url.Action("ResetPassword", "Account", new { token }, Request.Scheme);
+
+            // Create the email message
             var mail = new MailMessage();
             mail.To.Add(new MailAddress(u.Email, u.Name));
-            mail.Subject = "Reset Password";
+            mail.Subject = "Reset Your Password";
             mail.IsBodyHtml = true;
-
-            var url = Url.Action("ResetPassword", "Account", null, "https");
-
-            // Generate File Path
-            string path;
-            if (u.UserImage == "")
-            {
-                path = Path.Combine(en.WebRootPath, "img/HomePage", "LOGO.jpg");
-            }
-            else
-            {
-                // Default or other roles (adjust as necessary)
-                path = Path.Combine(en.WebRootPath, "photos", u.UserImage);
-            }
-
-            var att = new Attachment(path);
-            mail.Attachments.Add(att);
-            att.ContentId = "photo";
-
             mail.Body = $@"
-            <img src='cid:photo' style='width: 200px; height: 200px;
-                                        border: 1px solid #333'>
-            <p>Dear {u.Name},<p>
-            <p>Your password has been reset to:</p>
-            <p>
-                Please <a href='{url}'>ResetPassword</a>
-                with your new password.
-            </p>
-            <p>From, 🐱 Super Admin</p>
-        ";
+            <p>Dear {u.Name},</p>
+            <p>You requested to reset your password. Please click the link below to reset your password:</p>
+            <p><a href='{resetUrl}'>Reset Password</a></p>
+            <p>If you did not request this, please ignore this email.</p>
+            <p>Best regards,<br>EASYSTAYS HOTEL</p>
+            ";
 
+            // Send the email
             hp.SendEmail(mail);
         }
 
-        public IActionResult ResetPassword()
+        // GET: Account/ResetPassword
+        public IActionResult ResetPassword(string token)
         {
-            return View();
+            var tokenEntry = db.Tokens.SingleOrDefault(t => t.Id == token);
+
+            if (tokenEntry == null || tokenEntry.Expire < DateTime.UtcNow)
+            {
+                // Token is invalid or expired
+                TempData["Info"] = $"Invalid or expired token.";
+                return RedirectToAction("SendEmail");
+            }
+
+            // Show the reset password form
+            return View(new ResetPasswordVM { Token = token });
         }
 
+        // POST: Account/ResetPassword
+        [HttpPost]
+        public IActionResult ResetPassword(ResetPasswordVM vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(vm);
+            }
 
+            var tokenEntry = db.Tokens.SingleOrDefault(t => t.Id == vm.Token);
+
+            if (tokenEntry == null || tokenEntry.Expire < DateTime.UtcNow)
+            {
+                // Token is invalid or expired
+                return BadRequest("Invalid or expired token.");
+            }
+
+            // Find the user by the token's UserID
+            var user = db.Users.SingleOrDefault(u => u.UserID == tokenEntry.UserID);
+
+            if (user != null)
+            {
+                // Update the user's password
+                user.Password = hp.HashPassword(vm.NewPassword);
+                db.SaveChanges();
+
+                // Remove the used token
+                db.Tokens.Remove(tokenEntry);
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("Login");
+        }
     }
 }
