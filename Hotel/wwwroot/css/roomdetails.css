@@ -199,14 +199,6 @@ html {
             text-decoration: underline;
         }
 
-.menu-section {
-    display: none;
-}
-
-    .menu-section.active {
-        display: block;
-    }
-
 .menu-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
