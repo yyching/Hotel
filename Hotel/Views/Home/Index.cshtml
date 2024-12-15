@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Service>
+﻿@model HomePageVM
 
 @{
     Layout = "_Layout";
@@ -113,7 +113,7 @@
     <section class="menu-section">
         <h2>@ViewBag.SelectedCategory</h2>
         <div class="menu-grid">
-            @foreach (var s in Model)
+            @foreach (var s in Model.FoodServices)
             {
                 <div class="menu-item">
                     <div class="price">RM @s.UnitPrice</div>
@@ -128,141 +128,25 @@
 
 <!---Room-->
 <div class="room-grid">
-    <div class="room-card">
-        <div class="room-image" style="background-image: url('/img/HomePage/RoomImg/single.jpg')"></div>
-        <div class="room-overlay">
-            <h2 class="room-title">Single Room</h2>
-            <div class="room-price">199$/Pernight</div>
+    @foreach (var room in Model.Rooms)
+    {
+        <div class="room-card">
+            <div class="room-image" style="background-image: url('/uploads/@room.RoomImage')"></div>
+            <div class="room-overlay">
+                <h2 class="room-title">@room.CategoryName</h2>
+                <div class="room-price">RM @room.PricePerNight/Pernight</div>
+            </div>
+            <div class="room-details">
+                <h2 class="room-title">@room.CategoryName</h2>
+                <div class="room-price">RM @room.PricePerNight/Pernight</div>
+                <div class="detail-item">Size: @room.Size ft</div>
+                <div class="detail-item">Capacity: Max person @room.Capacity</div>
+                <div class="detail-item">Bed: @room.Bed</div>
+                <div class="detail-item">Services: @room.Description</div>
+                <a href="/Home/RoomPage" class="more-details">MORE DETAILS</a>
+            </div>
         </div>
-        <div class="room-details">
-            <h2 class="room-title">Single Room</h2>
-            <div class="room-price">199$/Pernight</div>
-            <div class="detail-item">Size: 25 ft</div>
-            <div class="detail-item">Capacity: Max person 1</div>
-            <div class="detail-item">Bed: Double Bed</div>
-            <div class="detail-item">Services: Wifi, Television, Bathroom</div>
-            <a href="/Home/RoomPage" class="more-details" target="_blank">MORE DETAILS</a>
-        </div>
-    </div>
-
-    <div class="room-card">
-        <div class="room-image" style="background-image: url('/img/HomePage/RoomImg/double.jpg')"></div>
-        <div class="room-overlay">
-            <h2 class="room-title">Double Room</h2>
-            <div class="room-price">159$/Pernight</div>
-        </div>
-        <div class="room-details">
-            <h2 class="room-title">Double Room</h2>
-            <div class="room-price">159$/Pernight</div>
-            <div class="detail-item">Size: 30 ft</div>
-            <div class="detail-item">Capacity: Max person 2</div>
-            <div class="detail-item">Bed: King Beds</div>
-            <div class="detail-item">Services: Wifi, Television, Bathroom</div>
-            <a href="/Home/RoomPage" class="more-details" target="_blank">MORE DETAILS</a>
-        </div>
-    </div>
-
-    <div class="room-card">
-        <div class="room-image" style="background-image: url('/img/HomePage/RoomImg/family.jpg')"></div>
-        <div class="room-overlay">
-            <h2 class="room-title">Family Room</h2>
-            <div class="room-price">198$/Pernight</div>
-        </div>
-        <div class="room-details">
-            <h2 class="room-title">Family Room</h2>
-            <div class="room-price">198$/Pernight</div>
-            <div class="detail-item">Size: 35 ft</div>
-            <div class="detail-item">Capacity: Max person 5</div>
-            <div class="detail-item">Bed: Queen Bed</div>
-            <div class="detail-item">Services: Wifi, Television, Bathroom, Mini Bar</div>
-            <a href="/Home/RoomPage" class="more-details" target="_blank">MORE DETAILS</a>
-        </div>
-    </div>
-
-    <div class="room-card">
-        <div class="room-image" style="background-image: url('/img/HomePage/RoomImg/Premium\ King.jpg')"></div>
-        <div class="room-overlay">
-            <h2 class="room-title">Premium King Room</h2>
-            <div class="room-price">299$/Pernight</div>
-        </div>
-        <div class="room-details">
-            <h2 class="room-title">Premium King Room</h2>
-            <div class="room-price">299$/Pernight</div>
-            <div class="detail-item">Size: 45 ft</div>
-            <div class="detail-item">Capacity: Max person 6</div>
-            <div class="detail-item">Bed: King Bed + 2 Single Beds</div>
-            <div class="detail-item">Services: Wifi, Television, Bathroom, Mini Bar, Balcony</div>
-            <a href="/Home/RoomPage" class="more-details" target="_blank">MORE DETAILS</a>
-        </div>
-    </div>
-
-    <div class="room-card">
-        <div class="room-image" style="background-image: url('/img/HomePage/RoomImg/single_nature.jpg')"></div>
-        <div class="room-overlay">
-            <h2 class="room-title">Single Room</h2>
-            <div class="room-price">199$/Pernight</div>
-        </div>
-        <div class="room-details">
-            <h2 class="room-title">Single Room</h2>
-            <div class="room-price">199$/Pernight</div>
-            <div class="detail-item">Size: 25 ft</div>
-            <div class="detail-item">Capacity: Max person 1</div>
-            <div class="detail-item">Bed: Double Bed</div>
-            <div class="detail-item">Services: Wifi, Television, Bathroom</div>
-            <a href="/Home/RoomPage" class="more-details" target="_blank">MORE DETAILS</a>
-        </div>
-    </div>
-
-    <div class="room-card">
-        <div class="room-image" style="background-image: url('/img/HomePage/RoomImg/double_nature.jpg')"></div>
-        <div class="room-overlay">
-            <h2 class="room-title">Double Room</h2>
-            <div class="room-price">159$/Pernight</div>
-        </div>
-        <div class="room-details">
-            <h2 class="room-title">Double Room</h2>
-            <div class="room-price">159$/Pernight</div>
-            <div class="detail-item">Size: 30 ft</div>
-            <div class="detail-item">Capacity: Max person 2</div>
-            <div class="detail-item">Bed: King Beds</div>
-            <div class="detail-item">Services: Wifi, Television, Bathroom</div>
-            <a href="/Home/RoomPage" class="more-details" target="_blank">MORE DETAILS</a>
-        </div>
-    </div>
-
-    <div class="room-card">
-        <div class="room-image" style="background-image: url('/img/HomePage/RoomImg/family_nature.jpg')"></div>
-        <div class="room-overlay">
-            <h2 class="room-title">Family Room</h2>
-            <div class="room-price">198$/Pernight</div>
-        </div>
-        <div class="room-details">
-            <h2 class="room-title">Family Room</h2>
-            <div class="room-price">198$/Pernight</div>
-            <div class="detail-item">Size: 35 ft</div>
-            <div class="detail-item">Capacity: Max person 5</div>
-            <div class="detail-item">Bed: Queen Bed</div>
-            <div class="detail-item">Services: Wifi, Television, Bathroom, Mini Bar</div>
-            <a href="/Home/RoomPage" class="more-details" target="_blank">MORE DETAILS</a>
-        </div>
-    </div>
-
-    <div class="room-card">
-        <div class="room-image" style="background-image: url('/img/HomePage/RoomImg/premingking_nature.jpg')"></div>
-        <div class="room-overlay">
-            <h2 class="room-title">Premium King Room</h2>
-            <div class="room-price">299$/Pernight</div>
-        </div>
-        <div class="room-details">
-            <h2 class="room-title">Premium King Room</h2>
-            <div class="room-price">299$/Pernight</div>
-            <div class="detail-item">Size: 45 ft</div>
-            <div class="detail-item">Capacity: Max person 6</div>
-            <div class="detail-item">Bed: King Bed + 2 Single Beds</div>
-            <div class="detail-item">Services: Wifi, Television, Bathroom, Mini Bar, Balcony</div>
-            <a href="/Home/RoomPage" class="more-details" target="_blank">MORE DETAILS</a>
-        </div>
-    </div>
+    }
 </div>
 
 <!-- Book Section -->

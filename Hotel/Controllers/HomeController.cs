@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Hotel.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hotel.Controllers;
 
@@ -34,7 +36,35 @@ public class HomeController : Controller
 
         ViewBag.SelectedCategory = Category ?? "Breakfast";
 
-        return View(foodServices);
+        //Get room from category
+        var rooms = db.Rooms
+        .Include(r => r.Category)
+        .Where(r => r.Status == "Active" && r.Category.Status == "Active")
+        .Select(r => new RoomViewModel
+        {
+            RoomID = r.RoomID,
+            RoomNumber = r.RoomNumber,
+            Status = r.Status,
+            CategoryID = r.CategoryID,
+            CategoryName = r.Category.CategoryName,
+            Theme = r.Category.Theme,
+            Size = r.Category.Size,
+            Capacity = r.Category.Capacity,
+            Bed = r.Category.Bed,
+            Description = r.Category.Description,
+            PricePerNight = r.Category.PricePerNight,
+            RoomImage = r.Category.RoomImage,
+            CategoryStatus = r.Category.Status
+        })
+        .ToList();
+
+        var viewModel = new HomePageVM
+        {
+            FoodServices = foodServices.ToList(),
+            Rooms = rooms
+        };
+
+        return View(viewModel);
     }
 
     public IActionResult RoomPage()
