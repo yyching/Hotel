@@ -1,0 +1,19 @@
+Service :
+SRV001	Classic Omelette	12.00	Fluffy eggs filled with cheese, fresh vegetables, and herbs, served with toast.	Food	Breakfast	Active
+SRV002	Pancake Stack	15.00	Golden pancakes drizzled with maple syrup and served with seasonal fruits.	Food	Breakfast	Active
+SRV003	Avocado Toast	10.00	Fresh avocado spread on toasted sourdough, topped with chili flakes and lemon.	Food	Breakfast	Active
+SRV004	Breakfast Burrito	14.00	Scrambled eggs, sausage, and cheese wrapped in a warm tortilla.	Food	Breakfast	Active
+SRV005	French Toast	13.00	Thick slices of bread dipped in a vanilla custard and grilled to perfection.	Food	Breakfast	Active
+SRV006	Granola Bowl	16.00	Crunchy granola with yogurt, honey, and fresh fruits.	Food	Breakfast	Active
+SRV007	Grilled Chicken Salad	18.00	Grilled chicken breast on a bed of mixed greens, with balsamic dressing.	Food	Lunch	Active
+SRV008	Club Sandwich	22.00	Layered sandwich with turkey, bacon, lettuce, tomato, and mayo, served with fries.	Food	Lunch	Active
+SRV009	Seafood Pasta	25.00	Al dente pasta tossed with fresh seafood in a light garlic sauce.	Food	Lunch	Active
+SRV010	Veggie Burger	20.00	Plant-based burger patty with lettuce, tomato, and special sauce, served with fries.	Food	Lunch	Active
+SRV011	Tom Yum Soup	19.00	Spicy and sour Thai soup with shrimp, mushrooms, and fragrant herbs.	Food	Lunch	Active
+SRV012	Quiche Lorraine	18.00	Savory tart filled with eggs, cream, bacon, and cheese.	Food	Lunch	Active
+SRV013	Grilled Salmon	30.00	Fresh salmon fillet grilled to perfection, served with steamed vegetables.	Food	Dinner	Active
+SRV014	Beef Steak	28.00	Juicy ribeye steak cooked to your liking, served with roasted potatoes and sauce.	Food	Dinner	Active
+SRV015	Vegetarian Stir-Fry	20.00	Crispy vegetables stir-fried in a savory soy-based sauce, served with rice.	Food	Dinner	Active
+SRV016	Roast Lamb	35.00	Slow-cooked lamb with garlic, rosemary, and a side of mashed potatoes.	Food	Dinner	Active
+SRV017	Shrimp Scampi	26.00	Juicy shrimp sautéed in garlic butter, served with pasta or rice.	Food	Dinner	Active
+SRV018	Duck Breast	32.00	Seared duck breast served with a berry reduction and seasonal vegetables.	Food	Dinner	Active
