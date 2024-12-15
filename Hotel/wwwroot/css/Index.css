@@ -184,7 +184,6 @@ select {
 }
 
 .menu-section {
-    display: none;
     padding: 30px;
     max-width: 850px;
     margin: 20px auto;

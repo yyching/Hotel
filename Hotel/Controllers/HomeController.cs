@@ -20,15 +20,17 @@ public class HomeController : Controller
     public IActionResult Index(string? Category)
     {
         ViewBag.ServiceTypes = db.Services
-        .Where(s => s.ServiceType == "Food") 
-        .Select(s => s.Category)            
-        .Distinct()                         
-        .ToList();
+       .Where(s => s.ServiceType == "Food")
+       .Select(s => s.Category)
+       .Distinct()
+       .ToList();
 
         // If no category is provided, default to "Breakfast"
         var services = string.IsNullOrEmpty(Category)
         ? db.Services.Where(s => s.Category == "Breakfast" && s.ServiceType == "Food")
         : db.Services.Where(s => s.Category == Category && s.ServiceType == "Food");
+
+        ViewBag.SelectedCategory = Category ?? "Breakfast";
 
         return View(services);
     }

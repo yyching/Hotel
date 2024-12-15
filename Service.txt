@@ -17,3 +17,6 @@ SRV015	Vegetarian Stir-Fry	20.00	Crispy vegetables stir-fried in a savory soy-ba
 SRV016	Roast Lamb	35.00	Slow-cooked lamb with garlic, rosemary, and a side of mashed potatoes.	Food	Dinner	Active
 SRV017	Shrimp Scampi	26.00	Juicy shrimp sautéed in garlic butter, served with pasta or rice.	Food	Dinner	Active
 SRV018	Duck Breast	32.00	Seared duck breast served with a berry reduction and seasonal vegetables.	Food	Dinner	Active
+SRV019	Extra Bed	50.00	-	Room	Room	Active
+SRV020	Extra Sheets	15.00	-	Room	Room	Active
+SRV021	Extra Pillows	10.00	-	Room	Room	Active
