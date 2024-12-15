@@ -103,21 +103,24 @@
     <h1>Our Food Menu</h1>
     <p>Discover a delightful selection of dishes carefully crafted to suit every meal of the day, whether you're looking for a hearty breakfast, a satisfying lunch, or a delicious dinner.</p>
 
-    @* <nav class="menu-nav"> *@
-    @*     @foreach (var p in ViewBag.ServiceTypes) *@
-    @*     { *@
-    @*         <a href="?ServiceTypeID=@p.ServiceTypeID">@p.ServiceTypeName</a> *@
-    @*     } *@
-    @* </nav> *@
+    <nav class="menu-nav">
+        @foreach (var category in ViewBag.ServiceTypes)
+        {
+            <a href="?Category=@category">@category</a>
+        }
+    </nav>
 
-    @* @foreach (var s in Model) *@
-    @* { *@
-    @*     <div class="menu-item"> *@
-    @*         <div class="price">RM @s.UnitPrice</div> *@
-    @*         <h3 class="item-title">@s.ServiceName</h3> *@
-    @*         <p class="item-description">@s.ServiceDescription</p> *@
-    @*     </div> *@
-    @* } *@
+    <div class="menu-items">
+        @foreach (var s in Model)
+        {
+            <div class="menu-item">
+                <div class="price">RM @s.UnitPrice</div>
+                <h3 class="item-title">@s.ServiceName</h3>
+                <p class="item-description">@s.ServiceDescription</p>
+            </div>
+        }
+    </div>
+
 
     <section class="menu-section">
        

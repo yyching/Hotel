@@ -96,36 +96,35 @@
     <input type="text" id="date-picker" placeholder="Select your Check-in and Check-out dates">
 
     <!-- Food Section -->
-    @* <div class="food-section"> *@
-    @*     <h1 class="hotel-booking">Our Food Menu</h1> *@
+    <div class="food-section">
+        <h1 class="hotel-booking">Our Food Menu</h1>
 
-    @*     <nav class="menu-nav"> *@
-    @*         @foreach (var p in ViewBag.ServiceTypes) *@
-    @*         { *@
-    @*             <a href="?ServiceTypeID=@p.ServiceTypeID">@p.ServiceTypeName</a> *@
-    @*         } *@
-    @*     </nav> *@
+        <nav class="menu-nav">
+            @foreach (var category in ViewBag.ServiceTypes)
+            {
+                <a href="?Category=@category">@category</a>
+            }
+        </nav>
 
-    @*     <section class="menu-section"> *@
-    @*         <h2>BREAKFAST</h2> *@
-    @*         <form class="menu-grid"> *@
-    @*             @foreach (var s in Model) *@
-    @*             { *@
-    @*                 <div class="menu-item"> *@
-    @*                     <input type="checkbox" id="classic-omelette" name="breakfast[]" value="Classic Omelette"> *@
-    @*                     <label for="classic-omelette"> *@
-    @*                         <div class="price">@s.UnitPrice</div> *@
-    @*                         <h3>@s.ServiceName</h3> *@
-    @*                     </label> *@
-    @*                     <div class="quantity-container"> *@
-    @*                         <label for="classic-omelette-qty">Qty:</label> *@
-    @*                         <input type="number" id="classic-omelette-qty" name="classic-omelette-qty" min="0" value="0"> *@
-    @*                     </div> *@
-    @*                 </div> *@
-    @*             } *@
-    @*         </form> *@
-    @*     </section> *@
-    @* </div> *@
+        <h2>@ViewBag.SelectedCategory</h2>
+
+        <form class="menu-grid">
+            @foreach (var s in Model)
+            {
+                <div class="menu-item">
+                    <input type="checkbox" id="classic-omelette" name="breakfast[]" value="Classic Omelette">
+                    <label for="classic-omelette">
+                        <div class="price">@s.UnitPrice</div>
+                        <h3>@s.ServiceName</h3>
+                    </label>
+                    <div class="quantity-container">
+                        <label for="classic-omelette-qty">Qty:</label>
+                        <input type="number" id="classic-omelette-qty" name="classic-omelette-qty" min="0" value="0">
+                    </div>
+                </div>
+            }
+        </form>
+    </div>
 
     <!-- Add-On Services Section -->
     <div class="addon-section">

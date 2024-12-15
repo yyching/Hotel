@@ -16,18 +16,21 @@ public class HomeController : Controller
         this.hp = hp;
     }
 
-    //public IActionResult Index(string? ServiceTypeID)
-    //{
-    //    ViewBag.ServiceTypes = db.ServiceTypes;
-
-    //    var m = db.Services.Where(s => s.ServiceTypeID == ServiceTypeID);
-
-    //    return View(m);
-    //}
-
-    public IActionResult Index()
+    // GET: HOMEPAGE
+    public IActionResult Index(string? Category)
     {
-        return View();
+        ViewBag.ServiceTypes = db.Services
+        .Where(s => s.ServiceType == "Food") 
+        .Select(s => s.Category)            
+        .Distinct()                         
+        .ToList();
+
+        // If no category is provided, default to "Breakfast"
+        var services = string.IsNullOrEmpty(Category)
+        ? db.Services.Where(s => s.Category == "Breakfast" && s.ServiceType == "Food")
+        : db.Services.Where(s => s.Category == Category && s.ServiceType == "Food");
+
+        return View(services);
     }
 
     public IActionResult RoomPage()
@@ -35,9 +38,23 @@ public class HomeController : Controller
         return View();
     }
 
+    // GET: ROOMDEATILS
     [Authorize(Roles = "Member")]
-    public IActionResult RoomDetailsPage()
+    public IActionResult RoomDetailsPage(string? Category)
     {
-        return View();
+        ViewBag.ServiceTypes = db.Services
+       .Where(s => s.ServiceType == "Food")
+       .Select(s => s.Category)
+       .Distinct()
+       .ToList();
+
+        // If no category is provided, default to "Breakfast"
+        var services = string.IsNullOrEmpty(Category)
+        ? db.Services.Where(s => s.Category == "Breakfast" && s.ServiceType == "Food")
+        : db.Services.Where(s => s.Category == Category && s.ServiceType == "Food");
+
+        ViewBag.SelectedCategory = Category ?? "Breakfast";
+
+        return View(services);
     }
 }
