@@ -6,7 +6,6 @@ namespace Hotel.Models;
 // View Models ----------------------------------------------------------------
 
 #nullable disable warnings
-
 public class LoginVM
 {
     [StringLength(100)]
@@ -107,6 +106,12 @@ public class ResetPasswordVM
     [DataType(DataType.Password)]
     [Display(Name = "Confirm Password")]
     public string ConfirmPassword { get; set; }
+}
+
+public class RoomDetailsVM
+{
+    public List<Service> FoodServices { get; set; }
+    public List<Service> RoomServices { get; set; }
 }
 
 public class AddRoomCategoryVM 

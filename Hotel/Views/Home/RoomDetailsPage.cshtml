@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Service>
+﻿@model RoomDetailsVM
 
 @{
     Layout = "_Layout2";
@@ -109,12 +109,12 @@
         <h2>@ViewBag.SelectedCategory</h2>
 
         <form class="menu-grid">
-            @foreach (var s in Model)
+            @foreach (var s in Model.FoodServices)
             {
                 <div class="menu-item">
                     <input type="checkbox" id="classic-omelette" name="breakfast[]" value="Classic Omelette">
                     <label for="classic-omelette">
-                        <div class="price">@s.UnitPrice</div>
+                        <div class="price">RM @s.UnitPrice</div>
                         <h3>@s.ServiceName</h3>
                     </label>
                     <div class="quantity-container">
@@ -130,18 +130,13 @@
     <div class="addon-section">
         <h1 class="hotel-booking">Add-On Services</h1>
 
-        <div class="addon-item">
-            <label for="extra-bed">Extra Bed (RM50.00)</label>
-            <input type="number" id="extra-bed" min="0" value="0">
-        </div>
-        <div class="addon-item">
-            <label for="extra-sheets">Extra Sheets (RM15.00)</label>
-            <input type="number" id="extra-sheets" min="0" value="0">
-        </div>
-        <div class="addon-item">
-            <label for="extra-pillows">Extra Pillows (RM10.00)</label>
-            <input type="number" id="extra-pillows" min="0" value="0">
-        </div>
+        @foreach (var service in Model.RoomServices)
+        {
+            <div class="addon-item">
+                <label for="@service.ServiceID">@service.ServiceName RM(@service.UnitPrice)</label>
+                <input type="number" id="@service.ServiceID" min="0" value="0">
+            </div>
+        }
 
         <a href="/Payment/PaymentPage" class="book-btn" id="book-btn">Book Now</a>
     </div>
