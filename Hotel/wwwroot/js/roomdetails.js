@@ -13,20 +13,3 @@ flatpickr("#date-picker", {
         errorMsg.textContent = "";
     },
 });
-
-
-// Food Menu Section Toggle
-const navLinks = document.querySelectorAll('.menu-nav a');
-const sections = document.querySelectorAll('.menu-section');
-
-navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
-        sections.forEach(section => section.classList.remove('active'));
-        const sectionID = link.getAttribute('data-section');
-        document.getElementById(sectionID).classList.add('active');
-    });
-});
-
-// Show Breakfast by default
-document.getElementById('breakfast').classList.add('active');

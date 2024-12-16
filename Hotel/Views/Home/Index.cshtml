@@ -5,7 +5,7 @@
     ViewBag.Title = "EASYSTAYS";
 }
 <link rel="stylesheet" href="/css/Index.css" asp-append-version="true">
-@* <script src="/js/HomePage.js" defer></script> *@
+<script src="/js/HomePage.js" defer></script>
 
 <!-- Booking Section -->
 <section class="booking-section">
@@ -131,18 +131,18 @@
     @foreach (var room in Model.Rooms)
     {
         <div class="room-card">
-            <div class="room-image" style="background-image: url('/uploads/@room.RoomImage')"></div>
+            <div class="room-image" style="background-image: url('/uploads/@room.Category.RoomImage')"></div>
             <div class="room-overlay">
-                <h2 class="room-title">@room.CategoryName</h2>
-                <div class="room-price">RM @room.PricePerNight/Pernight</div>
+                <h2 class="room-title">@room.Category.CategoryName</h2>
+                <div class="room-price">RM @room.Category.PricePerNight/Pernight</div>
             </div>
             <div class="room-details">
-                <h2 class="room-title">@room.CategoryName</h2>
-                <div class="room-price">RM @room.PricePerNight/Pernight</div>
-                <div class="detail-item">Size: @room.Size ft</div>
-                <div class="detail-item">Capacity: Max person @room.Capacity</div>
-                <div class="detail-item">Bed: @room.Bed</div>
-                <div class="detail-item">Services: @room.Description</div>
+                <h2 class="room-title">@room.Category.CategoryName</h2>
+                <div class="room-price">RM @room.Category.PricePerNight/Pernight</div>
+                <div class="detail-item">Size: @room.Category.Size ft</div>
+                <div class="detail-item">Capacity: Max person @room.Category.Capacity</div>
+                <div class="detail-item">Bed: @room.Category.Bed</div>
+                <div class="detail-item">Services: @room.Category.Description</div>
                 <a href="/Home/RoomPage" class="more-details">MORE DETAILS</a>
             </div>
         </div>

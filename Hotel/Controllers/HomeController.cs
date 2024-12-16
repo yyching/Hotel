@@ -40,22 +40,6 @@ public class HomeController : Controller
         var rooms = db.Rooms
         .Include(r => r.Category)
         .Where(r => r.Status == "Active" && r.Category.Status == "Active")
-        .Select(r => new RoomViewModel
-        {
-            RoomID = r.RoomID,
-            RoomNumber = r.RoomNumber,
-            Status = r.Status,
-            CategoryID = r.CategoryID,
-            CategoryName = r.Category.CategoryName,
-            Theme = r.Category.Theme,
-            Size = r.Category.Size,
-            Capacity = r.Category.Capacity,
-            Bed = r.Category.Bed,
-            Description = r.Category.Description,
-            PricePerNight = r.Category.PricePerNight,
-            RoomImage = r.Category.RoomImage,
-            CategoryStatus = r.Category.Status
-        })
         .ToList();
 
         var viewModel = new HomePageVM
@@ -69,7 +53,18 @@ public class HomeController : Controller
 
     public IActionResult RoomPage()
     {
-        return View();
+        //Get room from category
+        var rooms = db.Rooms
+        .Include(r => r.Category)
+        .Where(r => r.Status == "Active" && r.Category.Status == "Active")
+        .ToList();
+
+        var viewModel = new RoomVM
+        {
+            Rooms = rooms
+        };
+
+        return View(viewModel);
     }
 
     // GET: ROOMDEATILS

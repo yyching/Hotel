@@ -111,27 +111,12 @@ public class ResetPasswordVM
 public class HomePageVM
 {
     public List<Service> FoodServices { get; set; }
-    public List<RoomViewModel> Rooms { get; set; }
+    public List<Room> Rooms { get; set; }
 }
 
-public class RoomViewModel
+public class RoomVM 
 {
-    // Room Properties
-    public string RoomID { get; set; }
-    public string RoomNumber { get; set; }
-    public string Status { get; set; }
-
-    // Category Properties
-    public string CategoryID { get; set; }
-    public string CategoryName { get; set; }
-    public string Theme { get; set; }
-    public int Size { get; set; }
-    public string Capacity { get; set; }
-    public string Bed { get; set; }
-    public string Description { get; set; }
-    public double PricePerNight { get; set; }
-    public string RoomImage { get; set; }
-    public string CategoryStatus { get; set; }
+    public List<Room> Rooms { get; set; }
 }
 
 public class RoomDetailsVM

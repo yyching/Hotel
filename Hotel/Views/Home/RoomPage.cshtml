@@ -1,4 +1,6 @@
-﻿@{
+﻿@model RoomVM
+
+@{
     Layout = "_Layout";
     ViewBag.Title = "Room";
 }
@@ -105,43 +107,24 @@
                         <th>Hotel Name</th>
                         <th>Size</th>
                         <th>Capacity</th>
+                        <th>Bed</th>
                         <th>Price</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach (var room in Model.Rooms)
+                    {
                     <tr>
-                        <td><img src="/img/HomePage/RoomImg/single.jpg" alt="Hotel 1" class="hotel-image"></td>
-                        <td>Hotel Paradise</td>
-                        <td>300 sq. ft.</td>
-                        <td>2 Adults, 1 Child</td>
-                        <td>$150/night</td>
+                            <td><img src='/uploads/@room.Category.RoomImage' alt="Hotel 1" class="hotel-image"></td>
+                        <td>@room.Category.CategoryName</td>
+                        <td>@room.Category.Size sq. ft.</td>
+                        <td>Max person @room.Category.Capacity</td>
+                            <td>@room.Category.Bed</td>
+                        <td>RM @room.Category.PricePerNight/night</td>
                         <td><a href="/Home/RoomDetailsPage" class="book-btn" target="_blank">Book Now</a></td>
                     </tr>
-                    <tr>
-                        <td><img src="/img/HomePage/RoomImg/double.jpg" alt="Hotel 2" class="hotel-image"></td>
-                        <td>Grand Luxury Hotel</td>
-                        <td>500 sq. ft.</td>
-                        <td>4 Adults</td>
-                        <td>$250/night</td>
-                        <td><a href="/Home/RoomDetailsPage" class="book-btn" target="_blank">Book Now</a></td>
-                    </tr>
-                    <tr>
-                        <td><img src="/img/HomePage/RoomImg/family.jpg" alt="Hotel 3" class="hotel-image"></td>
-                        <td>Cozy Retreat</td>
-                        <td>200 sq. ft.</td>
-                        <td>2 Adults</td>
-                        <td>$120/night</td>
-                        <td><a href="/Home/RoomDetailsPage" class="book-btn" target="_blank">Book Now</a></td>
-                    </tr>
-                    <tr>
-                        <td><img src="/img/HomePage/RoomImg/Premium King.jpg" alt="Hotel 4" class="hotel-image"></td>
-                        <td>Cozy Retreat</td>
-                        <td>200 sq. ft.</td>
-                        <td>2 Adults</td>
-                        <td>$120/night</td>
-                        <td><a href="/Home/RoomDetailsPage" class="book-btn" target="_blank">Book Now</a></td>
-                    </tr>
+                    }
                 </tbody>
             </table>
         </div>
