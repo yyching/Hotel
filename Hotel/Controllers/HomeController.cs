@@ -68,9 +68,21 @@ public class HomeController : Controller
     }
 
     // GET: ROOMDEATILS
+    [Authorize]
     [Authorize(Roles = "Member")]
-    public IActionResult RoomDetailsPage(string? Category)
+    public IActionResult RoomDetailsPage(string roomID, string? Category)
     {
+        // Get the room from roomID
+        var rooms = db.Rooms
+        .Include(r => r.Category)
+        .FirstOrDefault(r => r.RoomID == roomID);
+
+        if (rooms == null)
+        {
+            TempData["Info"] = "Invalid Room";
+            return RedirectToAction("Index", "Home");
+        }
+
         // Get distinct categories for food services
         ViewBag.ServiceTypes = db.Services
        .Where(s => s.ServiceType == "Food")
@@ -94,6 +106,7 @@ public class HomeController : Controller
         // Create the view model and assign the lists
         var viewModel = new RoomDetailsVM
         {
+            Rooms = rooms,
             FoodServices = foodServices.ToList(),
             RoomServices = roomServices
         };

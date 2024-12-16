@@ -121,6 +121,7 @@ public class RoomVM
 
 public class RoomDetailsVM
 {
+    public Room Rooms { get; set; }
     public List<Service> FoodServices { get; set; }
     public List<Service> RoomServices { get; set; }
 }

@@ -2,7 +2,7 @@
 
 @{
     Layout = "_Layout2";
-    ViewBag.Title = "Room Details";
+    ViewBag.Title = "RoomDetails";
 }
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" href="/css/roomdetails.css" asp-append-version="true">
@@ -12,14 +12,14 @@
 <!-- Room Section -->
 <div class="room-container">
     <div class="room-image">
-        <img src="/img/HomePage/RoomImg/double.jpg" alt="Room Image">
+        <img src="/uploads/@Model.Rooms.Category.RoomImage" alt="Room Image">
     </div>
     <div class="room-details">
-        <h1>Deluxe Room</h1>
-        <p><strong>Price:</strong> $120/night</p>
-        <p><strong>Size:</strong> 35 sqm</p>
-        <p><strong>Capacity:</strong> 2 Adults</p>
-        <p><strong>Bed:</strong> King-size</p>
+        <h1>@Model.Rooms.Category.CategoryName</h1>
+        <p><strong>Price:</strong> RM @Model.Rooms.Category.PricePerNight/night</p>
+        <p><strong>Size:</strong> @Model.Rooms.Category.Size sqm</p>
+        <p><strong>Capacity:</strong> @Model.Rooms.Category.Capacity Adults</p>
+        <p><strong>Bed:</strong> @Model.Rooms.Category.Bed</p>
     </div>
 </div>
 
@@ -29,12 +29,9 @@
     <div class="description">
         <h2>Description</h2>
         <p>
-            This cozy and modern place is perfect for your getaway. It features
-            a fully equipped kitchen, comfortable bedrooms, and scenic balcony views.
-            Enjoy free Wi-Fi, air conditioning, and top-notch security features.
+            @Model.Rooms.Category.Description
         </p>
     </div>
-
     <div class="more-images">
         <h2>More Images</h2>
         <div class="image-grid">
@@ -88,6 +85,7 @@
         </div>
     </div>
 </div>
+
 
 <div class="service-container">
 

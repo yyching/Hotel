@@ -115,15 +115,15 @@
                 <tbody>
                     @foreach (var room in Model.Rooms)
                     {
-                    <tr>
+                        <tr>
                             <td><img src='/uploads/@room.Category.RoomImage' alt="Hotel 1" class="hotel-image"></td>
-                        <td>@room.Category.CategoryName</td>
-                        <td>@room.Category.Size sq. ft.</td>
-                        <td>Max person @room.Category.Capacity</td>
+                            <td>@room.Category.CategoryName</td>
+                            <td>@room.Category.Size sq. ft.</td>
+                            <td>Max person @room.Category.Capacity</td>
                             <td>@room.Category.Bed</td>
-                        <td>RM @room.Category.PricePerNight/night</td>
-                        <td><a href="/Home/RoomDetailsPage" class="book-btn" target="_blank">Book Now</a></td>
-                    </tr>
+                            <td>RM @room.Category.PricePerNight/night</td>
+                            <td><a href="/Home/RoomDetailsPage?roomID=@room.RoomID" class="book-btn" target="_blank">Book Now</a></td>
+                        </tr>
                     }
                 </tbody>
             </table>
