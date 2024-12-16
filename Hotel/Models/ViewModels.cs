@@ -108,10 +108,31 @@ public class ResetPasswordVM
     public string ConfirmPassword { get; set; }
 }
 
+public class HomeCombineVM 
+{
+    public HomePageVM HomePageVM { get; set; }
+    public SearchVM SearchVM { get; set; }
+}
+
 public class HomePageVM
 {
     public List<Service> FoodServices { get; set; }
     public List<Room> Rooms { get; set; }
+}
+
+public class SearchVM
+{
+    [Required(ErrorMessage = "Check-in date is required.")]
+    [DataType(DataType.Date)]
+    public DateTime CheckInDate { get; set; }
+
+    [Required(ErrorMessage = "Check-out date is required.")]
+    [DataType(DataType.Date)]
+    public DateTime CheckOutDate { get; set; }
+
+    [Required(ErrorMessage = "Number of persons is required.")]
+    [Range(1, int.MaxValue, ErrorMessage = "Number of persons must be at least 1.")]
+    public int Person { get; set; }
 }
 
 public class RoomVM 

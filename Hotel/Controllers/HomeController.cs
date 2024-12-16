@@ -1,4 +1,5 @@
-﻿using Hotel.Models;
+﻿using System;
+using Hotel.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -36,35 +37,115 @@ public class HomeController : Controller
 
         ViewBag.SelectedCategory = Category ?? "Breakfast";
 
-        //Get room from category
+        // Get room from category
         var rooms = db.Rooms
         .Include(r => r.Category)
         .Where(r => r.Status == "Active" && r.Category.Status == "Active")
         .ToList();
 
-        var viewModel = new HomePageVM
-        {
-            FoodServices = foodServices.ToList(),
-            Rooms = rooms
+        var viewModel = new HomeCombineVM{
+            HomePageVM = new HomePageVM(), // Initialize HomePageVM
+            SearchVM = new SearchVM()
         };
+        viewModel.HomePageVM.FoodServices = foodServices.ToList();
+        viewModel.HomePageVM.Rooms = rooms;
+        viewModel.SearchVM.CheckInDate = DateTime.Now.Date;
+        viewModel.SearchVM.CheckOutDate = DateTime.Now.Date.AddDays(1);
+        viewModel.SearchVM.Person = 1;
 
         return View(viewModel);
     }
 
-    public IActionResult RoomPage()
+    [HttpPost]
+    public IActionResult Index([Bind(Prefix = "SearchVM")]SearchVM sm)
     {
-        //Get room from category
-        var rooms = db.Rooms
-        .Include(r => r.Category)
-        .Where(r => r.Status == "Active" && r.Category.Status == "Active")
-        .ToList();
-
-        var viewModel = new RoomVM
+        if (ModelState.IsValid)
         {
-            Rooms = rooms
-        };
+            if (sm.CheckInDate < DateTime.Now.Date)
+            {
+                TempData["Info"] = "Check-in date cannot be in the past.";
+                return RedirectToAction("Index");
+            }
 
-        return View(viewModel);
+            if (sm.CheckOutDate <= sm.CheckInDate)
+            {
+                TempData["Info"] = "Check-out date must be after the check-in date.";
+                return RedirectToAction("Index");
+            }
+
+            // If model state is valid and business logic passes
+            var rooms = db.Rooms
+                .Include(r => r.Category)
+                .ToList();
+
+            var availableRooms = rooms
+                .Where(r => int.Parse(r.Category.Capacity) >= sm.Person &&
+                    !db.Bookings.Any(b =>
+                        b.RoomID == r.RoomID &&
+                        b.CheckInDate < sm.CheckOutDate &&
+                        b.CheckOutDate > sm.CheckInDate))
+                .ToList();
+
+            if (availableRooms.Count == 0)
+            {
+                TempData["Info"] = "No rooms are available for the selected dates and capacity.";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return RedirectToAction("RoomPage", new
+                {
+                    checkIn = sm.CheckInDate.ToString("yyyy-MM-dd"),
+                    checkOut = sm.CheckOutDate.ToString("yyyy-MM-dd"),
+                    persons = sm.Person
+                });
+            }
+        }
+        return RedirectToAction();
+    }
+
+    public IActionResult RoomPage(string? checkIn, string? checkOut, int? persons)
+    {
+        if (checkIn == null && checkOut == null && persons == null)
+        {
+            //Get room from category
+            var rooms = db.Rooms
+                .Include(r => r.Category)
+                .Where(r => r.Status == "Active" && r.Category.Status == "Active")
+                .ToList();
+
+            var viewModel = new RoomVM
+            {
+                Rooms = rooms
+            };
+
+            return View(viewModel);
+        }
+        else
+        {
+            var rooms = db.Rooms
+                .Include(r => r.Category)
+                .Where(r => r.Status == "Active" && r.Category.Status == "Active")
+                .ToList();
+
+            DateTime checkInDate = DateTime.Parse(checkIn);
+            DateTime checkOutDate = DateTime.Parse(checkOut);
+
+            var availableRooms = rooms
+                .Where(r => int.Parse(r.Category.Capacity) >= persons &&
+                    !db.Bookings.Any(b =>
+                        b.RoomID == r.RoomID &&
+                        b.CheckInDate < checkInDate &&
+                        b.CheckOutDate > checkOutDate))
+                .ToList();
+
+            var viewModel = new RoomVM
+            {
+                Rooms = availableRooms
+            };
+
+            return View(viewModel);
+        }
     }
 
     // GET: ROOMDEATILS

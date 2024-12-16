@@ -1,4 +1,4 @@
-﻿@model HomePageVM
+﻿@model HomeCombineVM
 
 @{
     Layout = "_Layout";
@@ -9,24 +9,23 @@
 
 <!-- Booking Section -->
 <section class="booking-section">
-    <form class="booking-form">
+    <form class="booking-form" method="post" asp-action="Index" asp-controller="Home">
         <div class="form-group">
-            <label for="check-in">Check In</label>
-            <input type="date" id="check-in" name="check-in">
+            <label asp-for="SearchVM.CheckInDate"></label>
+            <input asp-for="SearchVM.CheckInDate" type="date" />
+            <span asp-validation-for="SearchVM.CheckInDate"></span>
         </div>
         <div class="form-group">
-            <label for="check-out">Check Out</label>
-            <input type="date" id="check-out" name="check-out">
+            <label asp-for="SearchVM.CheckOutDate"></label>
+            <input asp-for="SearchVM.CheckOutDate" type="date" />
+            <span asp-validation-for="SearchVM.CheckOutDate"></span>
         </div>
         <div class="form-group">
-            <label for="adults">Adults</label>
-            <input type="number" id="adults" name="adults">
+            <label asp-for="SearchVM.Person"></label>
+            <input asp-for="SearchVM.Person" />
+            <span asp-validation-for="SearchVM.Person"></span>
         </div>
-        <div class="form-group">
-            <label for="children">Children</label>
-            <input type="number" id="children" name="children">
-        </div>
-        <button type="submit" class="btn">Check Availability</button>
+        <button class="btn">Check Availability</button>
     </form>
 </section>
 
@@ -103,17 +102,17 @@
     <h1>Our Food Menu</h1>
     <p>Discover a delightful selection of dishes carefully crafted to suit every meal of the day, whether you're looking for a hearty breakfast, a satisfying lunch, or a delicious dinner.</p>
 
-    <nav class="menu-nav">
-        @foreach (var category in ViewBag.ServiceTypes)
-        {
-            <a href="?Category=@category">@category</a>
-        }
-    </nav>
+<nav class="menu-nav">
+    @foreach (var category in ViewBag.ServiceTypes)
+    {
+        <a href="?Category=@category">@category</a>
+    }
+</nav>
 
     <section class="menu-section">
         <h2>@ViewBag.SelectedCategory</h2>
         <div class="menu-grid">
-            @foreach (var s in Model.FoodServices)
+            @foreach (var s in Model.HomePageVM.FoodServices)
             {
                 <div class="menu-item">
                     <div class="price">RM @s.UnitPrice</div>
@@ -128,7 +127,7 @@
 
 <!---Room-->
 <div class="room-grid">
-    @foreach (var room in Model.Rooms)
+    @foreach (var room in Model.HomePageVM.Rooms)
     {
         <div class="room-card">
             <div class="room-image" style="background-image: url('/uploads/@room.Category.RoomImage')"></div>
