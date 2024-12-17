@@ -1,8 +1,11 @@
 ﻿@model IEnumerable<Room>
+
 @{
     Layout = "_NavigationBar";
     ViewBag.Title = "Rooms Management";
 }
+
+<link href="/css/_Insert.css" rel="stylesheet" />
 
 <div class="table-responsive">
     <div class="section__content section__content--p30">
@@ -11,7 +14,7 @@
                 <div class="col-md-12">
                     <div class="overview-wrap">
                         <h2 class="title-1">@ViewBag.Title</h2>
-                        <button class="au-btn au-btn-icon au-btn--blue">
+                        <button id="addRoomBtn" class="au-btn au-btn-icon au-btn--blue">
                             <i class="zmdi zmdi-plus"></i>add item
                         </button>
                     </div>
@@ -51,3 +54,54 @@
         </tbody>
     </table>
 </div>
+
+<!-- Popup Modal -->
+<div id="addRoomModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span class="modal-title">Add Room</span>
+            <button id="closeModal" class="close-btn">&times;</button>
+        </div>
+        <div id="modalBody" class="modal-body">
+            <!-- Content from AddRoom.cshtml will load here -->
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript to Load the Partial View and Control Modal -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const addRoomBtn = $("#addRoomBtn");
+        const addRoomModal = $("#addRoomModal");
+        const closeModal = $("#closeModal");
+
+        // Open Modal and Load Partial View
+        addRoomBtn.click(function () {
+            $.ajax({
+                url: '/Admin/_AddRoom', // Controller action to return the partial view
+                type: 'GET',
+                success: function (data) {
+                    $("#modalBody").html(data); // Load form content into the modal body
+                    addRoomModal.css("display", "flex"); // Set display: flex for the modal
+                },
+                error: function () {
+                    alert("Failed to load the Add Room form.");
+                }
+            });
+        });
+
+        // Close Modal
+        closeModal.click(function () {
+            addRoomModal.css("display", "none"); // Hide the modal
+        });
+
+        // Hide Modal on Outside Click
+        $(window).click(function (event) {
+            if (event.target === addRoomModal[0]) {
+                addRoomModal.css("display", "none"); // Hide modal on outside click
+            }
+        });
+    });
+</script>
+

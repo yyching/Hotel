@@ -202,4 +202,19 @@ public class Helper
 
         return new SelectList(list);
     }
+
+    // ------------------------------------------------------------------------
+    // Generate time ID
+    // ------------------------------------------------------------------------
+    public string IDGenerator(string prefix) 
+    {
+        var random = new Random();
+        string randomPart = random.Next(100, 999).ToString();
+
+        // Get the current date and time in the format "yyyyMMddHHmmss"
+        string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
+
+        // Combine the parts to form the ID
+        return $"{prefix.ToUpper()}{randomPart}{timestamp}";
+    }
 }

@@ -1,0 +1,24 @@
+﻿@model RoomVM
+
+<form method="post" action="/Admin/_AddRoom">
+    <label asp-for="RoomNumber">Room Number:</label>
+    <input asp-for="RoomNumber" required />
+    <span asp-validation-for="RoomNumber"></span><br><br>
+
+    <label asp-for="CategoryID">Category:</label>
+    <select asp-for="CategoryID" asp-items="ViewBag.CategoryList">
+        <option value="">- Select One -</option>
+    </select>
+    <span asp-validation-for="CategoryID"></span><br><br>
+
+    <label asp-for="Status">Status:</label>
+    <select asp-for="Status">
+        <option value="Active">Active</option>
+        <option value="Terminate">Terminate</option>
+    </select><br><br>
+
+    <div class="modal-footer">
+        <button type="submit" class="submit-btn">Add Room</button>
+        <button type="button" id="cancelModal" class="cancel-btn">Cancel</button>
+    </div>
+</form>

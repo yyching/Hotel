@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Hotel.Models;
@@ -181,5 +183,15 @@ public class UpdateRoomCategoryVM
     public IFormFile? Photo { get; set; }
 }
 
-public class AddRoomVM { 
+public class RoomVM
+{
+    [Required(ErrorMessage = "Room Number is required.")]
+    public string RoomNumber { get; set; }
+
+    [Required(ErrorMessage = "Category is required.")]
+    [DisplayName("Categories")]
+    public string CategoryID { get; set; }
+
+    [Required(ErrorMessage = "Status is required.")]
+    public string Status { get; set; }
 }

@@ -1,6 +1,8 @@
-﻿using Hotel.Models;
+﻿using System.Reflection.Emit;
+using Hotel.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hotel.Controllers;
@@ -103,7 +105,7 @@ public class AdminController : Controller
                 Description     = vm.description,
                 PricePerNight   = vm.price,
                 RoomImage       = hp.SavePhoto(vm.Photo, "uploads"),
-                Status = "Active",
+                Status          = "Active",
             });
 
             db.SaveChanges();
@@ -222,9 +224,38 @@ public class AdminController : Controller
     }
 
     // Room - Add | Get
-    public IActionResult AddRoom()
+    public IActionResult _AddRoom()
     {
+        ViewBag.CategoryList = new SelectList(db.Categories, "CategoryID", "CategoryName");
         return View();
+    }
+
+    // Room - Add | Post
+    [HttpPost]
+    public IActionResult _AddRoom(RoomVM vm)
+    {
+        if (ModelState.IsValid)
+        {
+            var code = "ROM";
+
+            // Combine to form the new ID
+            string newID = hp.IDGenerator(code);
+
+            db.Rooms.Add(new Room
+            {
+                RoomID = newID,
+                RoomNumber = vm.RoomNumber,
+                Status = vm.Status,
+                CategoryID = vm.CategoryID,
+            });
+
+            db.SaveChanges();
+            TempData["Info"] = "Room added successfully";
+            return RedirectToAction("Rooms");
+
+        }
+
+        return View(vm);
     }
 
     // Service
