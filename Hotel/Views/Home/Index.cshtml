@@ -1,4 +1,4 @@
-﻿@model HomeCombineVM
+﻿@model HomePageVM
 
 @{
     Layout = "_Layout";
@@ -9,15 +9,15 @@
 
 <!-- Booking Section -->
 <section class="booking-section">
-    <form class="booking-form" method="post" asp-action="Index" asp-controller="Home">
+    <form class="booking-form" method="post">
         <div class="form-group">
             <label asp-for="SearchVM.CheckInDate"></label>
-            <input asp-for="SearchVM.CheckInDate" type="date" />
+            <input asp-for="SearchVM.CheckInDate"/>
             <span asp-validation-for="SearchVM.CheckInDate"></span>
         </div>
         <div class="form-group">
             <label asp-for="SearchVM.CheckOutDate"></label>
-            <input asp-for="SearchVM.CheckOutDate" type="date" />
+            <input asp-for="SearchVM.CheckOutDate"/>
             <span asp-validation-for="SearchVM.CheckOutDate"></span>
         </div>
         <div class="form-group">
@@ -112,7 +112,7 @@
     <section class="menu-section">
         <h2>@ViewBag.SelectedCategory</h2>
         <div class="menu-grid">
-            @foreach (var s in Model.HomePageVM.FoodServices)
+            @foreach (var s in Model.FoodServices)
             {
                 <div class="menu-item">
                     <div class="price">RM @s.UnitPrice</div>
@@ -127,7 +127,7 @@
 
 <!---Room-->
 <div class="room-grid">
-    @foreach (var room in Model.HomePageVM.Rooms)
+    @foreach (var room in Model.Rooms)
     {
         <div class="room-card">
             <div class="room-image" style="background-image: url('/uploads/@room.Category.RoomImage')"></div>

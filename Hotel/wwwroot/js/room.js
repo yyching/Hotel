@@ -39,3 +39,14 @@ rangeInput.forEach((input) => {
         }
     });
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const themeForm = document.getElementById('themeFilterForm');
+    const themeCheckboxes = themeForm.querySelectorAll('.filter-checkbox');
+
+    themeCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            themeForm.submit();
+        });
+    });
+});

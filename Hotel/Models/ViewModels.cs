@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -110,19 +109,8 @@ public class ResetPasswordVM
     public string ConfirmPassword { get; set; }
 }
 
-public class HomeCombineVM 
-{
-    public HomePageVM HomePageVM { get; set; }
-    public SearchVM SearchVM { get; set; }
-}
-
-public class HomePageVM
-{
-    public List<Service> FoodServices { get; set; }
-    public List<Room> Rooms { get; set; }
-}
-
-public class SearchVM
+// Search for the available room
+public class RoomSearchVM
 {
     [Required(ErrorMessage = "Check-in date is required.")]
     [DataType(DataType.Date)]
@@ -137,9 +125,17 @@ public class SearchVM
     public int Person { get; set; }
 }
 
-public class RoomVM 
+public class HomePageVM
+{
+    public List<Service> FoodServices { get; set; }
+    public List<Room> Rooms { get; set; }
+    public RoomSearchVM SearchVM { get; set; }
+}
+
+public class RoomPageVM
 {
     public List<Room> Rooms { get; set; }
+    public RoomSearchVM SearchVM { get; set; }
 }
 
 public class RoomDetailsVM

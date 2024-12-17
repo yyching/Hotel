@@ -43,21 +43,23 @@ public class HomeController : Controller
         .Where(r => r.Status == "Active" && r.Category.Status == "Active")
         .ToList();
 
-        var viewModel = new HomeCombineVM{
-            HomePageVM = new HomePageVM(), // Initialize HomePageVM
-            SearchVM = new SearchVM()
+        var viewModel = new HomePageVM
+        {
+            FoodServices = foodServices.ToList(),
+            Rooms = rooms,
+            SearchVM = new RoomSearchVM
+            {
+                CheckInDate = DateTime.Now.Date,
+                CheckOutDate = DateTime.Now.Date.AddDays(1),
+                Person = 1
+            }
         };
-        viewModel.HomePageVM.FoodServices = foodServices.ToList();
-        viewModel.HomePageVM.Rooms = rooms;
-        viewModel.SearchVM.CheckInDate = DateTime.Now.Date;
-        viewModel.SearchVM.CheckOutDate = DateTime.Now.Date.AddDays(1);
-        viewModel.SearchVM.Person = 1;
 
         return View(viewModel);
     }
 
     [HttpPost]
-    public IActionResult Index([Bind(Prefix = "SearchVM")]SearchVM sm)
+    public IActionResult Index([Bind(Prefix = "SearchVM")]RoomSearchVM sm)
     {
         if (ModelState.IsValid)
         {
@@ -101,33 +103,48 @@ public class HomeController : Controller
                 });
             }
         }
-        return RedirectToAction();
+        return View();
     }
 
-    public IActionResult RoomPage(string? checkIn, string? checkOut, int? persons)
+    public IActionResult RoomPage(string? checkIn, string? checkOut, int? persons, string[]? themes)
     {
+        //Get room from category
+        var rooms = db.Rooms
+            .Include(r => r.Category)
+            .Where(r => r.Status == "Active" && r.Category.Status == "Active")
+            .ToList();
+
+        // Get themes for room
+        ViewBag.Themes = db.Categories
+            .Where(c => c.Status == "Active")
+            .Select(c => c.Theme)
+            .Distinct()
+            .ToList();
+
+        ViewBag.SelectedTheme = themes;
+
+        if (themes != null)
+        {
+            rooms = rooms.Where(r => themes.Contains(r.Category.Theme)).ToList();
+        }
+
+
         if (checkIn == null && checkOut == null && persons == null)
         {
-            //Get room from category
-            var rooms = db.Rooms
-                .Include(r => r.Category)
-                .Where(r => r.Status == "Active" && r.Category.Status == "Active")
-                .ToList();
-
-            var viewModel = new RoomVM
+            var viewModel = new RoomPageVM
             {
-                Rooms = rooms
+                Rooms = rooms,
+                SearchVM = new RoomSearchVM
+                {
+                    CheckInDate = DateTime.Now.Date,
+                    CheckOutDate = DateTime.Now.Date.AddDays(1),
+                    Person = 1
+                }
             };
-
             return View(viewModel);
         }
         else
         {
-            var rooms = db.Rooms
-                .Include(r => r.Category)
-                .Where(r => r.Status == "Active" && r.Category.Status == "Active")
-                .ToList();
-
             DateTime checkInDate = DateTime.Parse(checkIn);
             DateTime checkOutDate = DateTime.Parse(checkOut);
 
@@ -139,13 +156,90 @@ public class HomeController : Controller
                         b.CheckOutDate > checkOutDate))
                 .ToList();
 
-            var viewModel = new RoomVM
+            var viewModel = new RoomPageVM
             {
-                Rooms = availableRooms
+                Rooms = availableRooms,
+                SearchVM = new RoomSearchVM
+                {
+                    CheckInDate = checkInDate,
+                    CheckOutDate = checkOutDate,
+                    Person = persons ?? 1
+                }
             };
 
             return View(viewModel);
         }
+    }
+
+    [HttpPost]
+    public IActionResult RoomPage([Bind(Prefix = "SearchVM")]RoomSearchVM sm)
+    {
+        if (ModelState.IsValid)
+        {
+            if (sm.CheckInDate < DateTime.Now.Date)
+            {
+                TempData["Info"] = "Check-in date cannot be in the past.";
+                return RedirectToAction("RoomPage");
+            }
+
+            if (sm.CheckOutDate <= sm.CheckInDate)
+            {
+                TempData["Info"] = "Check-out date must be after the check-in date.";
+                return RedirectToAction("RoomPage");
+            }
+
+            // If model state is valid and business logic passes
+            var rooms = db.Rooms
+                .Include(r => r.Category)
+                .ToList();
+
+            var availableRooms = rooms
+                .Where(r => int.Parse(r.Category.Capacity) >= sm.Person &&
+                    !db.Bookings.Any(b =>
+                        b.RoomID == r.RoomID &&
+                        b.CheckInDate < sm.CheckOutDate &&
+                        b.CheckOutDate > sm.CheckInDate))
+                .ToList();
+
+            ViewBag.Themes = db.Categories
+                .Where(c => c.Status == "Active")
+                .Select(c => c.Theme)
+                .Distinct()
+                .ToList();
+
+            if (availableRooms.Count == 0)
+            {
+                TempData["Info"] = "No rooms are available for the selected dates and capacity.";
+                var viewModel = new RoomPageVM
+                {
+                    Rooms = rooms,
+                    SearchVM = new RoomSearchVM
+                    {
+                        CheckInDate = sm.CheckInDate,
+                        CheckOutDate = sm.CheckOutDate,
+                        Person = sm.Person
+                    }
+                };
+
+                return View(viewModel);
+            }
+            else
+            {
+                var viewModel = new RoomPageVM
+                {
+                    Rooms = availableRooms,
+                    SearchVM = new RoomSearchVM
+                    {
+                        CheckInDate = sm.CheckInDate,
+                        CheckOutDate = sm.CheckOutDate,
+                        Person = sm.Person
+                    }
+                };
+
+                return View(viewModel);
+            }
+        }
+        return View();
     }
 
     // GET: ROOMDEATILS

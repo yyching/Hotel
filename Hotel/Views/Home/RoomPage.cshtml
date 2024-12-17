@@ -1,4 +1,4 @@
-﻿@model RoomVM
+﻿@model RoomPageVM
 
 @{
     Layout = "_Layout";
@@ -9,24 +9,23 @@
 
 <!-- Booking Section -->
 <section class="booking-section">
-    <form class="booking-form">
+    <form class="booking-form" method="post">
         <div class="form-group">
-            <label for="check-in">Check In</label>
-            <input type="date" id="check-in" name="check-in">
+            <label asp-for="SearchVM.CheckInDate"></label>
+            <input asp-for="SearchVM.CheckInDate" type="date" />
+            <span asp-validation-for="SearchVM.CheckInDate"></span>
         </div>
         <div class="form-group">
-            <label for="check-out">Check Out</label>
-            <input type="date" id="check-out" name="check-out">
+            <label asp-for="SearchVM.CheckOutDate"></label>
+            <input asp-for="SearchVM.CheckOutDate" type="date" />
+            <span asp-validation-for="SearchVM.CheckOutDate"></span>
         </div>
         <div class="form-group">
-            <label for="adults">Adults</label>
-            <input type="number" id="adults" name="adults">
+            <label asp-for="SearchVM.Person"></label>
+            <input asp-for="SearchVM.Person" type="number" />
+            <span asp-validation-for="SearchVM.Person"></span>
         </div>
-        <div class="form-group">
-            <label for="children">Children</label>
-            <input type="number" id="children" name="children">
-        </div>
-        <button type="submit" class="btn">Check Availability</button>
+        <button class="btn">Check Availability</button>
     </form>
 </section>
 
@@ -34,10 +33,6 @@
 <!-- Filter Section -->
 <div class="main-container">
     <div class="filter-container">
-
-        <div class="search-bar">
-            <input type="text" placeholder="Search Hotel" id="search-bar">
-        </div>
 
         <div class="filter-group">
             <h3>Price</h3>
@@ -61,17 +56,20 @@
             </div>
         </div>
 
-        <div class="filter-group">
+        <form class="filter-group" id=" themeFilterForm" method="get">
             <h3>Theme</h3>
-            <div class="filter-item">
-                <input type="checkbox" id="theme-city" class="filter-checkbox" checked>
-                <label for="theme-city">City</label>
-            </div>
-            <div class="filter-item">
-                <input type="checkbox" id="theme-nature" class="filter-checkbox" checked>
-                <label for="theme-nature">Nature</label>
-            </div>
-        </div>
+            @foreach (var theme in ViewBag.Themes){
+                <div class="filter-item">
+                    <input type="checkbox"
+                           class="filter-checkbox"
+                           name="themes"
+                           value="@theme"
+                           onchange="this.form.submit()"
+                    @((string[])ViewBag.SelectedTheme).Contains(theme) ? "checked" : "" )>
+                    <label>@theme</label>
+                </div>
+            }
+        </form>
         <div class="filter-group">
             <h3>Room Type</h3>
             <div class="filter-item">
@@ -105,6 +103,7 @@
                     <tr>
                         <th>Hotel Image</th>
                         <th>Hotel Name</th>
+                        <th>Hotel Name</th>
                         <th>Size</th>
                         <th>Capacity</th>
                         <th>Bed</th>
@@ -118,6 +117,7 @@
                         <tr>
                             <td><img src='/uploads/@room.Category.RoomImage' alt="Hotel 1" class="hotel-image"></td>
                             <td>@room.Category.CategoryName</td>
+                            <td>@room.Category.Theme</td>
                             <td>@room.Category.Size sq. ft.</td>
                             <td>Max person @room.Category.Capacity</td>
                             <td>@room.Category.Bed</td>
