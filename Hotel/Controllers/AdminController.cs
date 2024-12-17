@@ -232,7 +232,7 @@ public class AdminController : Controller
 
     // Room - Add | Post
     [HttpPost]
-    public IActionResult _AddRoom(RoomVM vm)
+    public IActionResult _AddRoom(RoomVMs vm)
     {
         if (ModelState.IsValid)
         {

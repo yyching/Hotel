@@ -183,7 +183,7 @@ public class UpdateRoomCategoryVM
     public IFormFile? Photo { get; set; }
 }
 
-public class RoomVM
+public class RoomVMs
 {
     [Required(ErrorMessage = "Room Number is required.")]
     public string RoomNumber { get; set; }
