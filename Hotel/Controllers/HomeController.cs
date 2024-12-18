@@ -106,13 +106,13 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult RoomPage(string? checkIn, string? checkOut, int? persons, string[]? themes)
+    public IActionResult RoomPage(string? checkIn, string? checkOut, int? persons, string? themes)
     {
         //Get room from category
-        var rooms = db.Rooms
-            .Include(r => r.Category)
-            .Where(r => r.Status == "Active" && r.Category.Status == "Active")
-            .ToList();
+        var Rooms = db.Rooms
+           .Include(r => r.Category)
+           .Where(r => r.Status == "Active" && r.Category.Status == "Active")
+           .ToList();
 
         // Get themes for room
         ViewBag.Themes = db.Categories
@@ -121,42 +121,25 @@ public class HomeController : Controller
             .Distinct()
             .ToList();
 
-        ViewBag.SelectedTheme = themes;
-
-        if (themes != null)
+        if (!string.IsNullOrEmpty(themes))
         {
-            rooms = rooms.Where(r => themes.Contains(r.Category.Theme)).ToList();
+            Rooms = Rooms.Where(r => r.Category.Theme == themes).ToList();
         }
 
-
-        if (checkIn == null && checkOut == null && persons == null)
-        {
-            var viewModel = new RoomPageVM
-            {
-                Rooms = rooms,
-                SearchVM = new RoomSearchVM
-                {
-                    CheckInDate = DateTime.Now.Date,
-                    CheckOutDate = DateTime.Now.Date.AddDays(1),
-                    Person = 1
-                }
-            };
-            return View(viewModel);
-        }
-        else
+        if (checkIn != null && checkOut != null && persons != null)
         {
             DateTime checkInDate = DateTime.Parse(checkIn);
             DateTime checkOutDate = DateTime.Parse(checkOut);
 
-            var availableRooms = rooms
+            var availableRooms = Rooms
                 .Where(r => int.Parse(r.Category.Capacity) >= persons &&
                     !db.Bookings.Any(b =>
                         b.RoomID == r.RoomID &&
-                        b.CheckInDate < checkInDate &&
-                        b.CheckOutDate > checkOutDate))
+                        b.CheckInDate < checkOutDate &&
+                        b.CheckOutDate > checkInDate))
                 .ToList();
 
-            var viewModel = new RoomPageVM
+            var m = new RoomPageVM
             {
                 Rooms = availableRooms,
                 SearchVM = new RoomSearchVM
@@ -167,8 +150,20 @@ public class HomeController : Controller
                 }
             };
 
-            return View(viewModel);
+            return View(m);
         }
+
+        var viewModel = new RoomPageVM
+        {
+            Rooms = Rooms,
+            SearchVM = new RoomSearchVM
+            {
+                CheckInDate = DateTime.Now.Date,
+                CheckOutDate = DateTime.Now.Date.AddDays(1),
+                Person = 1
+            }
+        };
+        return View(viewModel);
     }
 
     [HttpPost]
@@ -225,18 +220,12 @@ public class HomeController : Controller
             }
             else
             {
-                var viewModel = new RoomPageVM
+                return RedirectToAction("RoomPage", new
                 {
-                    Rooms = availableRooms,
-                    SearchVM = new RoomSearchVM
-                    {
-                        CheckInDate = sm.CheckInDate,
-                        CheckOutDate = sm.CheckOutDate,
-                        Person = sm.Person
-                    }
-                };
-
-                return View(viewModel);
+                    checkIn = sm.CheckInDate.ToString("yyyy-MM-dd"),
+                    checkOut = sm.CheckOutDate.ToString("yyyy-MM-dd"),
+                    persons = sm.Person
+                });
             }
         }
         return View();
