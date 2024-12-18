@@ -39,3 +39,29 @@ rangeInput.forEach((input) => {
         }
     });
 });
+
+function handleThemeFilter(checkbox) {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // capture the current theme
+    let themes = urlParams.get('themes') ? urlParams.get('themes').split(',') : [];
+
+    if (checkbox.checked) {
+        // if selected add the theme
+        if (!themes.includes(checkbox.value)) {
+            themes.push(checkbox.value);
+        }
+    } else {
+        themes = themes.filter(theme => theme !== checkbox.value);
+    }
+
+    // update url
+    if (themes.length > 0) {
+        urlParams.set('themes', themes.join(','));
+    } else {
+        urlParams.delete('themes');
+    }
+
+    // new url
+    window.location.href = window.location.pathname + '?' + urlParams.toString();
+}

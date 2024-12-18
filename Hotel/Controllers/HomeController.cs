@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Linq;
 using Hotel.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using X.PagedList.Extensions;
 
 namespace Hotel.Controllers;
 
@@ -108,7 +111,7 @@ public class HomeController : Controller
 
     public IActionResult RoomPage(string? checkIn, string? checkOut, int? persons, string? themes)
     {
-        //Get room from category
+        // Get room from category
         var Rooms = db.Rooms
            .Include(r => r.Category)
            .Where(r => r.Status == "Active" && r.Category.Status == "Active")
@@ -118,12 +121,13 @@ public class HomeController : Controller
         ViewBag.Themes = db.Categories
             .Where(c => c.Status == "Active")
             .Select(c => c.Theme)
-            .Distinct()
+            .Distinct() 
             .ToList();
 
         if (!string.IsNullOrEmpty(themes))
         {
-            Rooms = Rooms.Where(r => r.Category.Theme == themes).ToList();
+            var themeList = themes.Split(',').Select(t => t.Trim()).ToList();
+            Rooms = Rooms.Where(r => themeList.Contains(r.Category.Theme)).ToList();
         }
 
         if (checkIn != null && checkOut != null && persons != null)
