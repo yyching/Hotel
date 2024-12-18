@@ -146,6 +146,7 @@ select {
         position: absolute;
         border-radius: 5px;
         background: #007bff;
+        pointer-events: none;
     }
 
 .range-input {
@@ -154,8 +155,9 @@ select {
 
     .range-input input {
         position: absolute;
-        width: 100%;
+        width: 102%;
         height: 5px;
+        margin-left: -10px;
         top: -5px;
         background: none;
         pointer-events: none;
@@ -184,7 +186,6 @@ input[type="range"]::-moz-range-thumb {
     -moz-appearance: none;
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
 }
-
 
 .filter-item {
     display: flex;

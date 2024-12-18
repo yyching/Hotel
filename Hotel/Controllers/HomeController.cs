@@ -109,7 +109,7 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult RoomPage(string? checkIn, string? checkOut, int? persons, string? themes)
+    public IActionResult RoomPage(string? checkIn, string? checkOut, int? persons, double? minPrice, double? maxPrice, string? themes, string? category)
     {
         // Get room from category
         var Rooms = db.Rooms
@@ -124,10 +124,27 @@ public class HomeController : Controller
             .Distinct() 
             .ToList();
 
+        ViewBag.RoomCategory = db.Categories
+            .Where(c => c.Status == "Active")
+            .Select(c => c.CategoryName)
+            .Distinct()
+            .ToList();
+
+        if (minPrice.HasValue && maxPrice.HasValue)
+        {
+            Rooms = Rooms.Where(r => r.Category.PricePerNight >= minPrice && r.Category.PricePerNight <= maxPrice).ToList();
+        }
+
         if (!string.IsNullOrEmpty(themes))
         {
             var themeList = themes.Split(',').Select(t => t.Trim()).ToList();
             Rooms = Rooms.Where(r => themeList.Contains(r.Category.Theme)).ToList();
+        }
+
+        if (!string.IsNullOrEmpty(category))
+        {
+            var categoryList = category.Split(',').Select(t => t.Trim()).ToList();
+            Rooms = Rooms.Where(r => category.Contains(r.Category.CategoryName)).ToList();
         }
 
         if (checkIn != null && checkOut != null && persons != null)
@@ -187,10 +204,11 @@ public class HomeController : Controller
                 return RedirectToAction("RoomPage");
             }
 
-            // If model state is valid and business logic passes
+            // Get room from category
             var rooms = db.Rooms
-                .Include(r => r.Category)
-                .ToList();
+               .Include(r => r.Category)
+               .Where(r => r.Status == "Active" && r.Category.Status == "Active")
+               .ToList();
 
             var availableRooms = rooms
                 .Where(r => int.Parse(r.Category.Capacity) >= sm.Person &&
