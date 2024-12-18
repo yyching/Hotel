@@ -148,3 +148,38 @@ function handleCategoryFilter(checkbox) {
     // new url
     window.location.href = window.location.pathname + '?' + urlParams.toString();
 }
+
+// clear all the filter
+function clearAllFilters() {
+    const url = new URL(window.location.href);
+    const params = new URLSearchParams(url.search);
+
+    // only delete the filter
+    params.delete('themes');
+    params.delete('category');
+    params.delete('minPrice');
+    params.delete('maxPrice');
+
+    // reset the price
+    priceInput[0].value = 100;
+    priceInput[1].value = rangeInput[1].max;
+    rangeInput[0].value = 100;
+    rangeInput[1].value = rangeInput[1].max;
+    initializeSlider();
+
+    // reset theme
+    document.querySelectorAll('input[name="themes"]').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
+    // reset room type
+    document.querySelectorAll('input[name="category"]').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
+    // update the url
+    url.search = params.toString();
+    window.location.href = url.toString();
+}
+
+document.getElementById('clear-all').addEventListener('click', clearAllFilters);
