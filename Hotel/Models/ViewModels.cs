@@ -128,19 +128,19 @@ public class RoomSearchVM
 public class HomePageVM
 {
     public List<Service> FoodServices { get; set; }
-    public List<Room> Rooms { get; set; }
+    public List<Category> Categories { get; set; }
     public RoomSearchVM SearchVM { get; set; }
 }
 
 public class RoomPageVM
 {
-    public List<Room> Rooms { get; set; }
+    public List<Category> Categories { get; set; }
     public RoomSearchVM SearchVM { get; set; }
 }
 
 public class RoomDetailsVM
 {
-    public Room Rooms { get; set; }
+    public Category Categories { get; set; }
     public List<Service> FoodServices { get; set; }
     public List<Service> RoomServices { get; set; }
 }

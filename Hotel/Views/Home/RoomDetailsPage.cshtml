@@ -12,14 +12,14 @@
 <!-- Room Section -->
 <div class="room-container">
     <div class="room-image">
-        <img src="/uploads/@Model.Rooms.Category.RoomImage" alt="Room Image">
+        <img src="/uploads/@Model.Categories.RoomImage" alt="Room Image">
     </div>
     <div class="room-details">
-        <h1>@Model.Rooms.Category.CategoryName</h1>
-        <p><strong>Price:</strong> RM @Model.Rooms.Category.PricePerNight/night</p>
-        <p><strong>Size:</strong> @Model.Rooms.Category.Size sqm</p>
-        <p><strong>Capacity:</strong> @Model.Rooms.Category.Capacity Adults</p>
-        <p><strong>Bed:</strong> @Model.Rooms.Category.Bed</p>
+        <h1>@Model.Categories.CategoryName</h1>
+        <p><strong>Price:</strong> RM @Model.Categories.PricePerNight/night</p>
+        <p><strong>Size:</strong> @Model.Categories.Size sqm</p>
+        <p><strong>Capacity:</strong> @Model.Categories.Capacity Adults</p>
+        <p><strong>Bed:</strong> @Model.Categories.Bed</p>
     </div>
 </div>
 
@@ -29,7 +29,7 @@
     <div class="description">
         <h2>Description</h2>
         <p>
-            @Model.Rooms.Category.Description
+            @Model.Categories.Description
         </p>
     </div>
     <div class="more-images">

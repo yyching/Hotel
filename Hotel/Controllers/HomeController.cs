@@ -41,15 +41,14 @@ public class HomeController : Controller
         ViewBag.SelectedCategory = Category ?? "Breakfast";
 
         // Get room from category
-        var rooms = db.Rooms
-        .Include(r => r.Category)
-        .Where(r => r.Status == "Active" && r.Category.Status == "Active")
+        var categories = db.Categories
+        .Where(c => c.Status == "Active")
         .ToList();
 
         var viewModel = new HomePageVM
         {
             FoodServices = foodServices.ToList(),
-            Rooms = rooms,
+            Categories = categories,
             SearchVM = new RoomSearchVM
             {
                 CheckInDate = DateTime.Now.Date,
@@ -79,14 +78,13 @@ public class HomeController : Controller
             }
 
             // If model state is valid and business logic passes
-            var rooms = db.Rooms
-                .Include(r => r.Category)
+            var categories = db.Categories
+                .Where(c => c.Status == "Active")
                 .ToList();
 
-            var availableRooms = rooms
-                .Where(r => int.Parse(r.Category.Capacity) >= sm.Person &&
+            var availableRooms = categories
+                .Where(c => int.Parse(c.Capacity) >= sm.Person &&
                     !db.Bookings.Any(b =>
-                        b.RoomID == r.RoomID &&
                         b.CheckInDate < sm.CheckOutDate &&
                         b.CheckOutDate > sm.CheckInDate))
                 .ToList();
@@ -112,10 +110,9 @@ public class HomeController : Controller
     public IActionResult RoomPage(string? checkIn, string? checkOut, int? persons, double? minPrice, double? maxPrice, string? themes, string? category)
     {
         // Get room from category
-        var Rooms = db.Rooms
-           .Include(r => r.Category)
-           .Where(r => r.Status == "Active" && r.Category.Status == "Active")
-           .ToList();
+        var categories = db.Categories
+                .Where(c => c.Status == "Active")
+                .ToList();
 
         // Get themes for room
         ViewBag.Themes = db.Categories
@@ -132,19 +129,19 @@ public class HomeController : Controller
 
         if (minPrice.HasValue && maxPrice.HasValue)
         {
-            Rooms = Rooms.Where(r => r.Category.PricePerNight >= minPrice && r.Category.PricePerNight <= maxPrice).ToList();
+            categories = categories.Where(c => c.PricePerNight >= minPrice && c.PricePerNight <= maxPrice).ToList();
         }
 
         if (!string.IsNullOrEmpty(themes))
         {
             var themeList = themes.Split(',').Select(t => t.Trim()).ToList();
-            Rooms = Rooms.Where(r => themeList.Contains(r.Category.Theme)).ToList();
+            categories = categories.Where(c => themeList.Contains(c.Theme)).ToList();
         }
 
         if (!string.IsNullOrEmpty(category))
         {
             var categoryList = category.Split(',').Select(t => t.Trim()).ToList();
-            Rooms = Rooms.Where(r => category.Contains(r.Category.CategoryName)).ToList();
+            categories = categories.Where(c => category.Contains(c.CategoryName)).ToList();
         }
 
         if (checkIn != null && checkOut != null && persons != null)
@@ -152,17 +149,16 @@ public class HomeController : Controller
             DateTime checkInDate = DateTime.Parse(checkIn);
             DateTime checkOutDate = DateTime.Parse(checkOut);
 
-            var availableRooms = Rooms
-                .Where(r => int.Parse(r.Category.Capacity) >= persons &&
+            var availableRooms = categories
+                .Where(c => int.Parse(c.Capacity) >= persons &&
                     !db.Bookings.Any(b =>
-                        b.RoomID == r.RoomID &&
                         b.CheckInDate < checkOutDate &&
                         b.CheckOutDate > checkInDate))
                 .ToList();
 
             var m = new RoomPageVM
             {
-                Rooms = availableRooms,
+                Categories = availableRooms,
                 SearchVM = new RoomSearchVM
                 {
                     CheckInDate = checkInDate,
@@ -176,7 +172,7 @@ public class HomeController : Controller
 
         var viewModel = new RoomPageVM
         {
-            Rooms = Rooms,
+            Categories = categories,
             SearchVM = new RoomSearchVM
             {
                 CheckInDate = DateTime.Now.Date,
@@ -204,24 +200,16 @@ public class HomeController : Controller
                 return RedirectToAction("RoomPage");
             }
 
-            // Get room from category
-            var rooms = db.Rooms
-               .Include(r => r.Category)
-               .Where(r => r.Status == "Active" && r.Category.Status == "Active")
-               .ToList();
-
-            var availableRooms = rooms
-                .Where(r => int.Parse(r.Category.Capacity) >= sm.Person &&
-                    !db.Bookings.Any(b =>
-                        b.RoomID == r.RoomID &&
-                        b.CheckInDate < sm.CheckOutDate &&
-                        b.CheckOutDate > sm.CheckInDate))
+            // If model state is valid and business logic passes
+            var categories = db.Categories
+                .Where(c => c.Status == "Active")
                 .ToList();
 
-            ViewBag.Themes = db.Categories
-                .Where(c => c.Status == "Active")
-                .Select(c => c.Theme)
-                .Distinct()
+            var availableRooms = categories
+                .Where(c => int.Parse(c.Capacity) >= sm.Person &&
+                    !db.Bookings.Any(b =>
+                        b.CheckInDate < sm.CheckOutDate &&
+                        b.CheckOutDate > sm.CheckInDate))
                 .ToList();
 
             if (availableRooms.Count == 0)
@@ -229,7 +217,7 @@ public class HomeController : Controller
                 TempData["Info"] = "No rooms are available for the selected dates and capacity.";
                 var viewModel = new RoomPageVM
                 {
-                    Rooms = rooms,
+                    Categories = categories,
                     SearchVM = new RoomSearchVM
                     {
                         CheckInDate = sm.CheckInDate,
@@ -256,14 +244,13 @@ public class HomeController : Controller
     // GET: ROOMDEATILS
     [Authorize]
     [Authorize(Roles = "Member")]
-    public IActionResult RoomDetailsPage(string roomID, string? Category)
+    public IActionResult RoomDetailsPage(string categoryID, string? Category)
     {
         // Get the room from roomID
-        var rooms = db.Rooms
-        .Include(r => r.Category)
-        .FirstOrDefault(r => r.RoomID == roomID);
+        var category = db.Categories
+        .FirstOrDefault(c => c.CategoryID == categoryID);
 
-        if (rooms == null)
+        if (category == null)
         {
             TempData["Info"] = "Invalid Room";
             return RedirectToAction("Index", "Home");
@@ -292,7 +279,7 @@ public class HomeController : Controller
         // Create the view model and assign the lists
         var viewModel = new RoomDetailsVM
         {
-            Rooms = rooms,
+            Categories = category,
             FoodServices = foodServices.ToList(),
             RoomServices = roomServices
         };

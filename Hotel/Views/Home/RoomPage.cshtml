@@ -116,17 +116,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var room in Model.Rooms)
+                    @foreach (var category in Model.Categories)
                     {
                         <tr>
-                            <td><img src='/uploads/@room.Category.RoomImage' alt="Hotel 1" class="hotel-image"></td>
-                            <td>@room.Category.CategoryName</td>
-                            <td>@room.Category.Theme</td>
-                            <td>@room.Category.Size sq. ft.</td>
-                            <td>Max person @room.Category.Capacity</td>
-                            <td>@room.Category.Bed</td>
-                            <td>RM @room.Category.PricePerNight/night</td>
-                            <td><a href="/Home/RoomDetailsPage?roomID=@room.RoomID" class="book-btn" target="_blank">Book Now</a></td>
+                            <td><img src='/uploads/@category.RoomImage' alt="Hotel 1" class="hotel-image"></td>
+                            <td>@category.CategoryName</td>
+                            <td>@category.Theme</td>
+                            <td>@category.Size sq. ft.</td>
+                            <td>Max person @category.Capacity</td>
+                            <td>@category.Bed</td>
+                            <td>RM @category.PricePerNight/night</td>
+                            <td><a href="/Home/RoomDetailsPage?categoryID=@category.CategoryID" class="book-btn" target="_blank">Book Now</a></td>
                         </tr>
                     }
                 </tbody>
