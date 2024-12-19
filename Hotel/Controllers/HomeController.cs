@@ -68,9 +68,33 @@ public class HomeController : Controller
         return View(vm);
     }
 
+    // POST: HOMEPAGE
     [HttpPost]
     public IActionResult Index([Bind(Prefix = "SearchVM")]RoomSearchVM sm, string? Category)
     {
+        // Get distinct categories for food services
+        ViewBag.ServiceTypes = db.Services
+       .Where(s => s.ServiceType == "Food")
+       .Select(s => s.Category)
+       .Distinct()
+       .ToList();
+
+        // Get food services based on selected category
+        // If no category is provided, default to "Breakfast"
+        var foodServices = string.IsNullOrEmpty(Category)
+        ? db.Services.Where(s => s.Category == "Breakfast" && s.ServiceType == "Food")
+        : db.Services.Where(s => s.Category == Category && s.ServiceType == "Food");
+
+        ViewBag.SelectedCategory = Category ?? "Breakfast";
+
+        // Get room from category
+        var categories = db.Rooms
+                    .Include(r => r.Category)
+                    .Where(r => r.Status == "Active" && r.Category.Status == "Active")
+                    .GroupBy(r => r.Category.CategoryID)
+                    .Select(g => g.First().Category)
+                    .ToList();
+
         // Validation (1): CheckIn within 30 days range
         if (ModelState.IsValid("SearchVM.CheckInDate"))
         {
@@ -113,7 +137,19 @@ public class HomeController : Controller
             if (availableRooms.Count == 0)
             {
                 TempData["Info"] = "No rooms are available for the selected dates and capacity.";
-                return RedirectToAction("Index");
+                var m = new HomePageVM
+                {
+                    FoodServices = foodServices.ToList(),
+                    Categories = categories,
+                    SearchVM = new RoomSearchVM
+                    {
+                        CheckInDate = sm.CheckInDate,
+                        CheckOutDate = sm.CheckOutDate,
+                        Person = sm.Person
+                    }
+                };
+
+                return View(m);
             }
             else
             {
@@ -125,29 +161,6 @@ public class HomeController : Controller
                 });
             }
         }
-
-        // Get distinct categories for food services
-        ViewBag.ServiceTypes = db.Services
-       .Where(s => s.ServiceType == "Food")
-       .Select(s => s.Category)
-       .Distinct()
-       .ToList();
-
-        // Get food services based on selected category
-        // If no category is provided, default to "Breakfast"
-        var foodServices = string.IsNullOrEmpty(Category)
-        ? db.Services.Where(s => s.Category == "Breakfast" && s.ServiceType == "Food")
-        : db.Services.Where(s => s.Category == Category && s.ServiceType == "Food");
-
-        ViewBag.SelectedCategory = Category ?? "Breakfast";
-
-        // Get room from category
-        var categories = db.Rooms
-                    .Include(r => r.Category)
-                    .Where(r => r.Status == "Active" && r.Category.Status == "Active")
-                    .GroupBy(r => r.Category.CategoryID)
-                    .Select(g => g.First().Category)
-                    .ToList();
 
         var vm = new HomePageVM
         {
@@ -164,6 +177,7 @@ public class HomeController : Controller
         return View(vm);
     }
 
+    // GET: ROOMPAGE
     public IActionResult RoomPage(DateOnly? checkIn, DateOnly? checkOut, int? persons, double? minPrice, double? maxPrice, string? themes, string? category)
     {
         // Get room from category
@@ -275,9 +289,31 @@ public class HomeController : Controller
         return View(vm);
     }
 
+    // POST: ROOMPAGE
     [HttpPost]
     public IActionResult RoomPage([Bind(Prefix = "SearchVM")]RoomSearchVM sm)
     {
+        // Get themes for room
+        ViewBag.Themes = db.Categories
+            .Where(c => c.Status == "Active")
+            .Select(c => c.Theme)
+            .Distinct()
+            .ToList();
+
+        ViewBag.RoomCategory = db.Categories
+            .Where(c => c.Status == "Active")
+            .Select(c => c.CategoryName)
+            .Distinct()
+            .ToList();
+
+        // Get room from category
+        var categories = db.Rooms
+                    .Include(r => r.Category)
+                    .Where(r => r.Status == "Active" && r.Category.Status == "Active")
+                    .GroupBy(r => r.Category.CategoryID)
+                    .Select(g => g.First().Category)
+                    .ToList();
+
         // Validation (1): CheckIn within 30 days range
         if (ModelState.IsValid("SearchVM.CheckInDate"))
         {
@@ -301,14 +337,6 @@ public class HomeController : Controller
                 ModelState.AddModelError("SearchVM.CheckOutDate", "Date out of range.");
             }
         }
-
-        // Get room from category
-        var categories = db.Rooms
-                    .Include(r => r.Category)
-                    .Where(r => r.Status == "Active" && r.Category.Status == "Active")
-                    .GroupBy(r => r.Category.CategoryID)
-                    .Select(g => g.First().Category)
-                    .ToList();
 
         if (ModelState.IsValid)
         {
@@ -345,19 +373,6 @@ public class HomeController : Controller
                 });
             }
         }
-
-        // Get themes for room
-        ViewBag.Themes = db.Categories
-            .Where(c => c.Status == "Active")
-            .Select(c => c.Theme)
-            .Distinct() 
-            .ToList();
-
-        ViewBag.RoomCategory = db.Categories
-            .Where(c => c.Status == "Active")
-            .Select(c => c.CategoryName)
-            .Distinct()
-            .ToList();
 
         var vm = new RoomPageVM
         {
