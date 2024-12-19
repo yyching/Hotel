@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.Migrations
 {
     [DbContext(typeof(DB))]
-    [Migration("20241213135331_CreateDB")]
+    [Migration("20241219151937_CreateDB")]
     partial class CreateDB
     {
         /// <inheritdoc />
@@ -45,7 +45,7 @@ namespace Hotel.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ServiceBookingID")
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("TotalAmount")
                         .HasColumnType("float");
@@ -206,18 +206,22 @@ namespace Hotel.Migrations
 
             modelBuilder.Entity("Hotel.Models.ServiceBooking", b =>
                 {
-                    b.Property<string>("ServiceBookingID")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<string>("ID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Qty")
                         .HasColumnType("int");
+
+                    b.Property<string>("ServiceBookingID")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ServiceID")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("ServiceBookingID");
+                    b.HasKey("ID");
 
                     b.HasIndex("ServiceID");
 
@@ -235,12 +239,13 @@ namespace Hotel.Migrations
 
                     b.Property<string>("UserID")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("tokens");
+                    b.HasIndex("UserID");
+
+                    b.ToTable("Tokens");
                 });
 
             modelBuilder.Entity("Hotel.Models.User", b =>
@@ -278,16 +283,11 @@ namespace Hotel.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TokenId")
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<string>("UserImage")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserID");
-
-                    b.HasIndex("TokenId");
 
                     b.ToTable("Users");
                 });
@@ -342,7 +342,7 @@ namespace Hotel.Migrations
             modelBuilder.Entity("Hotel.Models.ServiceBooking", b =>
                 {
                     b.HasOne("Hotel.Models.Service", "Service")
-                        .WithMany()
+                        .WithMany("ServiceBookings")
                         .HasForeignKey("ServiceID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -350,11 +350,15 @@ namespace Hotel.Migrations
                     b.Navigation("Service");
                 });
 
-            modelBuilder.Entity("Hotel.Models.User", b =>
+            modelBuilder.Entity("Hotel.Models.Token", b =>
                 {
-                    b.HasOne("Hotel.Models.Token", null)
-                        .WithMany("user")
-                        .HasForeignKey("TokenId");
+                    b.HasOne("Hotel.Models.User", "user")
+                        .WithMany()
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("Hotel.Models.Category", b =>
@@ -367,9 +371,9 @@ namespace Hotel.Migrations
                     b.Navigation("Bookings");
                 });
 
-            modelBuilder.Entity("Hotel.Models.Token", b =>
+            modelBuilder.Entity("Hotel.Models.Service", b =>
                 {
-                    b.Navigation("user");
+                    b.Navigation("ServiceBookings");
                 });
 
             modelBuilder.Entity("Hotel.Models.User", b =>

@@ -49,16 +49,21 @@ namespace Hotel.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "tokens",
+                name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Expire = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserID = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    UserID = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    UserImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_tokens", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.UserID);
                 });
 
             migrationBuilder.CreateTable(
@@ -85,77 +90,19 @@ namespace Hotel.Migrations
                 name: "ServiceBooking",
                 columns: table => new
                 {
+                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ServiceBookingID = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Qty = table.Column<int>(type: "int", nullable: false),
                     ServiceID = table.Column<string>(type: "nvarchar(100)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServiceBooking", x => x.ServiceBookingID);
+                    table.PrimaryKey("PK_ServiceBooking", x => x.ID);
                     table.ForeignKey(
                         name: "FK_ServiceBooking_Services_ServiceID",
                         column: x => x.ServiceID,
                         principalTable: "Services",
                         principalColumn: "ServiceID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    UserID = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    UserImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TokenId = table.Column<string>(type: "nvarchar(100)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.UserID);
-                    table.ForeignKey(
-                        name: "FK_Users_tokens_TokenId",
-                        column: x => x.TokenId,
-                        principalTable: "tokens",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Bookings",
-                columns: table => new
-                {
-                    BookingID = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    BookingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CheckInDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CheckOutDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TotalAmount = table.Column<double>(type: "float", nullable: false),
-                    UserID = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    RoomID = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    ServiceBookingID = table.Column<string>(type: "nvarchar(100)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Bookings", x => x.BookingID);
-                    table.ForeignKey(
-                        name: "FK_Bookings_Rooms_RoomID",
-                        column: x => x.RoomID,
-                        principalTable: "Rooms",
-                        principalColumn: "RoomID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Bookings_ServiceBooking_ServiceBookingID",
-                        column: x => x.ServiceBookingID,
-                        principalTable: "ServiceBooking",
-                        principalColumn: "ServiceBookingID");
-                    table.ForeignKey(
-                        name: "FK_Bookings_Users_UserID",
-                        column: x => x.UserID,
-                        principalTable: "Users",
-                        principalColumn: "UserID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -175,6 +122,60 @@ namespace Hotel.Migrations
                     table.PrimaryKey("PK_Reviews", x => x.ReviewID);
                     table.ForeignKey(
                         name: "FK_Reviews_Users_UserID",
+                        column: x => x.UserID,
+                        principalTable: "Users",
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tokens",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Expire = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserID = table.Column<string>(type: "nvarchar(100)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tokens_Users_UserID",
+                        column: x => x.UserID,
+                        principalTable: "Users",
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Bookings",
+                columns: table => new
+                {
+                    BookingID = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    BookingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CheckInDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CheckOutDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TotalAmount = table.Column<double>(type: "float", nullable: false),
+                    UserID = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    RoomID = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    ServiceBookingID = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bookings", x => x.BookingID);
+                    table.ForeignKey(
+                        name: "FK_Bookings_Rooms_RoomID",
+                        column: x => x.RoomID,
+                        principalTable: "Rooms",
+                        principalColumn: "RoomID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Bookings_ServiceBooking_ServiceBookingID",
+                        column: x => x.ServiceBookingID,
+                        principalTable: "ServiceBooking",
+                        principalColumn: "ID");
+                    table.ForeignKey(
+                        name: "FK_Bookings_Users_UserID",
                         column: x => x.UserID,
                         principalTable: "Users",
                         principalColumn: "UserID",
@@ -212,9 +213,9 @@ namespace Hotel.Migrations
                 column: "ServiceID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_TokenId",
-                table: "Users",
-                column: "TokenId");
+                name: "IX_Tokens_UserID",
+                table: "Tokens",
+                column: "UserID");
         }
 
         /// <inheritdoc />
@@ -225,6 +226,9 @@ namespace Hotel.Migrations
 
             migrationBuilder.DropTable(
                 name: "Reviews");
+
+            migrationBuilder.DropTable(
+                name: "Tokens");
 
             migrationBuilder.DropTable(
                 name: "Rooms");
@@ -240,9 +244,6 @@ namespace Hotel.Migrations
 
             migrationBuilder.DropTable(
                 name: "Services");
-
-            migrationBuilder.DropTable(
-                name: "tokens");
         }
     }
 }
