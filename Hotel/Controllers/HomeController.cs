@@ -48,7 +48,7 @@ public class HomeController : Controller
                     .Select(g => g.First().Category)
                     .ToList();
 
-        var viewModel = new HomePageVM
+        var vm = new HomePageVM
         {
             FoodServices = foodServices.ToList(),
             Categories = categories,
@@ -62,10 +62,10 @@ public class HomeController : Controller
 
         if (Request.IsAjax())
         {
-            return PartialView("FoodMenu", viewModel);
+            return PartialView("FoodMenu", vm);
         }
 
-        return View(viewModel);
+        return View(vm);
     }
 
     [HttpPost]
@@ -187,7 +187,7 @@ public class HomeController : Controller
             return View(m);
         }
 
-        var viewModel = new RoomPageVM
+        var vm = new RoomPageVM
         {
             Categories = categories,
             SearchVM = new RoomSearchVM
@@ -200,10 +200,10 @@ public class HomeController : Controller
 
         if (Request.IsAjax())
         {
-            return PartialView("ShowRoom", viewModel);
+            return PartialView("ShowRoom", vm);
         }
 
-        return View(viewModel);
+        return View(vm);
     }
 
     [HttpPost]
@@ -241,7 +241,7 @@ public class HomeController : Controller
             if (availableRooms.Count == 0)
             {
                 TempData["Info"] = "No rooms are available for the selected dates and capacity.";
-                var viewModel = new RoomPageVM
+                var vm = new RoomPageVM
                 {
                     Categories = categories,
                     SearchVM = new RoomSearchVM
@@ -252,7 +252,7 @@ public class HomeController : Controller
                     }
                 };
 
-                return View(viewModel);
+                return View(vm);
             }
             else
             {
@@ -270,13 +270,13 @@ public class HomeController : Controller
     // GET: ROOMDEATILS
     [Authorize]
     [Authorize(Roles = "Member")]
-    public IActionResult RoomDetailsPage(string categoryID, string? Category)
+    public IActionResult RoomDetailsPage(string categoryID, string? FoodCategory)
     {
         // Get the room from roomID
-        var category = db.Categories
+        var categories = db.Categories
         .FirstOrDefault(c => c.CategoryID == categoryID);
 
-        if (category == null)
+        if (categories == null)
         {
             TempData["Info"] = "Invalid Room";
             return RedirectToAction("Index", "Home");
@@ -291,11 +291,11 @@ public class HomeController : Controller
 
         // Get food services based on selected category
         // If no category is provided, default to "Breakfast"
-        var foodServices = string.IsNullOrEmpty(Category)
+        var foodServices = string.IsNullOrEmpty(FoodCategory)
         ? db.Services.Where(s => s.Category == "Breakfast" && s.ServiceType == "Food")
-        : db.Services.Where(s => s.Category == Category && s.ServiceType == "Food");
+        : db.Services.Where(s => s.Category == FoodCategory && s.ServiceType == "Food");
 
-        ViewBag.SelectedCategory = Category ?? "Breakfast";
+        ViewBag.SelectedCategory = FoodCategory ?? "Breakfast";
 
         // Get room services (ServiceType == "Room")
         var roomServices = db.Services
@@ -303,13 +303,18 @@ public class HomeController : Controller
         .ToList();
 
         // Create the view model and assign the lists
-        var viewModel = new RoomDetailsVM
+        var vm = new RoomDetailsVM
         {
-            Categories = category,
+            Categories = categories,
             FoodServices = foodServices.ToList(),
             RoomServices = roomServices
         };
 
-        return View(viewModel);
+        if (Request.IsAjax())
+        {
+            return PartialView("FoodAddOn", vm);
+        }
+
+        return View(vm);
     }
 }
