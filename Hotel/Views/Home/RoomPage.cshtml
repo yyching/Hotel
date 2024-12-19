@@ -3,6 +3,8 @@
 @{
     Layout = "_Layout";
     ViewBag.Title = "Room";
+    string min = DateTime.Today.ToString("yyyy-MM-dd");
+    string max = DateTime.Today.AddDays(30).ToString("yyyy-MM-dd");
 }
 <link rel="stylesheet" href="/css/room.css" asp-append-version="true">
 <script src="/js/room.js" defer></script>
@@ -12,13 +14,17 @@
     <form class="booking-form" method="post">
         <div class="form-group">
             <label asp-for="SearchVM.CheckInDate"></label>
-            <input asp-for="SearchVM.CheckInDate" />
+            <input asp-for="SearchVM.CheckInDate" min="@min" max="@max" />
             <span asp-validation-for="SearchVM.CheckInDate"></span>
         </div>
         <div class="form-group">
             <label asp-for="SearchVM.CheckOutDate"></label>
-            <input asp-for="SearchVM.CheckOutDate" />
+            <input asp-for="SearchVM.CheckOutDate"/>
             <span asp-validation-for="SearchVM.CheckOutDate"></span>
+        </div>
+        <div class="form-group">
+            <label>Days</label>
+            <span id="days" class="day"></span>
         </div>
         <div class="form-group">
             <label asp-for="SearchVM.Person"></label>

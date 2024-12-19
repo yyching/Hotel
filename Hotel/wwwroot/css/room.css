@@ -36,6 +36,12 @@ html {
         color: #333;
     }
 
+    .form-group .day {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
 input,
 select {
     padding: 8px;

@@ -38,7 +38,7 @@ $('#SearchVM_CheckInDate').on('input', e => {
 // 4. #CheckIn, #CheckOut input event
 //    --> Calculate days difference
 //    --> 1 day = 24 * 60 * 60 * 1000 ms
-$('#SearchVM_CheckInDate,#CheckOut').on('input', e => {
+$('#SearchVM_CheckInDate,#SearchVM_CheckOutDate').on('input', e => {
     const ci = $('#SearchVM_CheckInDate')[0];
     const co = $('#SearchVM_CheckOutDate')[0];
     const ms = co.valueAsDate - ci.valueAsDate;
