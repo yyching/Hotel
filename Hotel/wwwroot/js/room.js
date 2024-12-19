@@ -47,15 +47,27 @@ function debounce(func, wait) {
 const updatePriceFilter = debounce(() => {
     const minPrice = priceInput[0].value;
     const maxPrice = priceInput[1].value;
-    
+
     const url = new URL(window.location.href);
     const params = new URLSearchParams(url.search);
-    
+
     params.set('minPrice', minPrice);
     params.set('maxPrice', maxPrice);
-    
-    url.search = params.toString();
-    window.location.href = url.toString();
+
+    // send the ajax request
+    fetch(`/Home/RoomPage?${params.toString()}`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+        .then(response => response.text())
+        .then(html => {
+            document.querySelector('.hotel-table').innerHTML = html;
+            // update the url but not refresh the page
+            window.history.pushState({}, '', `${url.pathname}?${params.toString()}`);
+        })
+        .catch(error => console.error('Error:', error));
 }, 1000);
 
 priceInput.forEach((input) => {
@@ -98,55 +110,69 @@ rangeInput.forEach((input) => {
 });
 
 function handleThemeFilter(checkbox) {
-    const urlParams = new URLSearchParams(window.location.search);
+    // get the selected theme
+    const selectedThemes = Array.from(document.querySelectorAll('.theme-checkbox:checked'))
+        .map(checkbox => checkbox.value)
+        .join(',');
 
-    // capture the current theme
-    let themes = urlParams.get('themes') ? urlParams.get('themes').split(',') : [];
+    // get the current filter
+    const url = new URL(window.location.href);
+    const currentParams = new URLSearchParams(url.search);
+    
+    // update the theme
+    if (selectedThemes) {
+        currentParams.set('themes', selectedThemes);
+    } else {
+        currentParams.delete('themes');
+    }
 
-    if (checkbox.checked) {
-        // if selected add the theme
-        if (!themes.includes(checkbox.value)) {
-            themes.push(checkbox.value);
+    // send ajax request
+    fetch(`/Home/RoomPage?${currentParams.toString()}`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
         }
-    } else {
-        themes = themes.filter(theme => theme !== checkbox.value);
-    }
-
-    // update url
-    if (themes.length > 0) {
-        urlParams.set('themes', themes.join(','));
-    } else {
-        urlParams.delete('themes');
-    }
-
-    // new url
-    window.location.href = window.location.pathname + '?' + urlParams.toString();
+    })
+    .then(response => response.text())
+    .then(html => {
+        document.querySelector('.hotel-table').innerHTML = html;
+        // update thee url but no page refresh
+        window.history.pushState({}, '', `${url.pathname}?${currentParams.toString()}`);
+    })
+    .catch(error => console.error('Error:', error));
 }
 
 function handleCategoryFilter(checkbox) {
-    const urlParams = new URLSearchParams(window.location.search);
+    // get the selected category
+    const selectedCategories = Array.from(document.querySelectorAll('.category-checkbox:checked'))
+        .map(checkbox => checkbox.value)
+        .join(',');
 
-    // capture the current category
-    let category = urlParams.get('category') ? urlParams.get('category').split(',') : [];
+    // get the current filter
+    const url = new URL(window.location.href);
+    const currentParams = new URLSearchParams(url.search);
+    
+    // update the category
+    if (selectedCategories) {
+        currentParams.set('category', selectedCategories);
+    } else {
+        currentParams.delete('category');
+    }
 
-    if (checkbox.checked) {
-        // if selected add the category
-        if (!category.includes(checkbox.value)) {
-            category.push(checkbox.value);
+    // send ajax request
+    fetch(`/Home/RoomPage?${currentParams.toString()}`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
         }
-    } else {
-        category = category.filter(category => category !== checkbox.value);
-    }
-
-    // update url
-    if (category.length > 0) {
-        urlParams.set('category', category.join(','));
-    } else {
-        urlParams.delete('category');
-    }
-
-    // new url
-    window.location.href = window.location.pathname + '?' + urlParams.toString();
+    })
+    .then(response => response.text())
+    .then(html => {
+        document.querySelector('.hotel-table').innerHTML = html;
+        // update thee url but no page refresh
+        window.history.pushState({}, '', `${url.pathname}?${currentParams.toString()}`);
+    })
+    .catch(error => console.error('Error:', error));
 }
 
 // clear all the filter
@@ -167,19 +193,30 @@ function clearAllFilters() {
     rangeInput[1].value = rangeInput[1].max;
     initializeSlider();
 
-    // reset theme
-    document.querySelectorAll('input[name="themes"]').forEach(checkbox => {
+    // reset theme checkboxes
+    document.querySelectorAll('.theme-checkbox').forEach(checkbox => {
         checkbox.checked = false;
     });
 
-    // reset room type
-    document.querySelectorAll('input[name="category"]').forEach(checkbox => {
+    // reset room category checkboxes
+    document.querySelectorAll('.category-checkbox').forEach(checkbox => {
         checkbox.checked = false;
     });
 
-    // update the url
-    url.search = params.toString();
-    window.location.href = url.toString();
+    // send ajax request
+    fetch(`/Home/RoomPage?${params.toString()}`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+        .then(response => response.text())
+        .then(html => {
+            document.querySelector('.hotel-table').innerHTML = html;
+            // update the url but no oage reload
+            window.history.pushState({}, '', `${url.pathname}?${params.toString()}`);
+        })
+        .catch(error => console.error('Error:', error));
 }
 
 document.getElementById('clear-all').addEventListener('click', clearAllFilters);
