@@ -155,10 +155,10 @@ select {
 
     .range-input input {
         position: absolute;
-        width: 102%;
+        width: 104%;
         height: 5px;
-        margin-left: -10px;
-        top: -5px;
+        margin-left: -13px;
+        top: -14px;
         background: none;
         pointer-events: none;
         -webkit-appearance: none;
@@ -173,17 +173,6 @@ input[type="range"]::-webkit-slider-thumb {
     background: #007bff;
     pointer-events: auto;
     -webkit-appearance: none;
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
-}
-
-input[type="range"]::-moz-range-thumb {
-    height: 17px;
-    width: 17px;
-    border: none;
-    border-radius: 50%;
-    background: #007bff;
-    pointer-events: auto;
-    -moz-appearance: none;
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
 }
 
