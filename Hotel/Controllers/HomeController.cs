@@ -41,9 +41,12 @@ public class HomeController : Controller
         ViewBag.SelectedCategory = Category ?? "Breakfast";
 
         // Get room from category
-        var categories = db.Categories
-        .Where(c => c.Status == "Active")
-        .ToList();
+        var categories = db.Rooms
+                    .Include(r => r.Category)
+                    .Where(r => r.Status == "Active" && r.Category.Status == "Active")
+                    .GroupBy(r => r.Category.CategoryID)
+                    .Select(g => g.First().Category)
+                    .ToList();
 
         var viewModel = new HomePageVM
         {
@@ -63,27 +66,28 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult Index([Bind(Prefix = "SearchVM")]RoomSearchVM sm)
     {
+        if (sm.CheckInDate < DateTime.Now.Date)
+        {
+            TempData["Info"] = "Check-in date cannot be in the past.";
+            return RedirectToAction("Index");
+        }
+
+        if (sm.CheckOutDate <= sm.CheckInDate)
+        {
+            TempData["Info"] = "Check-out date must be after the check-in date.";
+            return RedirectToAction("Index");
+        }
+
         if (ModelState.IsValid)
         {
-            if (sm.CheckInDate < DateTime.Now.Date)
-            {
-                TempData["Info"] = "Check-in date cannot be in the past.";
-                return RedirectToAction("Index");
-            }
+            // If model state is valid get the category
+            var rooms = db.Rooms
+                     .Include(r => r.Category)
+                     .Where(r => r.Status == "Active" && r.Category.Status == "Active")
+                     .ToList();
 
-            if (sm.CheckOutDate <= sm.CheckInDate)
-            {
-                TempData["Info"] = "Check-out date must be after the check-in date.";
-                return RedirectToAction("Index");
-            }
-
-            // If model state is valid and business logic passes
-            var categories = db.Categories
-                .Where(c => c.Status == "Active")
-                .ToList();
-
-            var availableRooms = categories
-                .Where(c => int.Parse(c.Capacity) >= sm.Person &&
+            var availableRooms = rooms
+                .Where(r => int.Parse(r.Category.Capacity) >= sm.Person &&
                     !db.Bookings.Any(b =>
                         b.CheckInDate < sm.CheckOutDate &&
                         b.CheckOutDate > sm.CheckInDate))
@@ -110,9 +114,12 @@ public class HomeController : Controller
     public IActionResult RoomPage(string? checkIn, string? checkOut, int? persons, double? minPrice, double? maxPrice, string? themes, string? category)
     {
         // Get room from category
-        var categories = db.Categories
-                .Where(c => c.Status == "Active")
-                .ToList();
+        var categories = db.Rooms
+                    .Include(r => r.Category)
+                    .Where(r => r.Status == "Active" && r.Category.Status == "Active")
+                    .GroupBy(r => r.Category.CategoryID)
+                    .Select(g => g.First().Category)
+                    .ToList();
 
         // Get themes for room
         ViewBag.Themes = db.Categories
@@ -150,8 +157,8 @@ public class HomeController : Controller
             DateTime checkOutDate = DateTime.Parse(checkOut);
 
             var availableRooms = categories
-                .Where(c => int.Parse(c.Capacity) >= persons &&
-                    !db.Bookings.Any(b =>
+                .Where(r => int.Parse(r.Capacity) >= persons &&
+                        !db.Bookings.Any(b =>
                         b.CheckInDate < checkOutDate &&
                         b.CheckOutDate > checkInDate))
                 .ToList();
@@ -200,14 +207,17 @@ public class HomeController : Controller
                 return RedirectToAction("RoomPage");
             }
 
-            // If model state is valid and business logic passes
-            var categories = db.Categories
-                .Where(c => c.Status == "Active")
-                .ToList();
+            // Get room from category
+            var categories = db.Rooms
+                        .Include(r => r.Category)
+                        .Where(r => r.Status == "Active" && r.Category.Status == "Active")
+                        .GroupBy(r => r.Category.CategoryID)
+                        .Select(g => g.First().Category)
+                        .ToList();
 
             var availableRooms = categories
-                .Where(c => int.Parse(c.Capacity) >= sm.Person &&
-                    !db.Bookings.Any(b =>
+                .Where(r => int.Parse(r.Capacity) >= sm.Person &&
+                        !db.Bookings.Any(b =>
                         b.CheckInDate < sm.CheckOutDate &&
                         b.CheckOutDate > sm.CheckInDate))
                 .ToList();
