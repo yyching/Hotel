@@ -105,25 +105,17 @@
 <nav class="menu-nav">
     @foreach (var category in ViewBag.ServiceTypes)
     {
-        <a href="?Category=@category">@category</a>
+        <a data-ajax="true"
+           data-ajax-update="#target"
+           data-ajax-loading="#loader"
+           href="?Category=@category">@category</a>
     }
 </nav>
 
-    <section class="menu-section">
-        <h2>@ViewBag.SelectedCategory</h2>
-        <div class="menu-grid">
-            @foreach (var s in Model.FoodServices)
-            {
-                <div class="menu-item">
-                    <div class="price">RM @s.UnitPrice</div>
-                    <h3 class="item-title">@s.ServiceName</h3>
-                    <p class="item-description">@s.ServiceDescription</p>
-                </div>
-            }
-        </div>
-    </section>
+    <div id="target">
+        <partial name="FoodMenu" />
+    </div>
 </div>
-
 
 <!---Room-->
 <div class="room-grid">

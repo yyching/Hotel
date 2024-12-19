@@ -101,37 +101,10 @@
 
     <!-- Hotel Table -->
     <div class="content-container">
-        <div class="hotel-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Hotel Image</th>
-                        <th>Type</th>
-                        <th>Theme</th>
-                        <th>Size</th>
-                        <th>Capacity</th>
-                        <th>Bed</th>
-                        <th>Price</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var category in Model.Categories)
-                    {
-                        <tr>
-                            <td><img src='/uploads/@category.RoomImage' alt="Hotel 1" class="hotel-image"></td>
-                            <td>@category.CategoryName</td>
-                            <td>@category.Theme</td>
-                            <td>@category.Size sq. ft.</td>
-                            <td>Max person @category.Capacity</td>
-                            <td>@category.Bed</td>
-                            <td>RM @category.PricePerNight/night</td>
-                            <td><a href="/Home/RoomDetailsPage?categoryID=@category.CategoryID" class="book-btn" target="_blank">Book Now</a></td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+        <div id="target">
+            <div class="hotel-table">
+                <partial name="ShowRoom" />
+            </div>
         </div>
-
     </div>
 </div>

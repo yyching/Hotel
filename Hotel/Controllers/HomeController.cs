@@ -60,6 +60,11 @@ public class HomeController : Controller
             }
         };
 
+        if (Request.IsAjax())
+        {
+            return PartialView("FoodMenu", viewModel);
+        }
+
         return View(viewModel);
     }
 
@@ -174,6 +179,11 @@ public class HomeController : Controller
                 }
             };
 
+            if (Request.IsAjax())
+            {
+                return PartialView("ShowRoom", m);
+            }
+
             return View(m);
         }
 
@@ -187,6 +197,12 @@ public class HomeController : Controller
                 Person = 1
             }
         };
+
+        if (Request.IsAjax())
+        {
+            return PartialView("ShowRoom", viewModel);
+        }
+
         return View(viewModel);
     }
 

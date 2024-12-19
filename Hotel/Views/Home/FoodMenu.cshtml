@@ -1,0 +1,15 @@
+﻿@model HomePageVM
+
+<section class="menu-section">
+    <h2>@ViewBag.SelectedCategory</h2>
+    <div class="menu-grid">
+        @foreach (var s in Model.FoodServices)
+        {
+            <div class="menu-item">
+                <div class="price">RM @s.UnitPrice</div>
+                <h3 class="item-title">@s.ServiceName</h3>
+                <p class="item-description">@s.ServiceDescription</p>
+            </div>
+        }
+    </div>
+</section>
