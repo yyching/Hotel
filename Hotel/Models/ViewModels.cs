@@ -112,15 +112,14 @@ public class ResetPasswordVM
 // Search for the available room
 public class RoomSearchVM
 {
-    [Required(ErrorMessage = "Check-in date is required.")]
+    [Display(Name = "Check In Date")]
     [DataType(DataType.Date)]
     public DateOnly CheckInDate { get; set; }
 
-    [Required(ErrorMessage = "Check-out date is required.")]
+    [Display(Name = "Check Out Date")]
     [DataType(DataType.Date)]
     public DateOnly CheckOutDate { get; set; }
 
-    [Required(ErrorMessage = "Number of persons is required.")]
     [Range(1, int.MaxValue, ErrorMessage = "Number of persons must be at least 1.")]
     public int Person { get; set; }
 }
