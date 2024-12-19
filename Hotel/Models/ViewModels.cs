@@ -114,11 +114,11 @@ public class RoomSearchVM
 {
     [Required(ErrorMessage = "Check-in date is required.")]
     [DataType(DataType.Date)]
-    public DateTime CheckInDate { get; set; }
+    public DateOnly CheckInDate { get; set; }
 
     [Required(ErrorMessage = "Check-out date is required.")]
     [DataType(DataType.Date)]
-    public DateTime CheckOutDate { get; set; }
+    public DateOnly CheckOutDate { get; set; }
 
     [Required(ErrorMessage = "Number of persons is required.")]
     [Range(1, int.MaxValue, ErrorMessage = "Number of persons must be at least 1.")]

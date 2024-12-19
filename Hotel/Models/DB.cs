@@ -117,8 +117,8 @@ public class Booking
     [Key, MaxLength(100)]
     public string BookingID { get; set; }
     public DateTime BookingDate { get; set; }
-    public DateTime CheckInDate { get; set; }
-    public DateTime CheckOutDate { get; set; }
+    public DateOnly CheckInDate { get; set; }
+    public DateOnly CheckOutDate { get; set; }
     public double TotalAmount { get; set; }
 
     // Foreign Key
