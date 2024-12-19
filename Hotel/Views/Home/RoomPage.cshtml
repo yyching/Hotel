@@ -12,23 +12,22 @@
     <form class="booking-form" method="post">
         <div class="form-group">
             <label asp-for="SearchVM.CheckInDate"></label>
-            <input asp-for="SearchVM.CheckInDate" type="date" />
+            <input asp-for="SearchVM.CheckInDate" />
             <span asp-validation-for="SearchVM.CheckInDate"></span>
         </div>
         <div class="form-group">
             <label asp-for="SearchVM.CheckOutDate"></label>
-            <input asp-for="SearchVM.CheckOutDate" type="date" />
+            <input asp-for="SearchVM.CheckOutDate" />
             <span asp-validation-for="SearchVM.CheckOutDate"></span>
         </div>
         <div class="form-group">
             <label asp-for="SearchVM.Person"></label>
-            <input asp-for="SearchVM.Person" type="number" />
+            <input asp-for="SearchVM.Person" />
             <span asp-validation-for="SearchVM.Person"></span>
         </div>
         <button class="btn">Check Availability</button>
     </form>
 </section>
-
 
 <!-- Filter Section -->
 <div class="main-container">
