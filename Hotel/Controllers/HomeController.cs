@@ -72,29 +72,6 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult Index([Bind(Prefix = "SearchVM")]RoomSearchVM sm, string? Category)
     {
-        // Get distinct categories for food services
-        ViewBag.ServiceTypes = db.Services
-       .Where(s => s.ServiceType == "Food")
-       .Select(s => s.Category)
-       .Distinct()
-       .ToList();
-
-        // Get food services based on selected category
-        // If no category is provided, default to "Breakfast"
-        var foodServices = string.IsNullOrEmpty(Category)
-        ? db.Services.Where(s => s.Category == "Breakfast" && s.ServiceType == "Food")
-        : db.Services.Where(s => s.Category == Category && s.ServiceType == "Food");
-
-        ViewBag.SelectedCategory = Category ?? "Breakfast";
-
-        // Get room from category
-        var categories = db.Rooms
-                    .Include(r => r.Category)
-                    .Where(r => r.Status == "Active" && r.Category.Status == "Active")
-                    .GroupBy(r => r.Category.CategoryID)
-                    .Select(g => g.First().Category)
-                    .ToList();
-
         // Validation (1): CheckIn within 30 days range
         if (ModelState.IsValid("SearchVM.CheckInDate"))
         {
@@ -121,60 +98,15 @@ public class HomeController : Controller
 
         if (ModelState.IsValid)
         {
-            // If model state is valid get the available room
-            var rooms = db.Rooms
-                     .Include(r => r.Category)
-                     .Where(r => r.Status == "Active" && r.Category.Status == "Active")
-                     .ToList();
-
-            var availableRooms = rooms
-                .Where(r => int.Parse(r.Category.Capacity) >= sm.Person &&
-                    !db.Bookings.Any(b =>
-                        b.CheckInDate < sm.CheckOutDate &&
-                        b.CheckOutDate > sm.CheckInDate))
-                .ToList();
-
-            if (availableRooms.Count == 0)
+            return RedirectToAction("RoomPage", new
             {
-                TempData["Info"] = "No rooms are available for the selected dates and capacity.";
-                var m = new HomePageVM
-                {
-                    FoodServices = foodServices.ToList(),
-                    Categories = categories,
-                    SearchVM = new RoomSearchVM
-                    {
-                        CheckInDate = sm.CheckInDate,
-                        CheckOutDate = sm.CheckOutDate,
-                        Person = sm.Person
-                    }
-                };
-
-                return View(m);
-            }
-            else
-            {
-                return RedirectToAction("RoomPage", new
-                {
-                    checkIn = sm.CheckInDate.ToString("yyyy-MM-dd"),
-                    checkOut = sm.CheckOutDate.ToString("yyyy-MM-dd"),
-                    persons = sm.Person
-                });
-            }
+                checkIn = sm.CheckInDate.ToString("MM/dd/yyyy"),
+                checkOut = sm.CheckOutDate.ToString("MM/dd/yyyy"),
+                persons = sm.Person
+            });
         }
 
-        var vm = new HomePageVM
-        {
-            FoodServices = foodServices.ToList(),
-            Categories = categories,
-            SearchVM = new RoomSearchVM
-            {
-                CheckInDate = sm.CheckInDate,
-                CheckOutDate = sm.CheckOutDate,
-                Person = sm.Person
-            }
-        };
-
-        return View(vm);
+        return View();
     }
 
     // GET: ROOMPAGE
@@ -192,7 +124,7 @@ public class HomeController : Controller
         ViewBag.Themes = db.Categories
             .Where(c => c.Status == "Active")
             .Select(c => c.Theme)
-            .Distinct() 
+            .Distinct()
             .ToList();
 
         ViewBag.RoomCategory = db.Categories
@@ -244,30 +176,61 @@ public class HomeController : Controller
                 }
             }
 
-            var availableRooms = categories
-                .Where(r => int.Parse(r.Capacity) >= persons &&
-                        !db.Bookings.Any(b =>
-                        b.CheckInDate < checkOut &&
-                        b.CheckOutDate > checkIn))
+            var occupiedRooms = db.Bookings
+                                  .Where(b => checkIn < b.CheckOutDate &&
+                                         b.CheckInDate < checkOut)
+                                  .Select(b => b.RoomID);
+
+            var availableRooms = db.Rooms
+                .Include(r => r.Category)
+                .Where(r => !occupiedRooms.Contains(r.RoomID))
+                .ToList()
+                .Where(r => Convert.ToInt32(r.Category.Capacity) >= persons)
+                .GroupBy(r => r.Category.CategoryID)
+                .Select(g => g.First().Category)
                 .ToList();
 
-            var m = new RoomPageVM
+            if (availableRooms.Count == 0)
             {
-                Categories = availableRooms,
-                SearchVM = new RoomSearchVM
+                TempData["Info"] = "No rooms are available for the selected dates and capacity.";
+                var sm = new RoomPageVM
                 {
-                    CheckInDate = checkIn.Value,
-                    CheckOutDate = checkOut.Value,
-                    Person = persons ?? 1
+                    Categories = availableRooms,
+                    SearchVM = new RoomSearchVM
+                    {
+                        CheckInDate = checkIn.Value,
+                        CheckOutDate = checkOut.Value,
+                        Person = persons.Value
+                    }
+                };
+
+                if (Request.IsAjax())
+                {
+                    return PartialView("ShowRoom", sm);
                 }
-            };
 
-            if (Request.IsAjax())
-            {
-                return PartialView("ShowRoom", m);
+                return View(sm);
             }
+            else
+            {
+                var sm = new RoomPageVM
+                {
+                    Categories = availableRooms,
+                    SearchVM = new RoomSearchVM
+                    {
+                        CheckInDate = checkIn.Value,
+                        CheckOutDate = checkOut.Value,
+                        Person = persons.Value
+                    }
+                };
 
-            return View(m);
+                if (Request.IsAjax())
+                {
+                    return PartialView("ShowRoom", sm);
+                }
+
+                return View(sm);
+            }
         }
 
         var vm = new RoomPageVM
@@ -293,27 +256,6 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult RoomPage([Bind(Prefix = "SearchVM")]RoomSearchVM sm)
     {
-        // Get themes for room
-        ViewBag.Themes = db.Categories
-            .Where(c => c.Status == "Active")
-            .Select(c => c.Theme)
-            .Distinct()
-            .ToList();
-
-        ViewBag.RoomCategory = db.Categories
-            .Where(c => c.Status == "Active")
-            .Select(c => c.CategoryName)
-            .Distinct()
-            .ToList();
-
-        // Get room from category
-        var categories = db.Rooms
-                    .Include(r => r.Category)
-                    .Where(r => r.Status == "Active" && r.Category.Status == "Active")
-                    .GroupBy(r => r.Category.CategoryID)
-                    .Select(g => g.First().Category)
-                    .ToList();
-
         // Validation (1): CheckIn within 30 days range
         if (ModelState.IsValid("SearchVM.CheckInDate"))
         {
@@ -340,52 +282,15 @@ public class HomeController : Controller
 
         if (ModelState.IsValid)
         {
-            var availableRooms = categories
-                .Where(r => int.Parse(r.Capacity) >= sm.Person &&
-                        !db.Bookings.Any(b =>
-                        b.CheckInDate < sm.CheckOutDate &&
-                        b.CheckOutDate > sm.CheckInDate))
-                .ToList();
-
-            if (availableRooms.Count == 0)
+            return RedirectToAction("RoomPage", new
             {
-                TempData["Info"] = "No rooms are available for the selected dates and capacity.";
-                var m = new RoomPageVM
-                {
-                    Categories = categories,
-                    SearchVM = new RoomSearchVM
-                    {
-                        CheckInDate = sm.CheckInDate,
-                        CheckOutDate = sm.CheckOutDate,
-                        Person = sm.Person
-                    }
-                };
-
-                return View(m);
-            }
-            else
-            {
-                return RedirectToAction("RoomPage", new
-                {
-                    checkIn = sm.CheckInDate.ToString("yyyy-MM-dd"),
-                    checkOut = sm.CheckOutDate.ToString("yyyy-MM-dd"),
-                    persons = sm.Person
-                });
-            }
+                checkIn = sm.CheckInDate.ToString("MM/dd/yyyy"),
+                checkOut = sm.CheckOutDate.ToString("MM/dd/yyyy"),
+                persons = sm.Person
+            });
         }
 
-        var vm = new RoomPageVM
-        {
-            Categories = categories,
-            SearchVM = new RoomSearchVM
-            {
-                CheckInDate = sm.CheckInDate,
-                CheckOutDate = sm.CheckOutDate,
-                Person = sm.Person
-            }
-        };
-
-        return View(vm);
+        return View();
     }
 
     // GET: ROOMDEATILS

@@ -129,7 +129,6 @@ public class Booking
     // Navigation
     public User User { get; set; }
     public Room Room { get; set; }
-    public ServiceBooking ServiceBooking { get; set; }
 }
 
 public class Service
