@@ -1,6 +1,7 @@
-﻿@model AddRoomVMs
+﻿@model UpdateRoomVMs
 
-<form method="post" action="/Admin/_AddRoom">
+<form method="post" action="/Admin/_UpdateRoom">
+    <input asp-for="RoomID" hidden>
     <label asp-for="RoomNumber">Room Number:</label>
     <input asp-for="RoomNumber" required />
     <span asp-validation-for="RoomNumber"></span><br><br>
@@ -11,13 +12,7 @@
     </select>
     <span asp-validation-for="CategoryID"></span><br><br>
 
-    <label asp-for="Status">Status:</label>
-    <select asp-for="Status">
-        <option value="Active">Active</option>
-        <option value="Terminate">Terminate</option>
-    </select><br><br>
-
     <div class="modal-footer">
-        <button type="submit" class="submit-btn">Add Room</button>
+        <button type="submit" class="submit-btn">Update Room</button>
     </div>
 </form>

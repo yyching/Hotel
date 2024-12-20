@@ -226,13 +226,22 @@ public class AdminController : Controller
     // Room - Add | Get
     public IActionResult _AddRoom()
     {
-        ViewBag.CategoryList = new SelectList(db.Categories, "CategoryID", "CategoryName");
+        var activeCategories = db.Categories
+                             .Where(c => c.Status == "Active")
+                             .Select(c => new
+                             {
+                                 c.CategoryID,
+                                 DisplayText = $"{c.CategoryName} - {c.Theme}"
+                             })
+                             .ToList();
+
+        ViewBag.CategoryList = new SelectList(activeCategories, "CategoryID", "DisplayText");
         return View();
     }
 
     // Room - Add | Post
     [HttpPost]
-    public IActionResult _AddRoom(RoomVMs vm)
+    public IActionResult _AddRoom(AddRoomVMs vm)
     {
         if (ModelState.IsValid)
         {
@@ -256,6 +265,91 @@ public class AdminController : Controller
         }
 
         return View(vm);
+    }
+
+    // Room - Update | Get
+    public IActionResult _UpdateRoom(string? id)
+    {
+        var rm = db.Rooms.Find(id);
+
+        if (rm == null)
+        {
+            return RedirectToAction("Rooms");
+        }
+
+        var activeCategories = db.Categories
+                             .Where(c => c.Status == "Active")
+                             .Select(c => new
+                             {
+                                 c.CategoryID,
+                                 DisplayText = $"{c.CategoryName} - {c.Theme}"
+                             })
+                             .ToList();
+
+        ViewBag.CategoryList = new SelectList(activeCategories, "CategoryID", "DisplayText");
+
+        var vm = new UpdateRoomVMs
+        {
+            RoomID = rm.RoomID,
+            RoomNumber = rm.RoomNumber,
+            CategoryID = rm.CategoryID,
+        };
+        return View(vm);
+    }
+
+    // Room - Add | Post
+    [HttpPost]
+    public IActionResult _UpdateRoom(UpdateRoomVMs vm)
+    {
+        var rm = db.Rooms.Find(vm.RoomID);
+
+        if (ModelState.IsValid)
+        {
+            rm.RoomNumber = vm.RoomNumber;
+            rm.CategoryID = vm.CategoryID;
+            db.SaveChanges();
+
+            TempData["Info"] = "Room updated.";
+            return RedirectToAction("Rooms");
+        }
+
+        return View(vm);
+    }
+
+    // Room Category - Terminate | Post
+    [HttpPost]
+    public IActionResult TerminateRoom(string? id)
+    {
+        var rc = db.Rooms.Find(id);
+
+        if (rc != null)
+        {
+            rc.Status = "Terminate";
+
+            db.SaveChanges();
+
+            TempData["Info"] = "Terminated.";
+        }
+
+        return RedirectToAction("Rooms");
+    }
+
+    // Room Category - Activate | Post
+    [HttpPost]
+    public IActionResult ActivateRoom(string? id)
+    {
+        var rc = db.Rooms.Find(id);
+
+        if (rc != null)
+        {
+            rc.Status = "Active";
+
+            db.SaveChanges();
+
+            TempData["Info"] = "Activate.";
+        }
+
+        return RedirectToAction("Rooms");
     }
 
     // Service

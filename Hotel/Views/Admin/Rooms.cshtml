@@ -46,8 +46,15 @@
                     <td>@rm.Category.Capacity</td>
                     <td>@rm.Status</td>
                     <td>
-                        <button class="btn btn-primary btn-sm">Edit</button>
-                        <button class="btn btn-danger btn-sm">Terminate</button>
+                        <button class="btn btn-primary btn-sm editRoomBtn" data-id="@rm.RoomID">Edit</button>
+                        @if (rm.Status == "Active")
+                        {
+                            <button data-post="/Admin/TerminateRoom/@rm.RoomID" class="btn btn-danger btn-sm">Terminate</button>
+                        }
+                        else if (rm.Status == "Terminate")
+                        {
+                            <button data-post="/Admin/ActivateRoom/@rm.RoomID" class="btn btn-success btn-sm">Activate</button>
+                        }
                     </td>
                 </tr>
             }
@@ -55,15 +62,15 @@
     </table>
 </div>
 
-<!-- Popup Modal -->
+<!-- Popup Modal for Add or Edit Room -->
 <div id="addRoomModal" class="modal" style="display:none;">
     <div class="modal-content">
         <div class="modal-header">
-            <span class="modal-title">Add Room</span>
+            <span id="modalTitle" class="modal-title">Add Room</span>
             <button id="closeModal" class="close-btn">&times;</button>
         </div>
         <div id="modalBody" class="modal-body">
-            <!-- Content from AddRoom.cshtml will load here -->
+            <!-- Content -->
         </div>
     </div>
 </div>
@@ -73,17 +80,24 @@
 <script>
     $(document).ready(function () {
         const addRoomBtn = $("#addRoomBtn");
+        const editRoomBtn = $(".editRoomBtn");
         const addRoomModal = $("#addRoomModal");
         const closeModal = $("#closeModal");
+        const modalTitle = $("#modalTitle");
+        const modalBody = $("#modalBody");
 
-        // Open Modal and Load Partial View
+        // Open Modal and Load Add Room Form
         addRoomBtn.click(function () {
             $.ajax({
-                url: '/Admin/_AddRoom', // Controller action to return the partial view
+                // Adjust the URL for your add room action
+                url: '/Admin/_AddRoom',  
                 type: 'GET',
                 success: function (data) {
-                    $("#modalBody").html(data); // Load form content into the modal body
-                    addRoomModal.css("display", "flex"); // Set display: flex for the modal
+                    // Set the modal title for Add Room
+                    modalTitle.text("Add Room");  
+                    // Load Add Room form content
+                    modalBody.html(data);  
+                    addRoomModal.css("display", "flex"); 
                 },
                 error: function () {
                     alert("Failed to load the Add Room form.");
@@ -91,17 +105,40 @@
             });
         });
 
+        // Open Modal and Load Edit Room Form
+        editRoomBtn.click(function () {
+            // Get the Room ID from the button's data-id attribute
+            const roomId = $(this).data("id");  
+            $.ajax({
+                // Pass roomId to the controller action
+                url: '/Admin/_UpdateRoom/' + roomId,  
+                type: 'GET',
+                success: function (data) {
+                    // Set the modal title for Edit Room
+                    modalTitle.text("Edit Room");
+                    // Load Edit Room form content
+                    modalBody.html(data);  
+                    addRoomModal.css("display", "flex");
+                },
+                error: function () {
+                    alert("Failed to load the Edit Room form.");
+                }
+            });
+        });
+
         // Close Modal
         closeModal.click(function () {
-            addRoomModal.css("display", "none"); // Hide the modal
+            addRoomModal.css("display", "none");
         });
 
         // Hide Modal on Outside Click
         $(window).click(function (event) {
             if (event.target === addRoomModal[0]) {
-                addRoomModal.css("display", "none"); // Hide modal on outside click
+                addRoomModal.css("display", "none");
             }
         });
     });
 </script>
+
+
 
