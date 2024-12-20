@@ -3,6 +3,8 @@
 @{
     Layout = "_Layout2";
     ViewBag.Title = "RoomDetails";
+    DateOnly min = ViewBag.Min;
+    DateOnly max = ViewBag.Max;
 }
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" href="/css/roomdetails.css" asp-append-version="true">
@@ -12,14 +14,14 @@
 <!-- Room Section -->
 <div class="room-container">
     <div class="room-image">
-        <img src="/uploads/@Model.Categories.RoomImage" alt="Room Image">
+        <img src="/uploads/@ViewBag.Categories.RoomImage" alt="Room Image">
     </div>
     <div class="room-details">
-        <h1>@Model.Categories.CategoryName</h1>
-        <p><strong>Price:</strong> RM @Model.Categories.PricePerNight/night</p>
-        <p><strong>Size:</strong> @Model.Categories.Size sqm</p>
-        <p><strong>Capacity:</strong> @Model.Categories.Capacity Adults</p>
-        <p><strong>Bed:</strong> @Model.Categories.Bed</p>
+        <h1>@ViewBag.Categories.CategoryName</h1>
+        <p><strong>Price:</strong> RM @ViewBag.Categories.PricePerNight/night</p>
+        <p><strong>Size:</strong> @ViewBag.Categories.Size sqm</p>
+        <p><strong>Capacity:</strong> @ViewBag.Categories.Capacity Adults</p>
+        <p><strong>Bed:</strong> @ViewBag.Categories.Bed</p>
     </div>
 </div>
 
@@ -29,7 +31,7 @@
     <div class="description">
         <h2>Description</h2>
         <p>
-            @Model.Categories.Description
+            @ViewBag.Categories.Description
         </p>
     </div>
     <div class="more-images">
@@ -88,9 +90,32 @@
 
 
 <div class="service-container">
+    
+    <h1 class="hotel-booking">Hotel Booking</h1>
+
+    <div>
+        <p>
+            @* Generate links for previous, c{urrent and next months *@
+            @for (int n = -1; n <= 1; n++)
+            {
+                if (n > -1)
+                {
+                    <text>|</text>
+                }
+
+                var d = DateTime.Today.AddMonths(n);
+                <a data-ajax="true"
+                   data-ajax-update="#RoomStatus"
+                   data-ajax-loading="#loader"
+                   href="?categoryID=@ViewBag.Categories.CategoryID&partialView=RoomStatus&month=@d.ToString("yyyy-MM")">@d.ToString("MMMM")</a>
+            }
+        </p>
+        <div id="RoomStatus">
+            <partial name="RoomStatus" />
+        </div>
+    </div>
 
     <!-- Calendar Section -->
-    <h1 class="hotel-booking">Hotel Booking</h1>
     <input type="text" id="date-picker" placeholder="Select your Check-in and Check-out dates">
 
     <!-- Food Section -->
@@ -101,15 +126,15 @@
             @foreach (var FoodCategory in ViewBag.ServiceTypes)
             {
                 <a data-ajax="true"
-                   data-ajax-update="#target"
-                   data-ajax-loading="#loader" 
-                   href="?categoryID=@Model.Categories.CategoryID&FoodCategory=@FoodCategory">
+                   data-ajax-update="#FoodAddOn"
+                   data-ajax-loading="#loader"
+                   href="?categoryID=@ViewBag.Categories.CategoryID&partialView=FoodAddOn&FoodCategory=@FoodCategory">
                    @FoodCategory
                 </a>
             }
         </nav>
 
-        <div id="target">
+        <div id="FoodAddOn">
             <partial name="FoodAddOn" />
         </div>
     </div>
@@ -118,7 +143,7 @@
     <div class="addon-section">
         <h1 class="hotel-booking">Add-On Services</h1>
 
-        @foreach (var service in Model.RoomServices)
+        @foreach (var service in ViewBag.RoomServices)
         {
             <div class="addon-item">
                 <label for="@service.ServiceID">@service.ServiceName RM(@service.UnitPrice)</label>

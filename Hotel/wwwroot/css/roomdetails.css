@@ -267,3 +267,26 @@ html {
     .book-btn:hover {
         background-color: #0056b3;
     }
+
+table {
+    border-collapse: collapse;
+}
+
+    table caption {
+        font-weight: bold;
+        font-size: 20px;
+        margin-bottom: 5px;
+    }
+
+td, th {
+    border: 1px solid #999;
+    padding: 5px;
+}
+
+.x {
+    background: tomato;
+}
+
+.o {
+    background: lightgreen;
+}

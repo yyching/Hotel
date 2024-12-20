@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using X.PagedList.Extensions;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Hotel.Controllers;
 
@@ -295,16 +296,43 @@ public class HomeController : Controller
     // GET: ROOMDEATILS
     [Authorize]
     [Authorize(Roles = "Member")]
-    public IActionResult RoomDetailsPage(string categoryID, string? FoodCategory)
+    public IActionResult RoomDetailsPage(string categoryID, string? FoodCategory, DateOnly? month, string? partialView)
     {
+        var m = month.GetValueOrDefault(DateTime.Today.ToDateOnly());
+
+        // Min = First day of the month
+        // Max = First day of next month
+
+        var min = new DateOnly(m.Year, m.Month, 1);
+        var max = min.AddMonths(1);
+
+        ViewBag.Min = min;
+        ViewBag.Max = max;
+
+        var dict = db.Rooms.OrderBy(rm => rm.RoomNumber).ToDictionary(rm => rm, rn => new List<DateOnly>());
+
+        var reservations = db.Bookings.Where(rs => min < rs.CheckOutDate && rs.CheckInDate < max);
+
+        foreach (var rs in reservations)
+        {
+            for (var d = rs.CheckInDate; d < rs.CheckOutDate; d = d.AddDays(1))
+            {
+                dict[rs.Room].Add(d);
+            }
+        }
+
+        ViewBag.RoomReservations = dict;
+
         // Get the room from roomID
         var categories = db.Categories
         .FirstOrDefault(c => c.CategoryID == categoryID);
 
+        ViewBag.Categories = categories;
+
         if (categories == null)
         {
             TempData["Info"] = "Invalid Room";
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("RoomPage", "Home");
         }
 
         // Get distinct categories for food services
@@ -314,32 +342,36 @@ public class HomeController : Controller
        .Distinct()
        .ToList();
 
+        ViewBag.SelectedCategory = FoodCategory ?? "Breakfast";
+
         // Get food services based on selected category
         // If no category is provided, default to "Breakfast"
         var foodServices = string.IsNullOrEmpty(FoodCategory)
         ? db.Services.Where(s => s.Category == "Breakfast" && s.ServiceType == "Food")
         : db.Services.Where(s => s.Category == FoodCategory && s.ServiceType == "Food");
 
-        ViewBag.SelectedCategory = FoodCategory ?? "Breakfast";
+        ViewBag.FoodServices = foodServices.ToList();
 
         // Get room services (ServiceType == "Room")
         var roomServices = db.Services
         .Where(s => s.ServiceType == "Room")
         .ToList();
 
-        // Create the view model and assign the lists
-        var vm = new RoomDetailsVM
-        {
-            Categories = categories,
-            FoodServices = foodServices.ToList(),
-            RoomServices = roomServices
-        };
+        ViewBag.RoomServices = roomServices;
 
         if (Request.IsAjax())
         {
-            return PartialView("FoodAddOn", vm);
+            switch (partialView)
+            {
+                case "FoodAddOn":
+                    return PartialView("FoodAddOn");
+                case "RoomStatus":
+                    return PartialView("RoomStatus");
+                default:
+                    return PartialView("RoomStatus");
+            }
         }
 
-        return View(vm);
+        return View();
     }
 }

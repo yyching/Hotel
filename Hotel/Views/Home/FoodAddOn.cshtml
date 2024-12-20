@@ -3,7 +3,7 @@
 <section class="menu-section">
     <h2>@ViewBag.SelectedCategory</h2>
     <form class="menu-grid">
-        @foreach (var s in Model.FoodServices)
+        @foreach (var s in ViewBag.FoodServices)
         {
             <div class="menu-item">
                 <input type="checkbox" id="classic-omelette" name="breakfast[]" value="Classic Omelette">

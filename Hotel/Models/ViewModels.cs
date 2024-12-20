@@ -139,9 +139,7 @@ public class RoomPageVM
 
 public class RoomDetailsVM
 {
-    public Category Categories { get; set; }
-    public List<Service> FoodServices { get; set; }
-    public List<Service> RoomServices { get; set; }
+
 }
 
 public class AddRoomCategoryVM 
