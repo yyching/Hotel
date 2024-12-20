@@ -153,12 +153,12 @@ namespace Hotel.Migrations
                 {
                     BookingID = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     BookingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CheckInDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CheckOutDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CheckInDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    CheckOutDate = table.Column<DateOnly>(type: "date", nullable: false),
                     TotalAmount = table.Column<double>(type: "float", nullable: false),
                     UserID = table.Column<string>(type: "nvarchar(100)", nullable: false),
                     RoomID = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    ServiceBookingID = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    ServiceBookingID = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -169,11 +169,6 @@ namespace Hotel.Migrations
                         principalTable: "Rooms",
                         principalColumn: "RoomID",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Bookings_ServiceBooking_ServiceBookingID",
-                        column: x => x.ServiceBookingID,
-                        principalTable: "ServiceBooking",
-                        principalColumn: "ID");
                     table.ForeignKey(
                         name: "FK_Bookings_Users_UserID",
                         column: x => x.UserID,
@@ -186,11 +181,6 @@ namespace Hotel.Migrations
                 name: "IX_Bookings_RoomID",
                 table: "Bookings",
                 column: "RoomID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bookings_ServiceBookingID",
-                table: "Bookings",
-                column: "ServiceBookingID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_UserID",
@@ -228,22 +218,22 @@ namespace Hotel.Migrations
                 name: "Reviews");
 
             migrationBuilder.DropTable(
+                name: "ServiceBooking");
+
+            migrationBuilder.DropTable(
                 name: "Tokens");
 
             migrationBuilder.DropTable(
                 name: "Rooms");
 
             migrationBuilder.DropTable(
-                name: "ServiceBooking");
+                name: "Services");
 
             migrationBuilder.DropTable(
                 name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Categories");
-
-            migrationBuilder.DropTable(
-                name: "Services");
         }
     }
 }

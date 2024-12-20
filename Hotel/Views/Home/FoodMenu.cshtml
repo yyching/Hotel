@@ -3,7 +3,7 @@
 <section class="menu-section">
     <h2>@ViewBag.SelectedCategory</h2>
     <div class="menu-grid">
-        @foreach (var s in Model.FoodServices)
+        @foreach (var s in ViewBag.Food)
         {
             <div class="menu-item">
                 <div class="price">RM @s.UnitPrice</div>

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.Migrations
 {
     [DbContext(typeof(DB))]
-    [Migration("20241219153318_UpdateDB")]
-    partial class UpdateDB
+    [Migration("20241220160012_CreateDB")]
+    partial class CreateDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,7 +45,7 @@ namespace Hotel.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ServiceBookingID")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("TotalAmount")
                         .HasColumnType("float");
@@ -57,8 +57,6 @@ namespace Hotel.Migrations
                     b.HasKey("BookingID");
 
                     b.HasIndex("RoomID");
-
-                    b.HasIndex("ServiceBookingID");
 
                     b.HasIndex("UserID");
 
@@ -300,10 +298,6 @@ namespace Hotel.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hotel.Models.ServiceBooking", "ServiceBooking")
-                        .WithMany()
-                        .HasForeignKey("ServiceBookingID");
-
                     b.HasOne("Hotel.Models.User", "User")
                         .WithMany("Bookings")
                         .HasForeignKey("UserID")
@@ -311,8 +305,6 @@ namespace Hotel.Migrations
                         .IsRequired();
 
                     b.Navigation("Room");
-
-                    b.Navigation("ServiceBooking");
 
                     b.Navigation("User");
                 });

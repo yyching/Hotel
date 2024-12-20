@@ -126,8 +126,6 @@ public class RoomSearchVM
 
 public class HomePageVM
 {
-    public List<Service> FoodServices { get; set; }
-    public List<Category> Categories { get; set; }
     public RoomSearchVM SearchVM { get; set; }
 }
 

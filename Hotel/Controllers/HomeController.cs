@@ -33,13 +33,15 @@ public class HomeController : Controller
        .Distinct()
        .ToList();
 
+        ViewBag.SelectedCategory = Category ?? "Breakfast";
+
         // Get food services based on selected category
         // If no category is provided, default to "Breakfast"
         var foodServices = string.IsNullOrEmpty(Category)
         ? db.Services.Where(s => s.Category == "Breakfast" && s.ServiceType == "Food")
         : db.Services.Where(s => s.Category == Category && s.ServiceType == "Food");
 
-        ViewBag.SelectedCategory = Category ?? "Breakfast";
+        ViewBag.Food = foodServices.ToList();
 
         // Get room from category
         var categories = db.Rooms
@@ -49,10 +51,10 @@ public class HomeController : Controller
                     .Select(g => g.First().Category)
                     .ToList();
 
+        ViewBag.Room = categories;
+
         var vm = new HomePageVM
         {
-            FoodServices = foodServices.ToList(),
-            Categories = categories,
             SearchVM = new RoomSearchVM
             {
                 CheckInDate = DateTime.Today.ToDateOnly(),
