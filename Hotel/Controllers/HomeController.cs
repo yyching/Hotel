@@ -112,7 +112,7 @@ public class HomeController : Controller
     // GET: ROOMPAGE
     public IActionResult RoomPage(DateOnly? checkIn, DateOnly? checkOut, int? persons, double? minPrice, double? maxPrice, string? themes, string? category)
     {
-        // Get room from category
+        // Get category from room
         var categories = db.Rooms
                     .Include(r => r.Category)
                     .Where(r => r.Status == "Active" && r.Category.Status == "Active")
@@ -127,28 +127,12 @@ public class HomeController : Controller
             .Distinct()
             .ToList();
 
+        // Get category for room
         ViewBag.RoomCategory = db.Categories
             .Where(c => c.Status == "Active")
             .Select(c => c.CategoryName)
             .Distinct()
             .ToList();
-
-        if (minPrice.HasValue && maxPrice.HasValue)
-        {
-            categories = categories.Where(c => c.PricePerNight >= minPrice && c.PricePerNight <= maxPrice).ToList();
-        }
-
-        if (!string.IsNullOrEmpty(themes))
-        {
-            var themeList = themes.Split(',').Select(t => t.Trim()).ToList();
-            categories = categories.Where(c => themeList.Contains(c.Theme)).ToList();
-        }
-
-        if (!string.IsNullOrEmpty(category))
-        {
-            var categoryList = category.Split(',').Select(t => t.Trim()).ToList();
-            categories = categories.Where(c => category.Contains(c.CategoryName)).ToList();
-        }
 
         if (checkIn != null && checkOut != null && persons != null)
         {
@@ -190,47 +174,62 @@ public class HomeController : Controller
                 .Select(g => g.First().Category)
                 .ToList();
 
+            if (minPrice.HasValue && maxPrice.HasValue)
+            {
+                availableRooms = availableRooms.Where(c => c.PricePerNight >= minPrice && c.PricePerNight <= maxPrice).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(themes))
+            {
+                var themeList = themes.Split(',').Select(t => t.Trim()).ToList();
+                availableRooms = availableRooms.Where(c => themeList.Contains(c.Theme)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(category))
+            {
+                var categoryList = category.Split(',').Select(t => t.Trim()).ToList();
+                availableRooms = availableRooms.Where(c => category.Contains(c.CategoryName)).ToList();
+            }
+
             if (availableRooms.Count == 0)
             {
                 TempData["Info"] = "No rooms are available for the selected dates and capacity.";
-                var sm = new RoomPageVM
-                {
-                    Categories = availableRooms,
-                    SearchVM = new RoomSearchVM
-                    {
-                        CheckInDate = checkIn.Value,
-                        CheckOutDate = checkOut.Value,
-                        Person = persons.Value
-                    }
-                };
-
-                if (Request.IsAjax())
-                {
-                    return PartialView("ShowRoom", sm);
-                }
-
-                return View(sm);
             }
-            else
+
+            var sm = new RoomPageVM
             {
-                var sm = new RoomPageVM
+                Categories = availableRooms,
+                SearchVM = new RoomSearchVM
                 {
-                    Categories = availableRooms,
-                    SearchVM = new RoomSearchVM
-                    {
-                        CheckInDate = checkIn.Value,
-                        CheckOutDate = checkOut.Value,
-                        Person = persons.Value
-                    }
-                };
-
-                if (Request.IsAjax())
-                {
-                    return PartialView("ShowRoom", sm);
+                    CheckInDate = checkIn.Value,
+                    CheckOutDate = checkOut.Value,
+                    Person = persons.Value
                 }
+            };
 
-                return View(sm);
+            if (Request.IsAjax())
+            {
+                return PartialView("ShowRoom", sm);
             }
+
+            return View(sm);
+        }
+
+        if (minPrice.HasValue && maxPrice.HasValue)
+        {
+            categories = categories.Where(c => c.PricePerNight >= minPrice && c.PricePerNight <= maxPrice).ToList();
+        }
+
+        if (!string.IsNullOrEmpty(themes))
+        {
+            var themeList = themes.Split(',').Select(t => t.Trim()).ToList();
+            categories = categories.Where(c => themeList.Contains(c.Theme)).ToList();
+        }
+
+        if (!string.IsNullOrEmpty(category))
+        {
+            var categoryList = category.Split(',').Select(t => t.Trim()).ToList();
+            categories = categories.Where(c => category.Contains(c.CategoryName)).ToList();
         }
 
         var vm = new RoomPageVM
