@@ -131,7 +131,6 @@ public class HomePageVM
 
 public class RoomPageVM
 {
-    public List<Category> Categories { get; set; }
     public RoomSearchVM SearchVM { get; set; }
 }
 

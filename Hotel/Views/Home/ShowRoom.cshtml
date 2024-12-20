@@ -14,7 +14,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var category in Model.Categories)
+        @foreach (var category in ViewBag.Categories)
         {
             <tr>
                 <td><img src='/uploads/@category.RoomImage' alt="Hotel 1" class="hotel-image"></td>

@@ -199,9 +199,10 @@ public class HomeController : Controller
                 TempData["Info"] = "No rooms are available for the selected dates and capacity.";
             }
 
+            ViewBag.Categories = availableRooms;
+
             var sm = new RoomPageVM
             {
-                Categories = availableRooms,
                 SearchVM = new RoomSearchVM
                 {
                     CheckInDate = checkIn.Value,
@@ -235,9 +236,10 @@ public class HomeController : Controller
             categories = categories.Where(c => category.Contains(c.CategoryName)).ToList();
         }
 
+        ViewBag.Categories = categories;
+
         var vm = new RoomPageVM
         {
-            Categories = categories,
             SearchVM = new RoomSearchVM
             {
                 CheckInDate = DateTime.Today.ToDateOnly(),
