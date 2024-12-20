@@ -27,6 +27,7 @@
                 <th>Service Name</th>
                 <th>Price (Per Unit)</th>
                 <th>Service Type</th>
+                <th>Category</th>
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
@@ -38,7 +39,8 @@
                     <td>@sr.ServiceID</td>
                     <td>@sr.ServiceName</td>
                     <td>@sr.UnitPrice</td>
-                    <td></td>
+                    <td>@sr.ServiceType</td>
+                    <td>@sr.Category</td>
                     <td>@sr.Status</td>
                     <td>
                         <button class="btn btn-primary btn-sm">Edit</button>
