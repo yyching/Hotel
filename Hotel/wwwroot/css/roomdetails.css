@@ -133,30 +133,91 @@ html {
 
 
 /* Service Section */
-#date-picker {
+.room-status {
+    width: 99%;
+    display: grid;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+    table caption {
+        font-weight: bold;
+        font-size: 20px;
+        margin-bottom: 5px;
+    }
+
+td, th {
+    border: 1px solid #999;
     padding: 10px;
-    font-size: 20px;
+}
+
+.x {
+    background: tomato;
+}
+
+.o {
+    background: lightgreen;
+}
+
+.booking-section {
     width: 100%;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 70px;
-    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+}
+
+.booking-form {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    padding-right: 20px;
+    gap: 5px;
+}
+
+    .form-group label {
+        font-size: 20px;
+        color: #333;
+    }
+
+    .form-group .day {
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+input,
+select {
+    font-size: 18px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 .service-container {
-    max-width: 80%;
+    max-width: 90%;
     margin: 0 auto;
     padding: 20px;
-    background: #fff;
+    background: rgb(243, 241, 241);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    justify-content:center;
 }
 
 .hotel-booking {
     text-align: center;
     color: #333;
     font-size: 50px;
-    margin-bottom: 40px;
 }
 
 .quantity-container {
@@ -180,29 +241,36 @@ html {
         border-radius: 4px;
     }
 
-.menu-nav {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+.food-section {
+    width: 100%;
+    display: grid;
+    justify-items: center;
 }
 
-    .menu-nav a {
-        margin: 0 15px;
-        text-decoration: none;
-        font-size: 18px;
-        color: #007bff;
-        font-weight: bold;
-        cursor: pointer;
-    }
+.food-section h1{
+    margin-top: 40px;
+}
 
-        .menu-nav a:hover {
-            text-decoration: underline;
-        }
+.service-breakfast {
+    margin-top: -35px;
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    text-align: center;
+}
+
+.service-category {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    text-align: center;
+}
 
 .menu-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
+    gap: 25px;
     justify-items: center;
 }
 
@@ -223,14 +291,19 @@ html {
 
 
 .addon-section {
-    margin-top: 40px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .addon-item {
+    width: 50%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
     border-bottom: 1px solid #ddd;
 }
 
@@ -252,7 +325,7 @@ html {
 .book-btn {
     display: block;
     margin: 0 auto;
-    width: 90%;
+    width: 20%;
     padding: 15px;
     background-color: #007bff;
     color: #fff;
@@ -268,25 +341,3 @@ html {
         background-color: #0056b3;
     }
 
-table {
-    border-collapse: collapse;
-}
-
-    table caption {
-        font-weight: bold;
-        font-size: 20px;
-        margin-bottom: 5px;
-    }
-
-td, th {
-    border: 1px solid #999;
-    padding: 5px;
-}
-
-.x {
-    background: tomato;
-}
-
-.o {
-    background: lightgreen;
-}

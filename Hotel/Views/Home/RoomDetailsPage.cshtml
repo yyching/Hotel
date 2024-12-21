@@ -96,7 +96,7 @@
     <h1 class="hotel-booking">Hotel Booking</h1>
     <input type="hidden" value="@ViewBag.Categories.CategoryID">
 
-    <div>
+    <div class="room-status">
         <p>
             @* Generate links for previous, c{urrent and next months *@
             @for (int n = -1; n <= 1; n++)
@@ -119,20 +119,22 @@
     </div>
 
     <!-- Calendar Section -->
-    <div class="booking-form">
-        <div class="form-group">
-            <label asp-for="CheckInDate"></label>
-            <input asp-for="CheckInDate" min="@mins" max="@maxs" />
-            <span asp-validation-for="CheckInDate"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="CheckOutDate"></label>
-            <input asp-for="CheckOutDate" />
-            <span asp-validation-for="CheckOutDate"></span>
-        </div>
-        <div class="form-group">
-            <label>Days</label>
-            <span id="days" class="day"></span>
+    <div class="booking-section">
+        <div class="booking-form">
+            <div class="form-group">
+                <label asp-for="CheckInDate"></label>
+                <input asp-for="CheckInDate" min="@mins" max="@maxs" />
+                <span asp-validation-for="CheckInDate"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CheckOutDate"></label>
+                <input asp-for="CheckOutDate" />
+                <span asp-validation-for="CheckOutDate"></span>
+            </div>
+            <div class="form-group">
+                <label>Days</label>
+                <span id="days" class="day"></span>
+            </div>
         </div>
     </div>
 
@@ -141,12 +143,14 @@
         <h1 class="hotel-booking">Our Food Menu</h1>
 
         <section class="menu-section">
-            <h2>Breakfast</h2>
+            <div class="service-breakfast">
+                <h2>Breakfast</h2>
+            </div>
             <div class="menu-grid">
                 @foreach (var b in ViewBag.breakfastServices)
                 {
                     <div class="menu-item">
-                        <label for="classic-omelette">
+                        <label>
                             <div class="price">RM @b.UnitPrice</div>
                             <h3>@b.ServiceName</h3>
                         </label>
@@ -166,12 +170,14 @@
             </div>
         </section>
         <section class="menu-section">
-            <h2>Lunch</h2>
+            <div class="service-category">
+                <h2>Lunch</h2>
+            </div>
             <div class="menu-grid">
                 @foreach (var l in ViewBag.lunchServices)
                 {
                     <div class="menu-item">
-                        <label for="classic-omelette">
+                        <label>
                             <div class="price">RM @l.UnitPrice</div>
                             <h3>@l.ServiceName</h3>
                         </label>
@@ -191,12 +197,14 @@
             </div>
         </section>
         <section class="menu-section">
-            <h2>Dinner</h2>
+            <div class="service-category">
+                <h2>Dinner</h2>
+            </div>
             <div class="menu-grid">
                 @foreach (var d in ViewBag.dinnerServices)
                 {
                     <div class="menu-item">
-                        <label for="classic-omelette">
+                        <label>
                             <div class="price">RM @d.UnitPrice</div>
                             <h3>@d.ServiceName</h3>
                         </label>
