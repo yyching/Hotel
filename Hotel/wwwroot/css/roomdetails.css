@@ -180,26 +180,28 @@ td, th {
 
 .form-group {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     padding-right: 20px;
     gap: 5px;
 }
 
     .form-group label {
-        font-size: 20px;
+        font-size: 16px;
         color: #333;
     }
 
     .form-group .day {
-        padding: 15px;
+        font-size: 16px;
+        padding: 8px;
         border: 1px solid #ccc;
         border-radius: 5px;
     }
 
 input,
 select {
-    font-size: 18px;
-    padding: 15px;
+    font-size: 16px;
+    padding: 8px;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
@@ -212,6 +214,7 @@ select {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     justify-content:center;
+    margin-bottom: 20px;
 }
 
 .hotel-booking {
@@ -229,16 +232,16 @@ select {
 
     .quantity-container label {
         margin-right: 5px;
-        font-size: 20px;
+        font-size: 16px;
     }
 
     .quantity-container input {
         width: 50px;
         text-align: center;
-        padding: 5px;
-        font-size: 20px;
+        padding: 8px;
+        font-size: 16px;
         border: 1px solid #ddd;
-        border-radius: 4px;
+        border-radius: 5px;
     }
 
 .food-section {
@@ -254,22 +257,22 @@ select {
 .service-breakfast {
     margin-top: -35px;
     display: flex;
-    justify-content: center; /* Centers horizontally */
-    align-items: center; /* Centers vertically */
+    justify-content: center;
+    align-items: center;
     text-align: center;
 }
 
 .service-category {
     margin-top: 30px;
     display: flex;
-    justify-content: center; /* Centers horizontally */
-    align-items: center; /* Centers vertically */
+    justify-content: center;
+    align-items: center;
     text-align: center;
 }
 
 .menu-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 25px;
     justify-items: center;
 }
@@ -280,12 +283,13 @@ select {
     border: 1px solid #ddd;
     border-radius: 5px;
     text-align: center;
-    width: 300px;
+    width: 200px;
 }
 
     .menu-item .price {
         font-size: 20px;
         color: #007bff;
+        font-weight: bold;
         margin-bottom: 10px;
     }
 
@@ -318,8 +322,11 @@ select {
     .addon-item input {
         width: 50px;
         height: auto;
-        font-size: 24px;
+        font-size: 16px;
         text-align: center;
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
     }
 
 .book-btn {
