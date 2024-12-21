@@ -28,7 +28,7 @@ public class HomeController : Controller
     {
         // Get distinct categories for food services
         ViewBag.ServiceTypes = db.Services
-       .Where(s => s.ServiceType == "Food")
+       .Where(s => s.ServiceType == "Food" && s.Status == "Active")
        .Select(s => s.Category)
        .Distinct()
        .ToList();
@@ -38,8 +38,8 @@ public class HomeController : Controller
         // Get food services based on selected category
         // If no category is provided, default to "Breakfast"
         var foodServices = string.IsNullOrEmpty(Category)
-        ? db.Services.Where(s => s.Category == "Breakfast" && s.ServiceType == "Food")
-        : db.Services.Where(s => s.Category == Category && s.ServiceType == "Food");
+        ? db.Services.Where(s => s.Category == "Breakfast" && s.ServiceType == "Food" && s.Status == "Active")
+        : db.Services.Where(s => s.Category == Category && s.ServiceType == "Food" && s.Status == "Active");
 
         ViewBag.Food = foodServices.ToList();
 
@@ -73,7 +73,7 @@ public class HomeController : Controller
 
     // POST: HOMEPAGE
     [HttpPost]
-    public IActionResult Index([Bind(Prefix = "SearchVM")]RoomSearchVM sm, string? Category)
+    public IActionResult Index([Bind(Prefix = "SearchVM")] RoomSearchVM sm, string? Category)
     {
         // Validation (1): CheckIn within 30 days range
         if (ModelState.IsValid("SearchVM.CheckInDate"))
@@ -258,7 +258,7 @@ public class HomeController : Controller
 
     // POST: ROOMPAGE
     [HttpPost]
-    public IActionResult RoomPage([Bind(Prefix = "SearchVM")]RoomSearchVM sm)
+    public IActionResult RoomPage([Bind(Prefix = "SearchVM")] RoomSearchVM sm)
     {
         // Validation (1): CheckIn within 30 days range
         if (ModelState.IsValid("SearchVM.CheckInDate"))
@@ -300,7 +300,7 @@ public class HomeController : Controller
     // GET: ROOMDEATILS
     [Authorize]
     [Authorize(Roles = "Member")]
-    public IActionResult RoomDetailsPage(string categoryID, string? FoodCategory, DateOnly? month, string? partialView)
+    public IActionResult RoomDetailsPage(string categoryID, string? FoodCategory, DateOnly? month)
     {
         var m = month.GetValueOrDefault(DateTime.Today.ToDateOnly());
 
@@ -346,41 +346,148 @@ public class HomeController : Controller
         }
 
         // Get distinct categories for food services
-        ViewBag.ServiceTypes = db.Services
-       .Where(s => s.ServiceType == "Food")
-       .Select(s => s.Category)
-       .Distinct()
+        ViewBag.breakfastServices = db.Services
+       .Where(s => s.Category == "Breakfast" && s.Status == "Active")
        .ToList();
 
-        ViewBag.SelectedCategory = FoodCategory ?? "Breakfast";
+        // Get distinct categories for food services
+        ViewBag.lunchServices = db.Services
+       .Where(s => s.Category == "Lunch" && s.Status == "Active")
+       .ToList();
 
-        // Get food services based on selected category
-        // If no category is provided, default to "Breakfast"
-        var foodServices = string.IsNullOrEmpty(FoodCategory)
-        ? db.Services.Where(s => s.Category == "Breakfast" && s.ServiceType == "Food")
-        : db.Services.Where(s => s.Category == FoodCategory && s.ServiceType == "Food");
-
-        ViewBag.FoodServices = foodServices.ToList();
+        // Get distinct categories for food services
+        ViewBag.dinnerServices = db.Services
+       .Where(s => s.Category == "Dinner" && s.Status == "Active")
+       .ToList();
 
         // Get room services (ServiceType == "Room")
         var roomServices = db.Services
-        .Where(s => s.ServiceType == "Room")
+        .Where(s => s.ServiceType == "Room" && s.Status == "Active")
         .ToList();
 
         ViewBag.RoomServices = roomServices;
 
+        var vm = new RoomDetailsVM
+        {
+            CheckInDate = DateTime.Today.ToDateOnly(),
+            CheckOutDate = DateTime.Today.ToDateOnly().AddDays(1),
+        };
+
         if (Request.IsAjax())
         {
-            switch (partialView)
+            return PartialView("RoomStatus", vm);
+        }
+
+        return View(vm);
+    }
+
+    [Authorize]
+    [Authorize(Roles = "Member")]
+    [HttpPost]
+    public IActionResult RoomDetailsPage(RoomDetailsVM sm, DateOnly? month, string categoryID)
+    {
+        // Validation (1): CheckIn within 30 days range
+        if (ModelState.IsValid("CheckInDate"))
+        {
+            var minDate = DateTime.Today.ToDateOnly();
+            var maxDate = DateTime.Today.ToDateOnly().AddDays(30);
+
+            if (sm.CheckInDate < minDate || sm.CheckInDate > maxDate)
             {
-                case "FoodAddOn":
-                    return PartialView("FoodAddOn");
-                case "RoomStatus":
-                    return PartialView("RoomStatus");
-                default:
-                    return PartialView("RoomStatus");
+                ModelState.AddModelError("CheckInDate", "Date out of range.");
             }
         }
+
+        // Validation (2): CheckOut within 10 days range (after CheckIn)
+        if (ModelState.IsValid("CheckInDate") && ModelState.IsValid("CheckOutDate"))
+        {
+            var minDate = sm.CheckInDate.AddDays(1);
+            var maxDate = sm.CheckInDate.AddDays(10);
+
+            if (sm.CheckOutDate < minDate || sm.CheckOutDate > maxDate)
+            {
+                ModelState.AddModelError("CheckOutDate", "Date out of range.");
+            }
+        }
+
+        if (ModelState.IsValid)
+        {
+            return RedirectToAction("PaymentPage", "Payment", new
+            {
+                categoryID = sm.CategoryID,
+                checkIn = sm.CheckInDate,
+                checkOut = sm.CheckOutDate,
+                foodServiceIds = sm.FoodServiceIds,
+                foodQuantities = sm.FoodQuantities,
+                roomServiceIds = sm.RoomServiceIds,
+                roomQuantities = sm.RoomQuantities
+            });
+        }
+
+        var m = month.GetValueOrDefault(DateTime.Today.ToDateOnly());
+
+        // Min = First day of the month
+        // Max = First day of next month
+        var min = new DateOnly(m.Year, m.Month, 1);
+        var max = min.AddMonths(1);
+        ViewBag.Min = min;
+        ViewBag.Max = max;
+
+        var rooms = db.Rooms
+           .Where(rm => rm.CategoryID == categoryID)
+           .OrderBy(rm => rm.RoomNumber)
+           .ToList();
+
+        var dict = rooms.ToDictionary(rm => rm, rn => new List<DateOnly>());
+
+        var roomIds = rooms.Select(r => r.RoomID).ToList();
+
+        var reservations = db.Bookings
+           .Where(rs => roomIds.Contains(rs.RoomID))
+           .Where(rs => rs.CheckInDate < max && min < rs.CheckOutDate);
+
+        foreach (var rs in reservations)
+        {
+            for (var d = rs.CheckInDate; d < rs.CheckOutDate; d = d.AddDays(1))
+            {
+                dict[rs.Room].Add(d);
+            }
+        }
+        ViewBag.RoomReservations = dict;
+
+        // Get the room from roomID
+        var categories = db.Categories
+        .FirstOrDefault(c => c.CategoryID == categoryID);
+
+        ViewBag.Categories = categories;
+
+        if (categories == null)
+        {
+            TempData["Info"] = "Invalid Room";
+            return RedirectToAction("RoomPage", "Home");
+        }
+
+        // Get distinct categories for food services
+        ViewBag.breakfastServices = db.Services
+       .Where(s => s.Category == "Breakfast" && s.Status == "Active")
+       .ToList();
+
+        // Get distinct categories for food services
+        ViewBag.lunchServices = db.Services
+       .Where(s => s.Category == "Lunch" && s.Status == "Active")
+       .ToList();
+
+        // Get distinct categories for food services
+        ViewBag.dinnerServices = db.Services
+       .Where(s => s.Category == "Dinner" && s.Status == "Active")
+       .ToList();
+
+        // Get room services (ServiceType == "Room")
+        var roomServices = db.Services
+        .Where(s => s.ServiceType == "Room" && s.Status == "Active")
+        .ToList();
+
+        ViewBag.RoomServices = roomServices;
 
         return View();
     }

@@ -16,6 +16,32 @@
 
     <div class="right-side">
         <div class="receipt">
+            <div>
+                @ViewBag.checkIn.ToString("yyyy-MM-dd")
+                @ViewBag.checkOut.ToString("yyyy-MM-dd")
+
+                @if (ViewBag.SelectedFoodServices != null)
+                {
+                    foreach (var f in ViewBag.SelectedFoodServices)
+                    {
+                        <div class="service-item">
+                            <p>服务ID: @f.ServiceId</p>
+                            <p>数量: @f.Quantity</p>
+                        </div>
+                    }
+                }
+
+                @if (ViewBag.SelectedRoomServices != null)
+                {
+                    foreach (var r in ViewBag.SelectedRoomServices)
+                    {
+                        <div class="service-item">
+                            <p>服务ID: @r.ServiceId</p>
+                            <p>数量: @r.Quantity</p>
+                        </div>
+                    }
+                }
+            </div>
             <h2 class="receipt-heading">Receipt Summary</h2>
             <div>
                 <table class="table">

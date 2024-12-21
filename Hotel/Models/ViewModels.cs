@@ -136,7 +136,20 @@ public class RoomPageVM
 
 public class RoomDetailsVM
 {
+    public string CategoryID { get; set; }
 
+    [Display(Name = "Check In Date")]
+    [DataType(DataType.Date)]
+    public DateOnly CheckInDate { get; set; }
+
+    [Display(Name = "Check Out Date")]
+    [DataType(DataType.Date)]
+    public DateOnly CheckOutDate { get; set; }
+
+    public string[]? FoodServiceIds { get; set; }
+    public int[]? FoodQuantities { get; set; }
+    public string[]? RoomServiceIds { get; set; }
+    public int[]? RoomQuantities { get; set; }
 }
 
 public class AddRoomCategoryVM 

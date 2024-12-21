@@ -5,11 +5,13 @@
     ViewBag.Title = "RoomDetails";
     DateOnly min = ViewBag.Min;
     DateOnly max = ViewBag.Max;
+    string mins = DateTime.Today.ToString("yyyy-MM-dd");
+    string maxs = DateTime.Today.AddDays(30).ToString("yyyy-MM-dd");
 }
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <link rel="stylesheet" href="/css/roomdetails.css" asp-append-version="true">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="/js/roomDetails.js" defer></script>
+<script src="/js/roomdetails.js" defer></script>
 
 <!-- Room Section -->
 <div class="room-container">
@@ -89,9 +91,10 @@
 </div>
 
 
-<div class="service-container">
+<form class="service-container" method="post">
     
     <h1 class="hotel-booking">Hotel Booking</h1>
+    <input type="hidden" value="@ViewBag.Categories.CategoryID">
 
     <div>
         <p>
@@ -107,7 +110,7 @@
                 <a data-ajax="true"
                    data-ajax-update="#RoomStatus"
                    data-ajax-loading="#loader"
-                   href="?categoryID=@ViewBag.Categories.CategoryID&partialView=RoomStatus&month=@d.ToString("yyyy-MM")">@d.ToString("MMMM")</a>
+                   href="?categoryID=@ViewBag.Categories.CategoryID&month=@d.ToString("yyyy-MM")">@d.ToString("MMMM")</a>
             }
         </p>
         <div id="RoomStatus">
@@ -116,27 +119,102 @@
     </div>
 
     <!-- Calendar Section -->
-    <input type="text" id="date-picker" placeholder="Select your Check-in and Check-out dates">
+    <div class="booking-form">
+        <div class="form-group">
+            <label asp-for="CheckInDate"></label>
+            <input asp-for="CheckInDate" min="@mins" max="@maxs" />
+            <span asp-validation-for="CheckInDate"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="CheckOutDate"></label>
+            <input asp-for="CheckOutDate" />
+            <span asp-validation-for="CheckOutDate"></span>
+        </div>
+        <div class="form-group">
+            <label>Days</label>
+            <span id="days" class="day"></span>
+        </div>
+    </div>
 
     <!-- Food Section -->
     <div class="food-section">
         <h1 class="hotel-booking">Our Food Menu</h1>
 
-        <nav class="menu-nav">
-            @foreach (var FoodCategory in ViewBag.ServiceTypes)
-            {
-                <a data-ajax="true"
-                   data-ajax-update="#FoodAddOn"
-                   data-ajax-loading="#loader"
-                   href="?categoryID=@ViewBag.Categories.CategoryID&partialView=FoodAddOn&FoodCategory=@FoodCategory">
-                   @FoodCategory
-                </a>
-            }
-        </nav>
-
-        <div id="FoodAddOn">
-            <partial name="FoodAddOn" />
-        </div>
+        <section class="menu-section">
+            <h2>Breakfast</h2>
+            <div class="menu-grid">
+                @foreach (var b in ViewBag.breakfastServices)
+                {
+                    <div class="menu-item">
+                        <label for="classic-omelette">
+                            <div class="price">RM @b.UnitPrice</div>
+                            <h3>@b.ServiceName</h3>
+                        </label>
+                        <div class="quantity-container">
+                            <label for="food-@b.ServiceID">Qty:</label>
+                            <input type="number"
+                                   id="@b.ServiceID"
+                                   name="foodQuantities"
+                                   min="0"
+                                   value="0" />
+                            <input type="hidden"
+                                   name="foodServiceIds"
+                                   value="@b.ServiceID">
+                        </div>
+                    </div>
+                }
+            </div>
+        </section>
+        <section class="menu-section">
+            <h2>Lunch</h2>
+            <div class="menu-grid">
+                @foreach (var l in ViewBag.lunchServices)
+                {
+                    <div class="menu-item">
+                        <label for="classic-omelette">
+                            <div class="price">RM @l.UnitPrice</div>
+                            <h3>@l.ServiceName</h3>
+                        </label>
+                        <div class="quantity-container">
+                            <label for="food-@l.ServiceID">Qty:</label>
+                            <input type="number"
+                                   id="@l.ServiceID"
+                                   name="foodQuantities"
+                                   min="0"
+                                   value="0" />
+                            <input type="hidden"
+                                   name="foodServiceIds"
+                                   value="@l.ServiceID">
+                        </div>
+                    </div>
+                }
+            </div>
+        </section>
+        <section class="menu-section">
+            <h2>Dinner</h2>
+            <div class="menu-grid">
+                @foreach (var d in ViewBag.dinnerServices)
+                {
+                    <div class="menu-item">
+                        <label for="classic-omelette">
+                            <div class="price">RM @d.UnitPrice</div>
+                            <h3>@d.ServiceName</h3>
+                        </label>
+                        <div class="quantity-container">
+                            <label for="food-@d.ServiceID">Qty:</label>
+                            <input type="number"
+                                   id="@d.ServiceID"
+                                   name="foodQuantities"
+                                   min="0"
+                                   value="0" />
+                            <input type="hidden"
+                                   name="foodServiceIds"
+                                   value="@d.ServiceID">
+                        </div>
+                    </div>
+                }
+            </div>
+        </section>
     </div>
 
     <!-- Add-On Services Section -->
@@ -147,10 +225,17 @@
         {
             <div class="addon-item">
                 <label for="@service.ServiceID">@service.ServiceName RM(@service.UnitPrice)</label>
-                <input type="number" id="@service.ServiceID" min="0" value="0">
+                <input type="number"
+                       name="roomQuantities"
+                       id="@service.ServiceID"
+                       min="0"
+                       value="0">
+                <input type="hidden"
+                       name="roomServiceIds"
+                       value="@service.ServiceID">
             </div>
         }
 
-        <a href="/Payment/PaymentPage" class="book-btn" id="book-btn">Book Now</a>
+        <button class="book-btn" id="book-btn">Book Now</button>
     </div>
-</div>
+</form>
