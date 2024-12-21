@@ -306,16 +306,23 @@ public class HomeController : Controller
 
         // Min = First day of the month
         // Max = First day of next month
-
         var min = new DateOnly(m.Year, m.Month, 1);
         var max = min.AddMonths(1);
-
         ViewBag.Min = min;
         ViewBag.Max = max;
 
-        var dict = db.Rooms.OrderBy(rm => rm.RoomNumber).ToDictionary(rm => rm, rn => new List<DateOnly>());
+        var rooms = db.Rooms
+           .Where(rm => rm.CategoryID == categoryID)
+           .OrderBy(rm => rm.RoomNumber)
+           .ToList();
 
-        var reservations = db.Bookings.Where(rs => min < rs.CheckOutDate && rs.CheckInDate < max);
+        var dict = rooms.ToDictionary(rm => rm, rn => new List<DateOnly>());
+
+        var roomIds = rooms.Select(r => r.RoomID).ToList();
+
+        var reservations = db.Bookings
+           .Where(rs => roomIds.Contains(rs.RoomID))
+           .Where(rs => rs.CheckInDate < max && min < rs.CheckOutDate);
 
         foreach (var rs in reservations)
         {
@@ -324,7 +331,6 @@ public class HomeController : Controller
                 dict[rs.Room].Add(d);
             }
         }
-
         ViewBag.RoomReservations = dict;
 
         // Get the room from roomID
