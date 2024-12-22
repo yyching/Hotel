@@ -300,7 +300,7 @@ public class HomeController : Controller
     // GET: ROOMDEATILS
     [Authorize]
     [Authorize(Roles = "Member")]
-    public IActionResult RoomDetailsPage(string categoryID, string? FoodCategory, DateOnly? month)
+    public IActionResult RoomDetailsPage(string categoryID, DateOnly? CheckInDate, DateOnly? CheckOutDate, string? FoodCategory, DateOnly? month)
     {
         var m = month.GetValueOrDefault(DateTime.Today.ToDateOnly());
 
@@ -369,8 +369,8 @@ public class HomeController : Controller
 
         var vm = new RoomDetailsVM
         {
-            CheckInDate = DateTime.Today.ToDateOnly(),
-            CheckOutDate = DateTime.Today.ToDateOnly().AddDays(1),
+            CheckInDate = CheckInDate ?? DateTime.Today.ToDateOnly(),
+            CheckOutDate = CheckOutDate ?? DateTime.Today.ToDateOnly().AddDays(1),
         };
 
         if (Request.IsAjax())
@@ -425,9 +425,6 @@ public class HomeController : Controller
         }
 
         var m = month.GetValueOrDefault(DateTime.Today.ToDateOnly());
-
-        // Min = First day of the month
-        // Max = First day of next month
         var min = new DateOnly(m.Year, m.Month, 1);
         var max = min.AddMonths(1);
         ViewBag.Min = min;

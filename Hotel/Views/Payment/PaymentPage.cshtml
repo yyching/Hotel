@@ -17,57 +17,52 @@
     <div class="right-side">
         <div class="receipt">
             <div>
-                @ViewBag.checkIn.ToString("yyyy-MM-dd")
-                @ViewBag.checkOut.ToString("yyyy-MM-dd")
-
-                @if (ViewBag.SelectedFoodServices != null)
-                {
-                    foreach (var f in ViewBag.SelectedFoodServices)
-                    {
-                        <div class="service-item">
-                            <p>服务ID: @f.ServiceId</p>
-                            <p>数量: @f.Quantity</p>
-                        </div>
-                    }
-                }
-
-                @if (ViewBag.SelectedRoomServices != null)
-                {
-                    foreach (var r in ViewBag.SelectedRoomServices)
-                    {
-                        <div class="service-item">
-                            <p>服务ID: @r.ServiceId</p>
-                            <p>数量: @r.Quantity</p>
-                        </div>
-                    }
-                }
+                <h2 class="receipt-heading">Receipt Summary</h2>
+                <h3>
+                    @ViewBag.roomCategory
+                </h3>
+                <p>
+                    @ViewBag.checkIn.ToString("yyyy-MM-dd") to
+                    @ViewBag.checkOut.ToString("yyyy-MM-dd")
+                </p>
             </div>
-            <h2 class="receipt-heading">Receipt Summary</h2>
             <div>
                 <table class="table">
                     <tr>
-                        <td>249.50 x 2 nights</td>
-                        <td class="price">RM 499.00</td>
+                        <td>RM @ViewBag.roomPrice x @ViewBag.numberOfDays nights</td>
+                        <td class="price">RM @ViewBag.roomTotalPrice</td>
                     </tr>
-                    <tr>
-                        <td>Food</td>
-                        <td class="price">RM 0.00</td>
-                    </tr>
-                    <tr>
-                        <td>Service</td>
-                        <td class="price">RM 0.00</td>
-                    </tr>
+                    @if (ViewBag.SelectedFoodServices != null)
+                    {
+                        foreach (var f in ViewBag.SelectedFoodServices)
+                        {
+                            <tr>
+                                <td>@f.category: @f.serviceName x @f.quantity</td>
+                                <td class="price">RM @f.price</td>
+                            </tr>
+                        }
+                    }
+                    @if (ViewBag.SelectedRoomServices != null)
+                    {
+                        foreach (var r in ViewBag.SelectedRoomServices)
+                        {
+                            <tr>
+                                <td>@r.category: @r.serviceName x @r.quantity</td>
+                                <td class="price">RM @r.price</td>
+                            </tr>
+                        }
+                    }
                     <tr>
                         <td>Subtotal</td>
-                        <td class="price">RM 0.00</td>
+                        <td class="price">RM @ViewBag.Subtotal</td>
                     </tr>
                     <tr>
                         <td>Tax</td>
-                        <td class="price">RM 0.00</td>
+                        <td class="price">RM @ViewBag.Tax</td>
                     </tr>
                     <tr class="total">
                         <td>Total</td>
-                        <td class="price">RM 0.00</td>
+                        <td class="price">RM @ViewBag.Total</td>
                     </tr>
                 </table>
             </div>
