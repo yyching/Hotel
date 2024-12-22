@@ -177,6 +177,11 @@ public class HomeController : Controller
                 .Select(g => g.First().Category)
                 .ToList();
 
+            if (availableRooms.Count == 0)
+            {
+                TempData["Info"] = "No rooms are available for the selected dates and capacity.";
+            }
+
             if (minPrice.HasValue && maxPrice.HasValue)
             {
                 availableRooms = availableRooms.Where(c => c.PricePerNight >= minPrice && c.PricePerNight <= maxPrice).ToList();
@@ -192,11 +197,6 @@ public class HomeController : Controller
             {
                 var categoryList = category.Split(',').Select(t => t.Trim()).ToList();
                 availableRooms = availableRooms.Where(c => category.Contains(c.CategoryName)).ToList();
-            }
-
-            if (availableRooms.Count == 0)
-            {
-                TempData["Info"] = "No rooms are available for the selected dates and capacity.";
             }
 
             ViewBag.Categories = availableRooms;
