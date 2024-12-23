@@ -207,14 +207,14 @@ public class PaymentController : Controller
     {
         ViewBag.availableRoomID = TempData["RoomId"];
         ViewBag.roomCategory = TempData["RoomCategory"];
-        ViewBag.checkIn = DateTime.Parse(TempData["CheckIn"]?.ToString() ?? DateTime.Now.ToString("yyyy-MM-dd"));
-        ViewBag.checkOut = DateTime.Parse(TempData["CheckOut"]?.ToString() ?? DateTime.Now.ToString("yyyy-MM-dd"));
-        ViewBag.roomPrice = double.Parse(TempData["RoomPrice"]?.ToString() ?? "0");
-        ViewBag.numberOfDays = int.Parse(TempData["NumberOfDays"]?.ToString() ?? "0");
-        ViewBag.roomTotalPrice = double.Parse(TempData["RoomTotalPrice"]?.ToString() ?? "0");
-        ViewBag.Total = double.Parse(TempData["Total"]?.ToString() ?? "0");
-        ViewBag.Subtotal = double.Parse(TempData["Subtotal"]?.ToString() ?? "0");
-        ViewBag.Tax = double.Parse(TempData["Tax"]?.ToString() ?? "0");
+        ViewBag.checkIn = DateTime.Parse(TempData["CheckIn"]?.ToString());
+        ViewBag.checkOut = DateTime.Parse(TempData["CheckOut"]?.ToString());
+        ViewBag.roomPrice = double.Parse(TempData["RoomPrice"]?.ToString());
+        ViewBag.numberOfDays = int.Parse(TempData["NumberOfDays"]?.ToString());
+        ViewBag.roomTotalPrice = double.Parse(TempData["RoomTotalPrice"]?.ToString());
+        ViewBag.Total = double.Parse(TempData["Total"]?.ToString());
+        ViewBag.Subtotal = double.Parse(TempData["Subtotal"]?.ToString());
+        ViewBag.Tax = double.Parse(TempData["Tax"]?.ToString());
 
         if (TempData["FoodServices"] != null)
         {
