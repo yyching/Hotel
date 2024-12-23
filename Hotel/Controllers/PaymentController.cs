@@ -203,6 +203,11 @@ public class PaymentController : Controller
         return Redirect(session.Url);
     }
 
+    public IActionResult Success()
+    {
+        return View();
+    }
+
     public IActionResult Cancel()
     {
         ViewBag.availableRoomID = TempData["RoomId"];
