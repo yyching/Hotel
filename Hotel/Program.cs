@@ -12,6 +12,9 @@ builder.Services.AddScoped<Helper>();
 builder.Services.AddAuthentication().AddCookie();
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("StripeSettings"));
+var key = builder.Configuration.GetValue<string>("StripeSettings:SecretKey");
+
 var app = builder.Build();
 app.UseHttpsRedirection();
 app.UseStaticFiles();

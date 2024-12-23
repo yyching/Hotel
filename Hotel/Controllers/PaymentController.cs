@@ -1,15 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Stripe;
+using Stripe.Checkout;
 
 namespace Hotel.Controllers;
 
 public class PaymentController : Controller
 {
     private readonly DB db;
+    private readonly StripeSettings _stripeSettings;
 
-    public PaymentController(DB db)
+    public PaymentController(DB db, IOptions<StripeSettings> stripeSettings)
     {
         this.db = db;
+        _stripeSettings = stripeSettings.Value;
+        StripeConfiguration.ApiKey = _stripeSettings.SecretKey;
     }
 
     public IActionResult PaymentPage(string? categoryID, DateOnly checkIn, DateOnly checkOut, string[]? foodServiceIds, int[]? foodQuantities, string[]? roomServiceIds, int[]? roomQuantities)
@@ -22,7 +28,7 @@ public class PaymentController : Controller
         var availableRooms = db.Rooms
            .Include(r => r.Category)
            .Where(r => !occupiedRooms.Contains(r.RoomID))
-           .Where(r => r.Category.CategoryID == categoryID)  // 移除 ToList() 提高性能
+           .Where(r => r.Category.CategoryID == categoryID)
            .Select(r => new {
                r.RoomID,
                r.Category.PricePerNight,
@@ -99,5 +105,46 @@ public class PaymentController : Controller
         ViewBag.Total = total;
 
         return View();
+    }
+
+    public IActionResult CreateCheckoutSession(double total)
+    {
+
+        var currency = "usd"; // Currency code
+        var successUrl = "https://localhost:7161/Payment/Success";
+        var cancelUrl = "https://localhost:7161/Payment/Cancel";
+
+        var options = new SessionCreateOptions
+        {
+            PaymentMethodTypes = new List<string>
+                {
+                    "card"
+                },
+            LineItems = new List<SessionLineItemOptions>
+                {
+                    new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            Currency = currency,
+                            UnitAmount = (long)(total * 100),  // Amount in smallest currency unit (e.g., cents)
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = "Product Name",
+                                Description = "Product Description"
+                            }
+                        },
+                        Quantity = 1
+                    }
+                },
+            Mode = "payment",
+            SuccessUrl = successUrl,
+            CancelUrl = cancelUrl
+        };
+
+        var service = new SessionService();
+        var session = service.Create(options);
+
+        return Redirect(session.Url);
     }
 }
