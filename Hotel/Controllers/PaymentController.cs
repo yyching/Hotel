@@ -228,7 +228,7 @@ public class PaymentController : Controller
                 TempData["RoomServices"].ToString());
         }
 
-        TempData["ErrorMessage"] = "Payment was cancelled. Please try again.";
+        TempData["Info"] = "Payment was cancelled.";
         return View("PaymentPage");
     }
 }
