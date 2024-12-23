@@ -134,6 +134,14 @@ public class RoomPageVM
     public RoomSearchVM SearchVM { get; set; }
 }
 
+public class ServiceItem
+{
+    public string category { get; set; }
+    public string serviceName { get; set; }
+    public int quantity { get; set; }
+    public double price { get; set; }
+}
+
 public class RoomDetailsVM
 {
     public string CategoryID { get; set; }

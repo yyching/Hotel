@@ -63,7 +63,42 @@
                     <tr class="total">
                         <td>Total</td>
                         <td class="price">RM @ViewBag.Total</td>
-                        <input type="hidden" id="total" name="total" value="@ViewBag.Total" />
+
+                        <!-- Hidden inputs for form submission -->
+                        <input type="hidden" name="roomId" value="@ViewBag.availableRoomID" />
+                        <input type="hidden" name="roomCategory" value="@ViewBag.roomCategory" />
+                        <input type="hidden" name="checkIn" value="@ViewBag.checkIn.ToString("yyyy-MM-dd")" />
+                        <input type="hidden" name="checkOut" value="@ViewBag.checkOut.ToString("yyyy-MM-dd")" />
+                        <input type="hidden" name="roomPrice" value="@ViewBag.roomPrice" />
+                        <input type="hidden" name="numberOfDays" value="@ViewBag.numberOfDays" />
+                        <input type="hidden" name="roomTotalPrice" value="@ViewBag.roomTotalPrice" />
+                        <input type="hidden" name="total" value="@ViewBag.Total" />
+                        <input type="hidden" name="subtotal" value="@ViewBag.Subtotal" />
+                        <input type="hidden" name="tax" value="@ViewBag.Tax" />
+
+                        @if (ViewBag.SelectedFoodServices != null)
+                        {
+                            for (int i = 0; i < ViewBag.SelectedFoodServices.Count; i++)
+                            {
+                                var f = ViewBag.SelectedFoodServices[i];
+                                <input type="hidden" name="foodNames[@i]" value="@f.serviceName" />
+                                <input type="hidden" name="foodQuantities[@i]" value="@f.quantity" />
+                                <input type="hidden" name="foodPrices[@i]" value="@f.price" />
+                                <input type="hidden" name="foodCategories[@i]" value="@f.category" />
+                            }
+                        }
+
+                        @if (ViewBag.SelectedRoomServices != null)
+                        {
+                            for (int i = 0; i < ViewBag.SelectedRoomServices.Count; i++)
+                            {
+                                var r = ViewBag.SelectedRoomServices[i];
+                                <input type="hidden" name="roomNames[@i]" value="@r.serviceName" />
+                                <input type="hidden" name="roomQuantities[@i]" value="@r.quantity" />
+                                <input type="hidden" name="roomPrices[@i]" value="@r.price" />
+                                <input type="hidden" name="roomCategories[@i]" value="@r.category" />
+                            }
+                        }
                     </tr>
                 </table>
             </div>

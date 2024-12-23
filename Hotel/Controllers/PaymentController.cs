@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Stripe;
@@ -107,12 +108,66 @@ public class PaymentController : Controller
         return View();
     }
 
-    public IActionResult CreateCheckoutSession(double total)
+    public IActionResult CreateCheckoutSession(
+        string roomId,
+        string roomCategory,
+        DateOnly checkIn,
+        DateOnly checkOut,
+        double roomPrice,
+        int numberOfDays,
+        double roomTotalPrice,
+        double total,
+        double subtotal,
+        double tax,
+        string[]? foodCategories,
+        string[]? foodNames,
+        int[]? foodQuantities,
+        double[]? foodPrices,
+        string[]? roomCategories,
+        string[]? roomNames,
+        int[]? roomQuantities,
+        double[]? roomPrices)
     {
+        TempData["RoomId"] = roomId;
+        TempData["RoomCategory"] = roomCategory;
+        TempData["CheckIn"] = checkIn.ToString("yyyy-MM-dd");
+        TempData["CheckOut"] = checkOut.ToString("yyyy-MM-dd");
+        TempData["RoomPrice"] = roomPrice.ToString();
+        TempData["NumberOfDays"] = numberOfDays.ToString();
+        TempData["RoomTotalPrice"] = roomTotalPrice.ToString();
+        TempData["Total"] = total.ToString();
+        TempData["Subtotal"] = subtotal.ToString();
+        TempData["Tax"] = tax.ToString();
+        if (foodNames != null && foodQuantities != null)
+        {
+            var foodServices = foodNames.Select((name, i) => new ServiceItem
+            {
+                category = foodCategories[i],
+                serviceName = name,
+                quantity = foodQuantities[i],
+                price = foodPrices[i]
+            }).ToList();
 
-        var currency = "usd"; // Currency code
+            TempData["FoodServices"] = JsonSerializer.Serialize(foodServices);
+        }
+        if (roomNames != null && roomQuantities != null)
+        {
+            var roomServices = roomNames.Select((name, i) => new ServiceItem
+            {
+                category = roomCategories[i],
+                serviceName = name,
+                quantity = roomQuantities[i],
+                price = roomPrices[i]
+            }).ToList();
+
+            TempData["RoomServices"] = JsonSerializer.Serialize(roomServices);
+        }
+
+        var currency = "myr";
         var successUrl = "https://localhost:7161/Payment/Success";
         var cancelUrl = "https://localhost:7161/Payment/Cancel";
+
+        var description = $"Check-in: {checkIn:yyyy-MM-dd}\nCheck-out: {checkOut:yyyy-MM-dd}\n";
 
         var options = new SessionCreateOptions
         {
@@ -130,8 +185,8 @@ public class PaymentController : Controller
                             UnitAmount = (long)(total * 100),  // Amount in smallest currency unit (e.g., cents)
                             ProductData = new SessionLineItemPriceDataProductDataOptions
                             {
-                                Name = "Product Name",
-                                Description = "Product Description"
+                                Name = "Hotel Booking",
+                                Description = description
                             }
                         },
                         Quantity = 1
@@ -146,5 +201,34 @@ public class PaymentController : Controller
         var session = service.Create(options);
 
         return Redirect(session.Url);
+    }
+
+    public IActionResult Cancel()
+    {
+        ViewBag.availableRoomID = TempData["RoomId"];
+        ViewBag.roomCategory = TempData["RoomCategory"];
+        ViewBag.checkIn = DateTime.Parse(TempData["CheckIn"]?.ToString() ?? DateTime.Now.ToString("yyyy-MM-dd"));
+        ViewBag.checkOut = DateTime.Parse(TempData["CheckOut"]?.ToString() ?? DateTime.Now.ToString("yyyy-MM-dd"));
+        ViewBag.roomPrice = double.Parse(TempData["RoomPrice"]?.ToString() ?? "0");
+        ViewBag.numberOfDays = int.Parse(TempData["NumberOfDays"]?.ToString() ?? "0");
+        ViewBag.roomTotalPrice = double.Parse(TempData["RoomTotalPrice"]?.ToString() ?? "0");
+        ViewBag.Total = double.Parse(TempData["Total"]?.ToString() ?? "0");
+        ViewBag.Subtotal = double.Parse(TempData["Subtotal"]?.ToString() ?? "0");
+        ViewBag.Tax = double.Parse(TempData["Tax"]?.ToString() ?? "0");
+
+        if (TempData["FoodServices"] != null)
+        {
+            ViewBag.SelectedFoodServices = JsonSerializer.Deserialize<List<ServiceItem>>(
+                TempData["FoodServices"].ToString());
+        }
+
+        if (TempData["RoomServices"] != null)
+        {
+            ViewBag.SelectedRoomServices = JsonSerializer.Deserialize<List<ServiceItem>>(
+                TempData["RoomServices"].ToString());
+        }
+
+        TempData["ErrorMessage"] = "Payment was cancelled. Please try again.";
+        return View("PaymentPage");
     }
 }
