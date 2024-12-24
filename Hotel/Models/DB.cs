@@ -120,6 +120,7 @@ public class Booking
     public DateOnly CheckInDate { get; set; }
     public DateOnly CheckOutDate { get; set; }
     public double TotalAmount { get; set; }
+    public string Status { get; set; }
 
     // Foreign Key
     public string UserID { get; set; }

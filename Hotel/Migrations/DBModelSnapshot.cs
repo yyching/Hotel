@@ -44,6 +44,10 @@ namespace Hotel.Migrations
                     b.Property<string>("ServiceBookingID")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<double>("TotalAmount")
                         .HasColumnType("float");
 

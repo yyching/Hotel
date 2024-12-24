@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.Migrations
 {
     [DbContext(typeof(DB))]
-    [Migration("20241220160012_CreateDB")]
+    [Migration("20241224080844_CreateDB")]
     partial class CreateDB
     {
         /// <inheritdoc />
@@ -45,6 +45,10 @@ namespace Hotel.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ServiceBookingID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("TotalAmount")

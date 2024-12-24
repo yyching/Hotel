@@ -156,6 +156,7 @@ namespace Hotel.Migrations
                     CheckInDate = table.Column<DateOnly>(type: "date", nullable: false),
                     CheckOutDate = table.Column<DateOnly>(type: "date", nullable: false),
                     TotalAmount = table.Column<double>(type: "float", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserID = table.Column<string>(type: "nvarchar(100)", nullable: false),
                     RoomID = table.Column<string>(type: "nvarchar(100)", nullable: false),
                     ServiceBookingID = table.Column<string>(type: "nvarchar(max)", nullable: true)
