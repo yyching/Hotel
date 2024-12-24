@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -163,39 +164,78 @@ public class PaymentController : Controller
             TempData["RoomServices"] = JsonSerializer.Serialize(roomServices);
         }
 
-        var currency = "myr";
-        var successUrl = "https://localhost:7161/Payment/Success";
-        var cancelUrl = "https://localhost:7161/Payment/Cancel";
+        // get the booking details
+        var productList = new List<(string name, string description, long amount, int quantity)>();
 
-        var description = $"Check-in: {checkIn:yyyy-MM-dd}\nCheck-out: {checkOut:yyyy-MM-dd}\n";
+        productList.Add((
+            $"{roomCategory}",
+            $"Check-in: {checkIn:yyyy-MM-dd}\nCheck-out: {checkOut:yyyy-MM-dd}",
+            (long)(roomPrice * 100),
+            numberOfDays
+        ));
+
+        if (foodNames != null && foodQuantities != null)
+        {
+            for (int i = 0; i < foodNames.Length; i++)
+            {
+                if (foodQuantities[i] > 0)
+                {
+                    productList.Add((
+                        foodNames[i],
+                        $"Category: {foodCategories[i]}",
+                        (long)(foodPrices[i] * 100) / foodQuantities[i],
+                        foodQuantities[i]
+                    ));
+                }
+            }
+        }
+
+        if (roomNames != null && roomQuantities != null)
+        {
+            for (int i = 0; i < roomNames.Length; i++)
+            {
+                if (roomQuantities[i] > 0)
+                {
+                    productList.Add((
+                        roomNames[i],
+                        $"Category: {roomCategories[i]}",
+                        (long)(roomPrices[i] * 100) / roomQuantities[i],
+                        roomQuantities[i]
+                    ));
+                }
+            }
+        }
+
+        productList.Add(("Tax", "TaxRate : 10%", (long)(tax * 100), 1));
 
         var options = new SessionCreateOptions
         {
-            PaymentMethodTypes = new List<string>
+            PaymentMethodTypes = new List<string> { "card" },
+            LineItems = new List<SessionLineItemOptions>(),
+            Mode = "payment",
+            SuccessUrl = "https://localhost:7161/Payment/Success",
+            CancelUrl = "https://localhost:7161/Payment/Cancel"
+        };
+
+        // show the booking details
+        foreach (var item in productList)
+        {
+            var sessionListItem = new SessionLineItemOptions
+            {
+                PriceData = new SessionLineItemPriceDataOptions
                 {
-                    "card"
-                },
-            LineItems = new List<SessionLineItemOptions>
-                {
-                    new SessionLineItemOptions
+                    UnitAmount = item.amount,
+                    Currency = "myr",
+                    ProductData = new SessionLineItemPriceDataProductDataOptions
                     {
-                        PriceData = new SessionLineItemPriceDataOptions
-                        {
-                            Currency = currency,
-                            UnitAmount = (long)(total * 100),  // Amount in smallest currency unit (e.g., cents)
-                            ProductData = new SessionLineItemPriceDataProductDataOptions
-                            {
-                                Name = "Hotel Booking",
-                                Description = description
-                            }
-                        },
-                        Quantity = 1
+                        Name = item.name,
+                        Description = item.description
                     }
                 },
-            Mode = "payment",
-            SuccessUrl = successUrl,
-            CancelUrl = cancelUrl
-        };
+                Quantity = item.quantity
+            };
+            options.LineItems.Add(sessionListItem);
+        }
 
         var service = new SessionService();
         var session = service.Create(options);
