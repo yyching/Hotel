@@ -371,5 +371,10 @@ namespace Hotel.Controllers
 
             return RedirectToAction("Login");
         }
+
+        public IActionResult BookingHistory()
+        {
+            return View();
+        }
     }
 }
