@@ -142,7 +142,7 @@ select {
 
 /* Menu Items */
 .food-section {
-    background-image: url('/img/HomePage/restaurant.jpg');
+    background-image: url('/img/restaurant.jpg');
     background-size: cover;
     background-attachment: fixed;
     background-repeat: no-repeat;
@@ -366,7 +366,7 @@ select {
 .book-section {
     position: relative;
     height: 300px;
-    background: url('../img/HomePage/book.jpg') no-repeat center center;
+    background: url('../img/book.jpg') no-repeat center center;
     background-size: cover;
     display: flex;
     align-items: center;
