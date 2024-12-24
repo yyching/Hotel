@@ -261,5 +261,4 @@ function clearAllFilters() {
         })
         .catch(error => console.error('Error:', error));
 }
-
 document.getElementById('clear-all').addEventListener('click', clearAllFilters);
