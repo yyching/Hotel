@@ -1,5 +1,7 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 using System.Text.Json;
+using Hotel.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -139,6 +141,7 @@ public class PaymentController : Controller
         TempData["Total"] = total.ToString();
         TempData["Subtotal"] = subtotal.ToString();
         TempData["Tax"] = tax.ToString();
+
         if (foodNames != null && foodQuantities != null)
         {
             var foodServices = foodNames.Select((name, i) => new ServiceItem
@@ -245,6 +248,71 @@ public class PaymentController : Controller
 
     public IActionResult Success()
     {
+        // Booking Data
+        var roomId = TempData["RoomId"]?.ToString();
+        var checkIn = TempData["CheckIn"]?.ToString();
+        var checkOut = TempData["CheckOut"]?.ToString();
+        var total = double.Parse(TempData["Total"]?.ToString());
+        var checkInDate = DateOnly.FromDateTime(DateTime.Parse(checkIn));
+        var checkOutDate = DateOnly.FromDateTime(DateTime.Parse(checkOut));
+
+        // generate BookingID and ServiceBookingID
+        var today = DateTime.Today;
+        var todayBookings = db.Bookings
+            .Where(b => b.BookingDate.Date == today)
+            .OrderByDescending(b => b.BookingID)
+            .ToList();
+        int sequence = todayBookings.Count + 1;
+        var bookingID = $"BOK{sequence:D3}{today:yyyyMMdd}";
+        var serviceBookingID = $"SER{sequence:D3}{today:yyyyMMdd}";
+
+        // store the food and room service to a list
+        var allServices = new List<ServiceItem>();
+        if (TempData["FoodServices"] != null)
+        {
+            var foodServices = JsonSerializer.Deserialize<List<ServiceItem>>(
+                TempData["FoodServices"].ToString());
+            allServices.AddRange(foodServices);
+        }
+        if (TempData["RoomServices"] != null)
+        {
+            var roomServices = JsonSerializer.Deserialize<List<ServiceItem>>(
+                TempData["RoomServices"].ToString());
+            allServices.AddRange(roomServices);
+        }
+
+        // store the service
+        foreach (var service in allServices)
+        {
+            if (service.quantity > 0)
+            {
+                var serviceBooking = new ServiceBooking
+                {
+                    ID = Guid.NewGuid().ToString(),
+                    ServiceBookingID = serviceBookingID,
+                    ServiceID = db.Services.First(s => s.ServiceName == service.serviceName).ServiceID,
+                    Qty = service.quantity
+                };
+                db.ServiceBooking.Add(serviceBooking);
+            }
+        }
+
+        // store the booking
+        var booking = new Booking
+        {
+            BookingID = bookingID,
+            BookingDate = today,
+            CheckInDate = checkInDate,
+            CheckOutDate = checkOutDate,
+            TotalAmount = total,
+            Status = "Paid",
+            UserID = User.FindFirst("UserID")?.Value,
+            RoomID = roomId,
+            ServiceBookingID = "-"
+        };
+        db.Bookings.Add(booking);
+        db.SaveChanges();
+
         return View();
     }
 
@@ -252,8 +320,8 @@ public class PaymentController : Controller
     {
         ViewBag.availableRoomID = TempData["RoomId"];
         ViewBag.roomCategory = TempData["RoomCategory"];
-        ViewBag.checkIn = DateTime.Parse(TempData["CheckIn"]?.ToString());
-        ViewBag.checkOut = DateTime.Parse(TempData["CheckOut"]?.ToString());
+        ViewBag.checkIn = TempData["CheckIn"];
+        ViewBag.checkOut = TempData["CheckOut"];
         ViewBag.roomPrice = double.Parse(TempData["RoomPrice"]?.ToString());
         ViewBag.numberOfDays = int.Parse(TempData["NumberOfDays"]?.ToString());
         ViewBag.roomTotalPrice = double.Parse(TempData["RoomTotalPrice"]?.ToString());
