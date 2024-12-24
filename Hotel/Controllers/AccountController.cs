@@ -382,14 +382,13 @@ namespace Hotel.Controllers
                 .Include(b => b.Room)
                     .ThenInclude(r => r.Category)
                 .Where(b => b.UserID == userId)
-                .OrderByDescending(b => b.BookingDate)
+                .OrderByDescending(b => b.BookingID)
                 .ToList();
 
             var serviceBookings = db.ServiceBooking
                 .Include(s => s.Service)
                 .ToList();
 
-            // 创建字典来存储每个预订的服务
             var breakfastDict = new Dictionary<string, Dictionary<string, int>>();
             var lunchDict = new Dictionary<string, Dictionary<string, int>>();
             var dinnerDict = new Dictionary<string, Dictionary<string, int>>();

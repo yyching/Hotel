@@ -32,8 +32,8 @@
                         <p><strong>Check-out:</strong> @booking.CheckOutDate.ToString("MMM dd, yyyy")</p>
 
                         @if (ViewBag.BreakfastServices.ContainsKey(booking.BookingID) ||
-                       ViewBag.LunchServices.ContainsKey(booking.BookingID) ||
-                       ViewBag.DinnerServices.ContainsKey(booking.BookingID))
+                             ViewBag.LunchServices.ContainsKey(booking.BookingID) ||
+                             ViewBag.DinnerServices.ContainsKey(booking.BookingID))
                         {
                             <h1><strong>Food</strong></h1>
 
