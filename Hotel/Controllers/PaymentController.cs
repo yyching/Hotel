@@ -308,7 +308,7 @@ public class PaymentController : Controller
             Status = "Paid",
             UserID = User.FindFirst("UserID")?.Value,
             RoomID = roomId,
-            ServiceBookingID = "-"
+            ServiceBookingID = serviceBookingID
         };
         db.Bookings.Add(booking);
         db.SaveChanges();
