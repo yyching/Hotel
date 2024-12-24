@@ -6,6 +6,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Hotel.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hotel.Controllers
 {
@@ -212,11 +213,11 @@ namespace Hotel.Controllers
         public IActionResult UpdatePassword()
         {
             var userId = User.FindFirst("UserID")?.Value;
-            if (string.IsNullOrEmpty(userId)) return RedirectToAction("Dashboard", "Admin");
+            if (string.IsNullOrEmpty(userId)) return RedirectToAction("Index", "Home");
 
             // Get member record based on UserID
             var u = db.Users.FirstOrDefault(u => u.UserID == userId);
-            if (u == null) return RedirectToAction("Dashboard", "Admin");
+            if (u == null) return RedirectToAction("Index", "Home");
 
             ViewBag.userImage = u.UserImage;
             ViewBag.userName = u.Name;
@@ -374,6 +375,23 @@ namespace Hotel.Controllers
 
         public IActionResult BookingHistory()
         {
+            var userId = User.FindFirst("UserID")?.Value;
+            if (string.IsNullOrEmpty(userId)) return RedirectToAction("Index", "Home");
+
+            var bookings = db.Bookings
+                            .Include(b => b.Room)
+                            .ThenInclude(r => r.Category)
+                            .Where(b => b.UserID == userId)
+                            .OrderByDescending(b => b.BookingDate)
+                            .ToList();
+
+            var serviceBookings = db.ServiceBooking
+                .Include(s => s.Service)
+                .ToList();
+
+            ViewBag.Bookings = bookings;
+            ViewBag.ServiceBookings = serviceBookings;
+
             return View();
         }
     }

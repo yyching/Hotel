@@ -1,6 +1,8 @@
 ﻿@{
     Layout = "_Layout2";
     ViewBag.Title = "Booking History";
+    var bookings = (IEnumerable<Booking>)ViewBag.Bookings;
+    var serviceBookings = (IEnumerable<ServiceBooking>)ViewBag.ServiceBookings;
 }
 <link rel="stylesheet" href="/css/BookingHistory.css" asp-append-version="true">
 
@@ -14,34 +16,88 @@
         </ul>
     </aside>
     <div class="history-container">
-        <div class="history-section">
-            <div class="history-header">
-                <h2>Hotel Paradise</h2>
-                <p>Order # 91256800100</p>
-            </div>
-            <h3 class="price">RM150.00</h3>
-            <div class="content-section">
-                <div class="image-container">
-                    <img src="../img/RoomImg/double_nature.jpg" alt="Item Image">
+        @foreach (var booking in ViewBag.Bookings)
+        {
+            var services = serviceBookings
+                            .Where(s => s.ServiceBookingID == booking.ServiceBookingID)
+                            .ToList();
+
+            var breakfastServices = services
+                                   .Where(s => s.Service.ServiceType == "Food" && s.Service.Category == "Breakfast")
+                                   .ToList();
+
+            var lunchServices = services
+                                   .Where(s => s.Service.ServiceType == "Food" && s.Service.Category == "Lunch")
+                                   .ToList();
+
+            var dinnerServices = services
+                                   .Where(s => s.Service.ServiceType == "Food" && s.Service.Category == "Dinner")
+                                   .ToList();
+
+            var roomServices = services
+                                   .Where(s => s.Service.ServiceType == "Room" && s.Qty >= 1)
+                                   .ToDictionary(s => s.Service.ServiceName, s => s.Qty);
+
+            <div class="history-section">
+                <div class="history-header">
+                    <h2>@booking.Room.Category.CategoryName</h2>
+                    <p>Order # @booking.BookingID</p>
                 </div>
-                <div class="info-section">
-                    <h1><strong>Booking Date:</strong> Dec 15, 2024</h1>
-                    <p><strong>Check-in:</strong> Dec 15, 2024</p>
-                    <p><strong>Check-out:</strong> Dec 15, 2024</p>
-                    <h1><strong>Food</strong></h1>
-                    <p><strong>Breakfast:</strong> Classic Omelette(Quantity: 1), Pancake Stack(Quantity: 2)</p>
-                    <p><strong>Lunch:</strong> None</p>
-                    <p><strong>Dinner:</strong> None</p>
-                    <h1><strong>Add On</strong></h1>
-                    <p><strong>Extra Bed:</strong> 1</p>
-                    <p><strong>Extra Sheets:</strong> 0</p>
-                    <p><strong>Extra Pillows:</strong> 1</p>
+                <h3 class="price">RM @booking.TotalAmount</h3>
+                <div class="content-section">
+                    <div class="image-container">
+                        <img src="/img/RoomImg/double.jpg">
+                    </div>
+                    <div class="info-section">
+                        <h1><strong>Booking Date:</strong> @booking.BookingDate.ToString("MMM dd, yyyy")</h1>
+                        <p><strong>Check-in:</strong> @booking.CheckInDate.ToString("MMM dd, yyyy")</p>
+                        <p><strong>Check-out:</strong> @booking.CheckOutDate.ToString("MMM dd, yyyy")</p>
+
+                        @if (breakfastServices.Any() || lunchServices.Any() || dinnerServices.Any())
+                        {
+                            <h1><strong>Food</strong></h1>
+
+                            @if (breakfastServices.Any())
+                            {
+                                <p>
+                                    <strong>Breakfast:</strong>
+                                    @string.Join(", ", breakfastServices.Select(s => $"{s.Service.ServiceName}(Quantity: {s.Qty})"))
+                                </p>
+                            }
+
+                            @if (lunchServices.Any())
+                            {
+                                <p>
+                                    <strong>Lunch:</strong>
+                                    @string.Join(", ", lunchServices.Select(s => $"{s.Service.ServiceName}(Quantity: {s.Qty})"))
+                                </p>
+                            }
+
+                            @if (dinnerServices.Any())
+                            {
+                                <p>
+                                    <strong>Dinner:</strong>
+                                    @string.Join(", ", dinnerServices.Select(s => $"{s.Service.ServiceName}(Quantity: {s.Qty})"))
+                                </p>
+                            }
+                        }
+
+                        @if (roomServices.Any())
+                        {
+                            <h1><strong>Add On</strong></h1>
+                            @foreach (var service in roomServices)
+                            {
+                                <p><strong>@service.Key:</strong> @service.Value</p>
+                            }
+                        }
+
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="receipt">Download Receipt</button>
+                    <button class="view-details">View Room Details</button>
                 </div>
             </div>
-            <div class="action-buttons">
-                <button class="receipt">Download Receipt</button>
-                <button class="view-details">View Room Details</button>
-            </div>
-        </div>
+        }
     </div>
 </div>
