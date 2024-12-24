@@ -34,20 +34,145 @@ public class AdminController : Controller
     }
 
     // Admin Profile
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult Profile()
     {
+        var userId = User.FindFirst("UserID")?.Value;
+        if (string.IsNullOrEmpty(userId)) return RedirectToAction("Dashboard", "Admin");
+
+        // Get admin record based on UserID
+        var user = db.Users.FirstOrDefault(u => u.UserID == userId);
+        if (user == null) return RedirectToAction("Dashboard", "Admin");
+
+        ViewBag.UserEmail = user.Email;
+        ViewBag.UserName = user.Name;
+        ViewBag.UserPhone = user.PhoneNumber;
+        ViewBag.UserImage = user.UserImage;
+        ViewBag.UserRole = user.Role;
+
         return View();
     }
 
     // Admin Profile - Edit
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult EditProfile()
     {
-        return View();
+        var userId = User.FindFirst("UserID")?.Value;
+        if (string.IsNullOrEmpty(userId)) return RedirectToAction("Dashboard", "Admin");
+
+        // Get admin record based on UserID
+        var m = db.Users.FirstOrDefault(u => u.UserID == userId);
+        if (m == null) return RedirectToAction("Dashboard", "Admin");
+
+        var vm = new UpdateProfileVM
+        {
+            Email = m.Email,
+            Name = m.Name,
+            PhoneNumber = m.PhoneNumber,
+            UserImage = m.UserImage,
+        };
+
+        return View(vm);
+    }
+
+    [HttpPost]
+    [Authorize]
+    [Authorize(Roles = "Admin")]
+    public IActionResult EditProfile(UpdateProfileVM vm)
+    {
+        var userId = User.FindFirst("UserID")?.Value;
+        if (string.IsNullOrEmpty(userId)) return RedirectToAction("Dashboard", "Admin");
+
+        // Get admin record based on UserID
+        var m = db.Users.FirstOrDefault(u => u.UserID == userId);
+        if (m == null) return RedirectToAction("Dashboard", "Admin");
+
+        if (vm.Photo != null)
+        {
+            var err = hp.ValidatePhoto(vm.Photo);
+            if (err != "") ModelState.AddModelError("Photo", err);
+        }
+
+        if (ModelState.IsValid)
+        {
+            m.Name = vm.Name;
+            m.Email = vm.Email;
+            m.PhoneNumber = vm.PhoneNumber;
+
+            if (vm.Photo != null)
+            {
+                // Delete old photo if it exists
+                if (!string.IsNullOrEmpty(m.UserImage))
+                {
+                    hp.DeletePhoto(m.UserImage, "photos");
+                }
+
+                m.UserImage = hp.SavePhoto(vm.Photo, "photos");
+            }
+
+            db.SaveChanges();
+
+            TempData["Info"] = "Profile updated.";
+            return RedirectToAction();
+        }
+
+        vm.Name = m.Name;
+        vm.Email = m.Email;
+        vm.PhoneNumber = m.PhoneNumber;
+        vm.UserImage = m.UserImage;
+        return View(vm);
     }
 
     // Admin Profile - Change Password
+    [Authorize]
     public IActionResult ChangePassword()
     {
+        var userId = User.FindFirst("UserID")?.Value;
+        if (string.IsNullOrEmpty(userId)) return RedirectToAction("Dashboard", "Admin");
+
+        // Get admin record based on UserID
+        var m = db.Users.FirstOrDefault(u => u.UserID == userId);
+        if (m == null) return RedirectToAction("Dashboard", "Admin");
+
+        ViewBag.userRole = m.Role;
+        var vm = new UpdatePasswordVM
+        {
+            Name = m.Name,
+            UserImage = m.UserImage
+        };
+
+        return View(vm);
+    }
+
+    [Authorize]
+    [HttpPost]
+    public IActionResult ChangePassword(UpdatePasswordVM vm)
+    {
+        var userId = User.FindFirst("UserID")?.Value;
+        if (string.IsNullOrEmpty(userId)) return RedirectToAction("Dashboard", "Admin");
+
+        // Get admin record based on UserID
+        var m = db.Users.FirstOrDefault(u => u.UserID == userId);
+        if (m == null) return RedirectToAction("Dashboard", "Admin");
+
+        // If current password not matched
+        if (!hp.VerifyPassword(m.Password, vm.Current))
+        {
+            ModelState.AddModelError("Current", "Current Password not matched.");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            // Update user password (hash)
+            m.Password = hp.HashPassword(vm.New);
+            db.SaveChanges();
+
+            TempData["Info"] = "Password updated.";
+            return RedirectToAction();
+        }
+
         return View();
     }
 

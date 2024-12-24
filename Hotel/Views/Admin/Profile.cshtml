@@ -7,20 +7,18 @@
 <div style="justify-items: center;">
     <div class="profile-card">
         <div class="profile-left">
-            <img src="/images/icon.jpg" alt="Profile Picture" class="profile-pic">
-            <h2 class="profile-name">John Doe</h2>
-            <p class="profile-role">Web Developer</p>
+            <img src="/photos/@ViewBag.UserImage" class="profile-pic">
+            <h2 class="profile-name">@ViewBag.UserName</h2>
+            <p class="profile-role">@ViewBag.UserRole</p>
         </div>
         <div class="profile-right">
             <h3>Profile Details</h3>
-            <p><strong>Name:</strong> John Doe</p>
-            <p><strong>Age:</strong> 35</p>
-            <p><strong>Mobile:</strong> +91 XXXXXXXXXX</p>
-            <p><strong>Email:</strong> john@example.com</p>
-            <p><strong>Address:</strong> 123 Main St, Anytown, USA</p>
+            <p><strong>Name:</strong> @ViewBag.UserName</p>
+            <p><strong>Mobile:</strong> @ViewBag.UserPhone</p>
+            <p><strong>Email:</strong> @ViewBag.UserEmail</p>
             <div class="button-container">
-                <button class="btn" data-get="/">Edit Profile</button>
-                <button class="btn">Change Password</button>
+                <button class="btn" data-get="EditProfile">Edit Profile</button>
+                <button class="btn" data-get="ChangePassword">Change Password</button>
             </div>
         </div>
     </div>

@@ -52,7 +52,15 @@ namespace Hotel.Controllers
                 // (4) Handle return URL
                 if (string.IsNullOrEmpty(returnURL))
                 {
-                    return RedirectToAction("Index", "Home");
+                    switch (u.Role.ToLower())
+                    {
+                        case "admin":
+                            return RedirectToAction("Dashboard", "Admin");
+                        case "member":
+                            return RedirectToAction("Index", "Home");
+                        default:
+                            return RedirectToAction("Index", "Home");
+                    }
                 }
             }
 
