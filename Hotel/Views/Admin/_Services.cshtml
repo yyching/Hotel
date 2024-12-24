@@ -1,0 +1,161 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<Service>
+
+@{
+    ViewBag.Title = "Services";
+}
+
+<link href="/css/_Insert.css" rel="stylesheet" />
+
+<div class="section__content section__content--p30">
+    <div class="container-fluid">
+        <div class="row-table">
+            <div class="col-md-12">
+                <div class="overview-wrap">
+                    <h2 class="title-1">@ViewBag.Title</h2>
+                    <button id="addServiceBtn"  class="au-btn au-btn-icon au-btn--blue">
+                        <i class="zmdi zmdi-plus"></i>add item
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p hidden>
+    @Model.Count() of @Model.TotalItemCount record(s) |
+    Page @Model.PageNumber of @Model.PageCount
+    <img src="/images/loader.gif" id="loader" style="display: none">
+</p>
+
+<table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Service Name</th>
+            <th>Price (Per Unit)</th>
+            <th>Service Type</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var sr in Model)
+        {
+            <tr>
+                <td>@sr.ServiceID</td>
+                <td>@sr.ServiceName</td>
+                <td>@sr.UnitPrice</td>
+                <td>@sr.ServiceType</td>
+                <td>@sr.Category</td>
+                <td>@sr.Status</td>
+                <td>
+                    <button class="btn btn-primary btn-sm">Edit</button>
+                    <button class="btn btn-danger btn-sm">Terminate</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Popup Modal for Add or Edit Service -->
+<div id="addServiceModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span id="modalTitle" class="modal-title">Add Service</span>
+            <button id="closeModal" class="close-btn">&times;</button>
+        </div>
+        <div id="modalBody" class="modal-body">
+            <!-- Content -->
+        </div>
+    </div>
+</div>
+
+@{
+    var options = PagedListRenderOptions.ClassicPlusFirstAndLast;
+    options.LinkToFirstPageFormat    = "First";
+    options.LinkToLastPageFormat     = "Last";
+    options.LinkToPreviousPageFormat = "Previous";
+    options.LinkToNextPageFormat     = "Next";
+
+    var ajaxOptions = new AjaxOptions
+    {
+        HttpMethod = "get",         //Required
+        UpdateTargetId = "target",  //No Need
+        LoadingElementId = "#loader",
+    };
+}
+
+@Html.PagedListPager(
+    Model,
+    p => $"?page={p}",
+    // TODO
+    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(options, ajaxOptions)
+)
+
+<!-- JavaScript to Load the Partial View and Control Modal -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const addServiceBtn = $("#addServiceBtn");
+        const editServiceBtn = $(".editServiceBtn");
+        const addServiceModal = $("#addServiceModal");
+        const closeModal = $("#closeModal");
+        const modalTitle = $("#modalTitle");
+        const modalBody = $("#modalBody");
+
+        // Open Modal and Load Add Service Form
+        addServiceBtn.click(function () {
+            $.ajax({
+                url: '/Admin/_AddService',
+                type: 'GET',
+                success: function (data) {
+                    // Set the modal title for Add Service
+                    modalTitle.text("Add Service");
+                    // Load Add Service form content
+                    modalBody.html(data);
+                    addServiceModal.css("display", "flex");
+                },
+                error: function () {
+                    alert("Failed to load the Add Service form.");
+                }
+            });
+        });
+
+        // Open Modal and Load Edit Service Form
+        editServiceBtn.click(function () {
+            // Get the Service ID from the button's data-id attribute
+            const ServiceId = $(this).data("id");
+            $.ajax({
+                // Pass ServiceId to the controller action
+                url: '/Admin/_UpdateService/' + ServiceId,
+                type: 'GET',
+                success: function (data) {
+                    // Set the modal title for Edit Service
+                    modalTitle.text("Edit Service");
+                    // Load Edit Service form content
+                    modalBody.html(data);
+                    addServiceModal.css("display", "flex");
+                },
+                error: function () {
+                    alert("Failed to load the Edit Service form.");
+                }
+            });
+        });
+
+        // Close Modal
+        closeModal.click(function () {
+            addServiceModal.css("display", "none");
+        });
+
+        // Hide Modal on Outside Click
+        $(window).click(function (event) {
+            if (event.target === addServiceModal[0]) {
+                addServiceModal.css("display", "none");
+            }
+        });
+    });
+</script>
+

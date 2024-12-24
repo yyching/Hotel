@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList.Extensions;
 
 namespace Hotel.Controllers;
 
@@ -478,9 +479,24 @@ public class AdminController : Controller
     }
 
     // Service
-    public IActionResult Services()
+    public IActionResult Services(int page = 1)
     {
-        var m = db.Services;
+        if (page < 1)
+        {
+            return RedirectToAction(null, new { page = 1 });
+        }
+
+        var m = db.Services.ToPagedList(page, 10);
+
+        if (page > m.PageCount && m.PageCount > 0)
+        {
+            return RedirectToAction(null, new { page = m.PageCount });
+        }
+
+        if (Request.IsAjax())
+        {
+            return PartialView("_Services", m);
+        }
 
         return View(m);
     }
