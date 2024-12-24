@@ -39,7 +39,8 @@ namespace Hotel.Controllers
             // (2) Custom validation -> verify password
             if (u == null || !hp.VerifyPassword(u.Password, vm.Password))
             {
-                ModelState.AddModelError("", "Login credentials not matched.");
+                TempData["Info"] = "Login credentials not matched.";
+                return View();
             }
 
             if (ModelState.IsValid)
@@ -210,19 +211,16 @@ namespace Hotel.Controllers
         public IActionResult UpdatePassword()
         {
             var userId = User.FindFirst("UserID")?.Value;
-            if (string.IsNullOrEmpty(userId)) return RedirectToAction("Index", "Home");
+            if (string.IsNullOrEmpty(userId)) return RedirectToAction("Dashboard", "Admin");
 
             // Get member record based on UserID
-            var m = db.Users.FirstOrDefault(u => u.UserID == userId);
-            if (m == null) return RedirectToAction("Index", "Home");
+            var u = db.Users.FirstOrDefault(u => u.UserID == userId);
+            if (u == null) return RedirectToAction("Dashboard", "Admin");
 
-            var vm = new UpdatePasswordVM
-            {
-                Name = m.Name,
-                UserImage = m.UserImage
-            };
+            ViewBag.userImage = u.UserImage;
+            ViewBag.userName = u.Name;
 
-            return View(vm);
+            return View();
         }
 
         // POST: Account/UpdatePassword
@@ -234,24 +232,27 @@ namespace Hotel.Controllers
             if (string.IsNullOrEmpty(userId)) return RedirectToAction("Index", "Home");
 
             // Get member record based on UserID
-            var m = db.Users.FirstOrDefault(u => u.UserID == userId);
-            if (m == null) return RedirectToAction("Index", "Home");
+            var u = db.Users.FirstOrDefault(u => u.UserID == userId);
+            if (u == null) return RedirectToAction("Index", "Home");
 
             // If current password not matched
-            if (!hp.VerifyPassword(m.Password, vm.Current))
+            if (!hp.VerifyPassword(u.Password, vm.Current))
             {
                 ModelState.AddModelError("Current", "Current Password not matched.");
             }
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 // Update user password (hash)
-                m.Password = hp.HashPassword(vm.New);
+                u.Password = hp.HashPassword(vm.New);
                 db.SaveChanges();
 
                 TempData["Info"] = "Password updated.";
                 return RedirectToAction();
             }
+
+            ViewBag.userImage = u.UserImage;
+            ViewBag.userName = u.Name;
 
             return View();
         }

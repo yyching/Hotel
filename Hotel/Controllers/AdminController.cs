@@ -133,17 +133,14 @@ public class AdminController : Controller
         if (string.IsNullOrEmpty(userId)) return RedirectToAction("Dashboard", "Admin");
 
         // Get admin record based on UserID
-        var m = db.Users.FirstOrDefault(u => u.UserID == userId);
-        if (m == null) return RedirectToAction("Dashboard", "Admin");
+        var u = db.Users.FirstOrDefault(u => u.UserID == userId);
+        if (u == null) return RedirectToAction("Dashboard", "Admin");
 
-        ViewBag.userRole = m.Role;
-        var vm = new UpdatePasswordVM
-        {
-            Name = m.Name,
-            UserImage = m.UserImage
-        };
+        ViewBag.userImage = u.UserImage;
+        ViewBag.userName = u.Name;
+        ViewBag.userRole = u.Role;
 
-        return View(vm);
+        return View();
     }
 
     [Authorize]
@@ -153,25 +150,29 @@ public class AdminController : Controller
         var userId = User.FindFirst("UserID")?.Value;
         if (string.IsNullOrEmpty(userId)) return RedirectToAction("Dashboard", "Admin");
 
-        // Get admin record based on UserID
-        var m = db.Users.FirstOrDefault(u => u.UserID == userId);
-        if (m == null) return RedirectToAction("Dashboard", "Admin");
+        // Get member record based on UserID
+        var u = db.Users.FirstOrDefault(u => u.UserID == userId);
+        if (u == null) return RedirectToAction("Dashboard", "Admin");
 
         // If current password not matched
-        if (!hp.VerifyPassword(m.Password, vm.Current))
+        if (!hp.VerifyPassword(u.Password, vm.Current))
         {
             ModelState.AddModelError("Current", "Current Password not matched.");
         }
 
-        if (!ModelState.IsValid)
+        if (ModelState.IsValid)
         {
             // Update user password (hash)
-            m.Password = hp.HashPassword(vm.New);
+            u.Password = hp.HashPassword(vm.New);
             db.SaveChanges();
 
             TempData["Info"] = "Password updated.";
             return RedirectToAction();
         }
+
+        ViewBag.userImage = u.UserImage;
+        ViewBag.userName = u.Name;
+        ViewBag.userRole = u.Role;
 
         return View();
     }

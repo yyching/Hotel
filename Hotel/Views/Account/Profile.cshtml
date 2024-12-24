@@ -38,12 +38,12 @@
             </div>
 
             <div class="profile-picture">
-                <label asp-for="Photo"></label>
                 <label class="upload">
                     <input asp-for="Photo" accept="image/jpeg,image/png" hidden>
                     <img src="/photos/@Model.UserImage" class="picture-placeholder">
                 </label>
                 <span asp-validation-for="Photo"></span>
+                <label>@Model.Name</label>
             </div>
         </form>
     </main>
