@@ -113,7 +113,7 @@ public class HomeController : Controller
     }
 
     // GET: ROOMPAGE
-    public IActionResult RoomPage(DateOnly? checkIn, DateOnly? checkOut, int? persons, double? minPrice, double? maxPrice, string? themes, string? category)
+    public IActionResult RoomPage(DateOnly? checkIn, DateOnly? checkOut, int? persons, double? minPrice, double? maxPrice, string? themes, string? category, string? sort)
     {
         // Get category from room
         var categories = db.Rooms
@@ -182,6 +182,19 @@ public class HomeController : Controller
                 TempData["Info"] = "No rooms are available for the selected dates and capacity.";
             }
 
+            if (!string.IsNullOrEmpty(sort))
+            {
+                switch (sort.ToLower())
+                {
+                    case "lowest":
+                        availableRooms = availableRooms.OrderBy(r => r.PricePerNight).ToList();
+                        break;
+                    case "highest":
+                        availableRooms = availableRooms.OrderByDescending(r => r.PricePerNight).ToList();
+                        break;
+                }
+            }
+
             if (minPrice.HasValue && maxPrice.HasValue)
             {
                 availableRooms = availableRooms.Where(c => c.PricePerNight >= minPrice && c.PricePerNight <= maxPrice).ToList();
@@ -217,6 +230,19 @@ public class HomeController : Controller
             }
 
             return View(sm);
+        }
+
+        if (!string.IsNullOrEmpty(sort))
+        {
+            switch (sort.ToLower())
+            {
+                case "lowest":
+                    categories = categories.OrderBy(c => c.PricePerNight).ToList();
+                    break;
+                case "highest":
+                    categories = categories.OrderByDescending(c => c.PricePerNight).ToList();
+                    break;
+            }
         }
 
         if (minPrice.HasValue && maxPrice.HasValue)
