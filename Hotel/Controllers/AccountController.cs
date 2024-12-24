@@ -379,18 +379,53 @@ namespace Hotel.Controllers
             if (string.IsNullOrEmpty(userId)) return RedirectToAction("Index", "Home");
 
             var bookings = db.Bookings
-                            .Include(b => b.Room)
-                            .ThenInclude(r => r.Category)
-                            .Where(b => b.UserID == userId)
-                            .OrderByDescending(b => b.BookingDate)
-                            .ToList();
+                .Include(b => b.Room)
+                    .ThenInclude(r => r.Category)
+                .Where(b => b.UserID == userId)
+                .OrderByDescending(b => b.BookingDate)
+                .ToList();
 
             var serviceBookings = db.ServiceBooking
                 .Include(s => s.Service)
                 .ToList();
 
+            // 创建字典来存储每个预订的服务
+            var breakfastDict = new Dictionary<string, Dictionary<string, int>>();
+            var lunchDict = new Dictionary<string, Dictionary<string, int>>();
+            var dinnerDict = new Dictionary<string, Dictionary<string, int>>();
+            var roomDict = new Dictionary<string, Dictionary<string, int>>();
+
+            foreach (var booking in bookings)
+            {
+                var services = serviceBookings
+                    .Where(s => s.ServiceBookingID == booking.ServiceBookingID)
+                    .ToList();
+
+                if (services.Any())
+                {
+                    breakfastDict[booking.BookingID] = services
+                        .Where(s => s.Service.ServiceType == "Food" && s.Service.Category == "Breakfast")
+                        .ToDictionary(s => s.Service.ServiceName, s => s.Qty);
+
+                    lunchDict[booking.BookingID] = services
+                        .Where(s => s.Service.ServiceType == "Food" && s.Service.Category == "Lunch")
+                        .ToDictionary(s => s.Service.ServiceName, s => s.Qty);
+
+                    dinnerDict[booking.BookingID] = services
+                        .Where(s => s.Service.ServiceType == "Food" && s.Service.Category == "Dinner")
+                        .ToDictionary(s => s.Service.ServiceName, s => s.Qty);
+
+                    roomDict[booking.BookingID] = services
+                        .Where(s => s.Service.ServiceType == "Room" && s.Qty >= 1)
+                        .ToDictionary(s => s.Service.ServiceName, s => s.Qty);
+                }
+            }
+
             ViewBag.Bookings = bookings;
-            ViewBag.ServiceBookings = serviceBookings;
+            ViewBag.BreakfastServices = breakfastDict;
+            ViewBag.LunchServices = lunchDict;
+            ViewBag.DinnerServices = dinnerDict;
+            ViewBag.RoomServices = roomDict;
 
             return View();
         }

@@ -1,8 +1,6 @@
 ﻿@{
     Layout = "_Layout2";
     ViewBag.Title = "Booking History";
-    var bookings = (IEnumerable<Booking>)ViewBag.Bookings;
-    var serviceBookings = (IEnumerable<ServiceBooking>)ViewBag.ServiceBookings;
 }
 <link rel="stylesheet" href="/css/BookingHistory.css" asp-append-version="true">
 
@@ -18,84 +16,74 @@
     <div class="history-container">
         @foreach (var booking in ViewBag.Bookings)
         {
-            var services = serviceBookings
-                            .Where(s => s.ServiceBookingID == booking.ServiceBookingID)
-                            .ToList();
-
-            var breakfastServices = services
-                                   .Where(s => s.Service.ServiceType == "Food" && s.Service.Category == "Breakfast")
-                                   .ToList();
-
-            var lunchServices = services
-                                   .Where(s => s.Service.ServiceType == "Food" && s.Service.Category == "Lunch")
-                                   .ToList();
-
-            var dinnerServices = services
-                                   .Where(s => s.Service.ServiceType == "Food" && s.Service.Category == "Dinner")
-                                   .ToList();
-
-            var roomServices = services
-                                   .Where(s => s.Service.ServiceType == "Room" && s.Qty >= 1)
-                                   .ToDictionary(s => s.Service.ServiceName, s => s.Qty);
-
             <div class="history-section">
                 <div class="history-header">
-                    <h2>@booking.Room.Category.CategoryName</h2>
+                    <h2>@booking.Room.Category.CategoryName (@booking.Room.Category.Theme)</h2>
                     <p>Order # @booking.BookingID</p>
                 </div>
                 <h3 class="price">RM @booking.TotalAmount</h3>
                 <div class="content-section">
                     <div class="image-container">
-                        <img src="/img/RoomImg/double.jpg">
+                        <img src="/uploads/@booking.Room.Category.RoomImage">
                     </div>
                     <div class="info-section">
                         <h1><strong>Booking Date:</strong> @booking.BookingDate.ToString("MMM dd, yyyy")</h1>
                         <p><strong>Check-in:</strong> @booking.CheckInDate.ToString("MMM dd, yyyy")</p>
                         <p><strong>Check-out:</strong> @booking.CheckOutDate.ToString("MMM dd, yyyy")</p>
 
-                        @if (breakfastServices.Any() || lunchServices.Any() || dinnerServices.Any())
+                        @if (ViewBag.BreakfastServices.ContainsKey(booking.BookingID) ||
+                       ViewBag.LunchServices.ContainsKey(booking.BookingID) ||
+                       ViewBag.DinnerServices.ContainsKey(booking.BookingID))
                         {
                             <h1><strong>Food</strong></h1>
 
-                            @if (breakfastServices.Any())
+                            @if (ViewBag.BreakfastServices.ContainsKey(booking.BookingID))
                             {
                                 <p>
                                     <strong>Breakfast:</strong>
-                                    @string.Join(", ", breakfastServices.Select(s => $"{s.Service.ServiceName}(Quantity: {s.Qty})"))
+                                    @foreach (var service in ViewBag.BreakfastServices[booking.BookingID])
+                                    {
+                                    <p><strong>@service.Key:</strong> @service.Value</p>
+                                    }
                                 </p>
                             }
 
-                            @if (lunchServices.Any())
+                            @if (ViewBag.LunchServices.ContainsKey(booking.BookingID))
                             {
                                 <p>
                                     <strong>Lunch:</strong>
-                                    @string.Join(", ", lunchServices.Select(s => $"{s.Service.ServiceName}(Quantity: {s.Qty})"))
+                                    @foreach (var service in ViewBag.LunchServices[booking.BookingID])
+                                    {
+                                    <p><strong>@service.Key:</strong> @service.Value</p>
+                                    }
                                 </p>
                             }
 
-                            @if (dinnerServices.Any())
+                            @if (ViewBag.DinnerServices.ContainsKey(booking.BookingID))
                             {
                                 <p>
                                     <strong>Dinner:</strong>
-                                    @string.Join(", ", dinnerServices.Select(s => $"{s.Service.ServiceName}(Quantity: {s.Qty})"))
+                                    @foreach (var service in ViewBag.DinnerServices[booking.BookingID])
+                                    {
+                                    <p><strong>@service.Key:</strong> @service.Value</p>
+                                    }
                                 </p>
                             }
                         }
 
-                        @if (roomServices.Any())
+                        @if (ViewBag.RoomServices.ContainsKey(booking.BookingID))
                         {
                             <h1><strong>Add On</strong></h1>
-                            @foreach (var service in roomServices)
+                            @foreach (var service in ViewBag.RoomServices[booking.BookingID])
                             {
                                 <p><strong>@service.Key:</strong> @service.Value</p>
                             }
                         }
-
                     </div>
                 </div>
                 <div class="action-buttons">
                     <button class="receipt">Download Receipt</button>
-                    <button class="view-details">View Room Details</button>
+                    <button class="view-details" onclick="window.open('/Home/RoomDetailsPage?categoryID=@booking.Room.Category.CategoryID', '_blank')">View Room Details</button>
                 </div>
             </div>
         }
