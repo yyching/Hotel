@@ -4,15 +4,6 @@
     padding: 0;
 }
 
-/* General Styles */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f9;
-    color: #333;
-}
-
 .profile-container {
     display: flex;
     margin: 150px auto;
@@ -23,7 +14,7 @@ body {
     overflow: hidden;
 }
 
-/* Sidebar Styles */
+/* Sidebar */
 .sidebar {
     width: 250px;
     background: #3a3f58;
@@ -60,7 +51,7 @@ body {
                     color: #f4f4f9;
                 }
 
-/* Content Styles */
+/* Content */
 .content {
     flex: 1;
     padding: 20px;
@@ -122,7 +113,7 @@ body {
         background-color: #50557b;
     }
 
-/* Profile Picture Styles */
+/* Profile Picture */
 .profile-picture {
     flex: 0.5;
     text-align: center;

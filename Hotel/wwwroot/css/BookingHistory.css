@@ -6,15 +6,14 @@
 
 .profile-container {
     display: flex;
-    margin: 30px auto;
+    margin: 70px auto;
     max-width: 1200px;
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    height: calc(80vh - 20px);
 }
 
-/* Sidebar Styles */
+/* Sidebar */
 .sidebar {
     width: 250px;
     background: #3a3f58;
@@ -51,11 +50,14 @@
                     color: #f4f4f9;
                 }
 
-/* History Container Styles */
+/* History Container */
 .history-container {
     flex: 1;
     padding: 20px;
-    margin-bottom: 20px;
+}
+
+.history-section {
+    margin-bottom: 30px;
     border-bottom: 1px solid #e0e0e0;
 }
 
@@ -121,6 +123,7 @@
 .action-buttons {
     display: flex;
     gap: 10px;
+    margin-bottom: 20px;
 }
 
     .action-buttons button {
