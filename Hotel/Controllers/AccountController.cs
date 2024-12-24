@@ -105,12 +105,13 @@ namespace Hotel.Controllers
             {
                 // Generate random UserID in the format USR000
                 var random = new Random();
-                string newUserID = "USR" + random.Next(100, 999).ToString();
+                var currentDateTime = DateTime.Now;
+                string newUserID = $"USR{random.Next(100, 999)}{currentDateTime:yyyyMMdd}";
 
                 // Ensure the random UserID is unique
                 while (db.Users.Any(u => u.UserID == newUserID))
                 {
-                    newUserID = "USR" + random.Next(100, 999).ToString();
+                    newUserID = $"USR{random.Next(100, 999)}{currentDateTime:yyyyMMdd}";
                 }
 
                 // Insert new member
