@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Net.Mail;
 using System.Text;
 using System.Text.Json;
 using Hotel.Models;
@@ -14,12 +15,16 @@ public class PaymentController : Controller
 {
     private readonly DB db;
     private readonly StripeSettings _stripeSettings;
+    private readonly IWebHostEnvironment en;
+    private readonly Helper hp;
 
-    public PaymentController(DB db, IOptions<StripeSettings> stripeSettings)
+    public PaymentController(DB db, IOptions<StripeSettings> stripeSettings, IWebHostEnvironment en, Helper hp)
     {
         this.db = db;
         _stripeSettings = stripeSettings.Value;
         StripeConfiguration.ApiKey = _stripeSettings.SecretKey;
+        this.en = en;
+        this.hp = hp;
     }
 
     public IActionResult PaymentPage(string? categoryID, DateOnly checkIn, DateOnly checkOut, string[]? foodServiceIds, int[]? foodQuantities, string[]? roomServiceIds, int[]? roomQuantities)
@@ -364,6 +369,99 @@ public class PaymentController : Controller
         };
         db.Bookings.Add(booking);
         db.SaveChanges();
+
+        // send receipt to user gmail
+        var userId = User.FindFirst("UserID")?.Value;
+        if (string.IsNullOrEmpty(userId)) return RedirectToAction("Index", "Home");
+
+        // Get member record based on UserID
+        var m = db.Users.FirstOrDefault(u => u.UserID == userId);
+
+        if (m != null)
+        {
+            var roomNumber = db.Rooms.Where(r => r.RoomID == roomId).Select(r => r.RoomNumber).FirstOrDefault();
+
+            var receiptHtml = $@"
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <style>
+                    body {{ font-family: Arial, sans-serif; }}
+                    .receipt {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                    .header {{ text-align: center; margin-bottom: 30px; }}
+                    .booking-info {{ margin-bottom: 20px; }}
+                    .services {{ margin-bottom: 20px; }}
+                    table {{ width: 100%; border-collapse: collapse; margin-bottom: 20px; }}
+                    th, td {{ padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }}
+                    .total {{ margin-top: 20px; text-align: right; }}
+                    .footer {{ margin-top: 30px; text-align: center; font-size: 14px; }}
+                </style>
+            </head>
+            <body>
+                <div class='receipt'>
+                    <div class='header'>
+                        <h1>EASYSTAYS HOTEL</h1>
+                        <h2>Booking Receipt</h2>
+                        <p>Booking ID: {bookingID}</p>
+                        <p>Date: {today:yyyy-MM-dd}</p>
+                    </div>
+
+                    <div class='booking-info'>
+                        <h3>Booking Details</h3>
+                        <table>
+                            <tr><td>Check-in Date:</td><td>{checkInDate:yyyy-MM-dd}</td></tr>
+                            <tr><td>Check-out Date:</td><td>{checkOutDate:yyyy-MM-dd}</td></tr>
+                            <tr><td>Room Number:</td><td>{roomNumber}</td></tr>
+                        </table>
+                    </div>
+            ";
+
+            if (allServices.Any(s => s.quantity > 0))
+            {
+                receiptHtml += @"
+                    <div class='services'>
+                        <h3>Services</h3>
+                        <table>
+                            <tr><th>Service</th><th>Quantity</th><th>Price</th><th>Total</th></tr>";
+
+                foreach (var service in allServices.Where(s => s.quantity > 0))
+                {
+                    var serviceTotal = service.price * service.quantity;
+                    receiptHtml += $@"
+                            <tr>
+                                <td>{service.serviceName}</td>
+                                <td>{service.quantity}</td>
+                                <td>RM {service.price:F2}</td>
+                                <td>RM {serviceTotal:F2}</td>
+                            </tr>";
+                }
+
+                receiptHtml += "</table></div>";
+            }
+
+            receiptHtml += $@"
+                    <div class='total'>
+                        <table>
+                            <tr><td>Subtotal:</td><td>RM {(total - (total * 0.1)):F2}</td></tr>
+                            <tr><td>Tax (10%):</td><td>RM {(total * 0.1):F2}</td></tr>
+                            <tr style='font-weight: bold'><td>Total:</td><td>RM {total:F2}</td></tr>
+                        </table>
+                    </div>
+
+                    <div class='footer'>
+                        <p>Thank you for choosing EASYSTAYS HOTEL!</p>
+                    </div>
+                </div>
+            </body>
+            </html>";
+
+            var mail = new MailMessage();
+            mail.To.Add(new MailAddress(m.Email, m.Name));
+            mail.Subject = "Reset Your Password";
+            mail.IsBodyHtml = true;
+            mail.Body = receiptHtml;
+            hp.SendEmail(mail);
+        }
 
         return View();
     }
