@@ -62,6 +62,26 @@
         </div>
 
         <div class="filter-group">
+            <h3>Sort By Price</h3>
+            <div class="filter-item">
+                <input type="checkbox"
+                       class="sort-checkbox"
+                       value="high-to-low"
+                       id="sort-high-to-low"
+                       onchange="handleSortFilter(this)" />
+                <label for="sort-high-to-low">High to Low</label>
+            </div>
+            <div class="filter-item">
+                <input type="checkbox"
+                       class="sort-checkbox"
+                       value="low-to-high"
+                       id="sort-low-to-high"
+                       onchange="handleSortFilter(this)" />
+                <label for="sort-low-to-high">Low to High</label>
+            </div>
+        </div>
+
+        <div class="filter-group">
             <h3>Theme</h3>
             @foreach (var theme in ViewBag.Themes)
             {

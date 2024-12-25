@@ -152,6 +152,45 @@ rangeInput.forEach((input) => {
     });
 });
 
+// sort by price
+function handleSortFilter(checkbox) {
+    // ensure only one is selected
+    if (checkbox.checked) {
+        document.querySelectorAll('.sort-checkbox').forEach(cb => {
+            if (cb !== checkbox) cb.checked = false;
+        });
+    }
+
+    const selectedSort = document.querySelector('.sort-checkbox:checked')?.value;
+
+    // get the current url
+    const url = new URL(window.location.href);
+    const currentParams = new URLSearchParams(url.search);
+
+    // update the value
+    if (selectedSort) {
+        currentParams.set('sort', selectedSort);
+    } else {
+        currentParams.delete('sort');
+    }
+
+    // send ajax request
+    fetch(`/Home/RoomPage?${currentParams.toString()}`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+        .then(response => response.text())
+        .then(html => {
+            document.querySelector('.hotel-table').innerHTML = html;
+            // update the url but not page reload
+            window.history.pushState({}, '', `${url.pathname}?${currentParams.toString()}`);
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// filter by theme
 function handleThemeFilter(checkbox) {
     // get the selected theme
     const selectedThemes = Array.from(document.querySelectorAll('.theme-checkbox:checked'))
@@ -185,6 +224,7 @@ function handleThemeFilter(checkbox) {
     .catch(error => console.error('Error:', error));
 }
 
+// filter by room category
 function handleCategoryFilter(checkbox) {
     // get the selected category
     const selectedCategories = Array.from(document.querySelectorAll('.category-checkbox:checked'))
@@ -228,6 +268,7 @@ function clearAllFilters() {
     params.delete('category');
     params.delete('minPrice');
     params.delete('maxPrice');
+    params.delete('sort');
 
     // reset the price
     priceInput[0].value = 100;
@@ -246,6 +287,11 @@ function clearAllFilters() {
         checkbox.checked = false;
     });
 
+    // reset theme checkboxes
+    document.querySelectorAll('.sort-checkbox').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
     // send ajax request
     fetch(`/Home/RoomPage?${params.toString()}`, {
         method: 'GET',
@@ -256,7 +302,7 @@ function clearAllFilters() {
         .then(response => response.text())
         .then(html => {
             document.querySelector('.hotel-table').innerHTML = html;
-            // update the url but no oage reload
+            // update the url but no page reload
             window.history.pushState({}, '', `${url.pathname}?${params.toString()}`);
         })
         .catch(error => console.error('Error:', error));

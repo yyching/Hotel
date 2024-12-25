@@ -186,10 +186,10 @@ public class HomeController : Controller
             {
                 switch (sort.ToLower())
                 {
-                    case "lowest":
+                    case "low-to-high":
                         availableRooms = availableRooms.OrderBy(r => r.PricePerNight).ToList();
                         break;
-                    case "highest":
+                    case "high-to-low":
                         availableRooms = availableRooms.OrderByDescending(r => r.PricePerNight).ToList();
                         break;
                 }
@@ -236,10 +236,10 @@ public class HomeController : Controller
         {
             switch (sort.ToLower())
             {
-                case "lowest":
+                case "low-to-high":
                     categories = categories.OrderBy(c => c.PricePerNight).ToList();
                     break;
-                case "highest":
+                case "high-to-low":
                     categories = categories.OrderByDescending(c => c.PricePerNight).ToList();
                     break;
             }
