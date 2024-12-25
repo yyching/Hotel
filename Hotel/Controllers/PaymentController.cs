@@ -143,7 +143,7 @@ public class PaymentController : Controller
         TempData["Tax"] = tax.ToString();
 
         var isRoomAvailable = !db.Bookings.Where(b => b.RoomID == roomId)
-                                          .Any(b => (checkIn <= b.CheckOutDate && checkOut >= b.CheckInDate));
+                                          .Any(b => (checkIn < b.CheckOutDate && b.CheckInDate < checkOut));
 
         if (!isRoomAvailable)
         {
