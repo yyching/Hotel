@@ -142,6 +142,15 @@ public class PaymentController : Controller
         TempData["Subtotal"] = subtotal.ToString();
         TempData["Tax"] = tax.ToString();
 
+        var isRoomAvailable = !db.Bookings.Where(b => b.RoomID == roomId)
+                                          .Any(b => (checkIn <= b.CheckOutDate && checkOut >= b.CheckInDate));
+
+        if (!isRoomAvailable)
+        {
+            TempData["Info"] = "sorry. The room has been book";
+            return RedirectToAction("RoomPage", "Home");
+        }
+
         if (foodNames != null && foodQuantities != null)
         {
             var foodServices = foodNames.Select((name, i) => new ServiceItem
