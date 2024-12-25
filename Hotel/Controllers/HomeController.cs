@@ -326,10 +326,10 @@ public class HomeController : Controller
     // GET: ROOMDEATILS
     [Authorize]
     [Authorize(Roles = "Member")]
-    public IActionResult RoomDetailsPage(string categoryID, DateOnly? CheckInDate, DateOnly? CheckOutDate, string? FoodCategory, DateOnly? month)
+    public IActionResult RoomDetailsPage(string categoryID, DateOnly? CheckInDate, DateOnly? CheckOutDate, DateOnly? month, 
+                                         string[]? foodServiceIds, int[]? foodQuantities, string[]? roomServiceIds, int[]? roomQuantities)
     {
         var m = month.GetValueOrDefault(DateTime.Today.ToDateOnly());
-
         // Min = First day of the month
         // Max = First day of next month
         var min = new DateOnly(m.Year, m.Month, 1);
@@ -387,11 +387,15 @@ public class HomeController : Controller
        .ToList();
 
         // Get room services (ServiceType == "Room")
-        var roomServices = db.Services
+        ViewBag.RoomServices = db.Services
         .Where(s => s.ServiceType == "Room" && s.Status == "Active")
         .ToList();
 
-        ViewBag.RoomServices = roomServices;
+        // Get the selected service qty if no available room
+        ViewBag.FoodServiceIds = foodServiceIds;
+        ViewBag.FoodQuantities = foodQuantities;
+        ViewBag.RoomServiceIds = roomServiceIds;
+        ViewBag.RoomQuantities = roomQuantities;
 
         var vm = new RoomDetailsVM
         {
