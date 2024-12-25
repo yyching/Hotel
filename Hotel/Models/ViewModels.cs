@@ -231,3 +231,23 @@ public class UpdateRoomVMs
     [DisplayName("Categories")]
     public string CategoryID { get; set; }
 }
+
+public class AddServiceVM 
+{
+    public string serviceName { get; set; }
+    public double unitPrice { get; set; }
+    public string serviceDescription { get; set; }
+    public string serviceType { get; set; }
+    public string category { get; set; }
+    public string Status { get; set; }
+}
+
+public class UpdateServiceVM
+{
+    public string serviceID { get; set; }
+    public string serviceName { get; set; }
+    public double unitPrice { get; set; }
+    public string serviceDescription { get; set; }
+    public string serviceType { get; set; }
+    public string category { get; set; }
+}

@@ -49,11 +49,11 @@
                         <button class="btn btn-primary btn-sm editRoomBtn" data-id="@rm.RoomID">Edit</button>
                         @if (rm.Status == "Active")
                         {
-                            <button data-post="/Admin/TerminateRoom/@rm.RoomID" class="btn btn-danger btn-sm">Terminate</button>
+                            <button data-id="@rm.RoomID" class="btn btn-danger btn-sm btn-terminate">Terminate</button>
                         }
                         else if (rm.Status == "Terminate")
                         {
-                            <button data-post="/Admin/ActivateRoom/@rm.RoomID" class="btn btn-success btn-sm">Activate</button>
+                            <button data-id="@rm.RoomID" class="btn btn-success btn-sm btn-activate">Activate</button>
                         }
                     </td>
                 </tr>
@@ -79,51 +79,39 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
+        // Elements
         const addRoomBtn = $("#addRoomBtn");
-        const editRoomBtn = $(".editRoomBtn");
+        const editRoomBtns = $(".editRoomBtn");
         const addRoomModal = $("#addRoomModal");
         const closeModal = $("#closeModal");
         const modalTitle = $("#modalTitle");
         const modalBody = $("#modalBody");
 
-        // Open Modal and Load Add Room Form
-        addRoomBtn.click(function () {
+        // Function to load the modal with a specified URL and title
+        function loadModal(url, title) {
             $.ajax({
-                // Adjust the URL for your add room action
-                url: '/Admin/_AddRoom',  
+                url: url,
                 type: 'GET',
                 success: function (data) {
-                    // Set the modal title for Add Room
-                    modalTitle.text("Add Room");  
-                    // Load Add Room form content
-                    modalBody.html(data);  
-                    addRoomModal.css("display", "flex"); 
+                    modalTitle.text(title);  // Set modal title
+                    modalBody.html(data);  // Load content
+                    addRoomModal.css("display", "flex");  // Show modal
                 },
                 error: function () {
-                    alert("Failed to load the Add Room form.");
+                    alert("Failed to load the form.");
                 }
             });
+        }
+
+        // Open Modal for Adding a Room
+        addRoomBtn.click(function () {
+            loadModal('/Admin/_AddRoom', "Add Room");
         });
 
-        // Open Modal and Load Edit Room Form
-        editRoomBtn.click(function () {
-            // Get the Room ID from the button's data-id attribute
-            const roomId = $(this).data("id");  
-            $.ajax({
-                // Pass roomId to the controller action
-                url: '/Admin/_UpdateRoom/' + roomId,  
-                type: 'GET',
-                success: function (data) {
-                    // Set the modal title for Edit Room
-                    modalTitle.text("Edit Room");
-                    // Load Edit Room form content
-                    modalBody.html(data);  
-                    addRoomModal.css("display", "flex");
-                },
-                error: function () {
-                    alert("Failed to load the Edit Room form.");
-                }
-            });
+        // Open Modal for Editing a Room
+        editRoomBtns.click(function () {
+            const roomId = $(this).data("id");
+            loadModal('/Admin/_UpdateRoom/' + roomId, "Edit Room");
         });
 
         // Close Modal
@@ -131,12 +119,58 @@
             addRoomModal.css("display", "none");
         });
 
-        // Hide Modal on Outside Click
+        // Close Modal if outside is clicked
         $(window).click(function (event) {
             if (event.target === addRoomModal[0]) {
                 addRoomModal.css("display", "none");
             }
         });
+
+        // Handle Terminate Button Click
+        $('.btn-terminate').on('click', function () {
+            var roomId = $(this).data('id');  // Make sure this is an integer, or cast if needed.
+
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/TerminateRoom/' + roomId,  // Ensure URL is correct for your route
+                success: function (response) {
+                    location.reload();  // Refresh the page to reflect changes
+                },
+                error: function (xhr, status, error) {
+                    alert("An error occurred while terminating the room.");
+                }
+            });
+        });
+    
+        // Handle Activate Button Click
+        $('.btn-activate').on('click', function () {
+            var roomId = $(this).data('id');  // Ensure roomId is correctly passed
+
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/ActivateRoom/' + roomId,  // Ensure URL is correct for your route
+                success: function (response) {
+                    location.reload();  // Refresh the page to reflect changes
+                },
+                error: function (xhr, status, error) {
+                    alert("An error occurred while activating the room.");
+                }
+            });
+        });
+
+        // Function to handle Room status changes (Activate/Terminate)
+        function handleRoomStatusChange(roomId, action, newStatus) {
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/' + action + '/' + roomId,
+                success: function () {
+                    location.reload();  // Refresh the page to reflect changes
+                },
+                error: function () {
+                    alert(`An error occurred while changing room status to ${newStatus}.`);
+                }
+            });
+        }
     });
 </script>
 

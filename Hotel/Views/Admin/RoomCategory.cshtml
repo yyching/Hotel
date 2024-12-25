@@ -55,15 +55,58 @@
                         <button data-get="/Admin/UpdateRoomCategory/@ct.CategoryID" class="btn btn-primary btn-sm">Edit</button>
                         @if (ct.Status == "Active")
                         {
-                            <button data-post="/Admin/TerminateRoomCategory/@ct.CategoryID" class="btn btn-danger btn-sm">Terminate</button>
+                            <button data-id="@ct.CategoryID" class="btn btn-danger btn-sm btn-terminate">Terminate</button>
                         }
                         else if (ct.Status == "Terminate")
                         {
-                            <button data-post="/Admin/ActivateRoomCategory/@ct.CategoryID" class="btn btn-success btn-sm">Activate</button>
+                            <button data-id="@ct.CategoryID" class="btn btn-success btn-sm btn-activate">Activate</button>
                         }
                     </td>
+
                 </tr>
             }
         </tbody>
     </table>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function () {
+    // Handle Terminate Button Click
+    $('.btn-terminate').on('click', function () {
+        var categoryId = $(this).data('id');  // Get the CategoryID from the data attribute
+
+        $.ajax({
+            type: 'POST',
+            url: '/Admin/TerminateRoomCategory/' + categoryId,  // URL to post the request
+            success: function (response) {
+                // Handle the success response
+                location.reload();  // Refresh the page to reflect changes
+            },
+            error: function (xhr, status, error) {
+                // Handle any errors that occur
+                alert("An error occurred while terminating the room category.");
+            }
+        });
+    });
+
+    // Handle Activate Button Click
+    $('.btn-activate').on('click', function () {
+        var categoryId = $(this).data('id');  // Get the CategoryID from the data attribute
+
+        $.ajax({
+            type: 'POST',
+            url: '/Admin/ActivateRoomCategory/' + categoryId,  // URL to post the request
+            success: function (response) {
+                // Handle the success response
+                location.reload();  // Refresh the page to reflect changes
+            },
+            error: function (xhr, status, error) {
+                // Handle any errors that occur
+                alert("An error occurred while activating the room category.");
+            }
+        });
+    });
+});
+
+</script>

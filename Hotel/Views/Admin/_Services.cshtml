@@ -52,8 +52,15 @@
                 <td>@sr.Category</td>
                 <td>@sr.Status</td>
                 <td>
-                    <button class="btn btn-primary btn-sm">Edit</button>
-                    <button class="btn btn-danger btn-sm">Terminate</button>
+                    <button class="btn btn-primary btn-sm editServiceBtn" data-id="@sr.ServiceID">Edit</button>
+                    @if (sr.Status == "Active")
+                    {
+                        <button data-id="@sr.ServiceID" class="btn btn-danger btn-sm btn-terminate">Terminate</button>
+                    }
+                    else if (sr.Status == "Terminate")
+                    {
+                        <button data-id="@sr.ServiceID" class="btn btn-success btn-sm btn-activate">Activate</button>
+                    }
                 </td>
             </tr>
         }
@@ -156,6 +163,52 @@
                 addServiceModal.css("display", "none");
             }
         });
+
+        // Handle Terminate Button Click
+        $('.btn-terminate').on('click', function () {
+            var serviceID = $(this).data('id');
+
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/TerminateService/' + serviceID,  // Ensure URL is correct for your route
+                success: function (response) {
+                    location.reload();  // Refresh the page to reflect changes
+                },
+                error: function (xhr, status, error) {
+                    alert("An error occurred while terminating the service.");
+                }
+            });
+        });
+
+        // Handle Activate Button Click
+        $('.btn-activate').on('click', function () {
+            var serviceID = $(this).data('id'); 
+
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/ActivateService/' + serviceID,  // Ensure URL is correct for your route
+                success: function (response) {
+                    location.reload();  // Refresh the page to reflect changes
+                },
+                error: function (xhr, status, error) {
+                    alert("An error occurred while activating the service.");
+                }
+            });
+        });
+
+        // Function to handle status changes (Activate/Terminate)
+        function handleRoomStatusChange(serviceID, action, newStatus) {
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/' + action + '/' + serviceID,
+                success: function () {
+                    location.reload();
+                },
+                error: function () {
+                    alert(`An error occurred while changing status to ${newStatus}.`);
+                }
+            });
+        }
     });
 </script>
 

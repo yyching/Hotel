@@ -315,13 +315,10 @@ public class AdminController : Controller
         if (rc != null)
         {
             rc.Status = "Terminate";
-
             db.SaveChanges();
-
-            TempData["Info"] = "Terminated.";
         }
 
-        return RedirectToAction("RoomCategory");
+        return Json(new { status = "success", message = "Terminated." });
     }
 
     // Room Category - Activate | Post
@@ -333,13 +330,10 @@ public class AdminController : Controller
         if (rc != null)
         {
             rc.Status = "Active";
-
             db.SaveChanges();
-
-            TempData["Info"] = "Activate.";
         }
 
-        return RedirectToAction("RoomCategory");
+        return Json(new { status = "success", message = "Activated." });
     }
 
     // Room
@@ -424,7 +418,7 @@ public class AdminController : Controller
         return View(vm);
     }
 
-    // Room - Add | Post
+    // Room - Update | Post
     [HttpPost]
     public IActionResult _UpdateRoom(UpdateRoomVMs vm)
     {
@@ -443,7 +437,7 @@ public class AdminController : Controller
         return View(vm);
     }
 
-    // Room Category - Terminate | Post
+    // Room - Terminate | Post
     [HttpPost]
     public IActionResult TerminateRoom(string? id)
     {
@@ -455,13 +449,12 @@ public class AdminController : Controller
 
             db.SaveChanges();
 
-            TempData["Info"] = "Terminated.";
         }
 
-        return RedirectToAction("Rooms");
+        return Json(new { status = "success", message = "Terminated." });
     }
 
-    // Room Category - Activate | Post
+    // Room - Activate | Post
     [HttpPost]
     public IActionResult ActivateRoom(string? id)
     {
@@ -473,10 +466,9 @@ public class AdminController : Controller
 
             db.SaveChanges();
 
-            TempData["Info"] = "Activate.";
         }
 
-        return RedirectToAction("Rooms");
+        return Json(new { status = "success", message = "Activated." });
     }
 
     // Service
@@ -500,6 +492,141 @@ public class AdminController : Controller
         }
 
         return View(m);
+    }
+
+    // Service - Get Category
+    public IActionResult GetCategories(string serviceType)
+    {
+        List<string> categories = new List<string>();
+
+        if (serviceType == "Room")
+        {
+            categories.Add("Room");
+        }
+        else if (serviceType == "Food")
+        {
+            categories.Add("Breakfast");
+            categories.Add("Lunch");
+            categories.Add("Dinner");
+        }
+
+        return Json(categories);
+    }
+
+    // Service - Add | Get
+    public IActionResult _AddService() 
+    {
+        return View();
+    }
+
+    // Service - Add | Post
+    [HttpPost]
+    public IActionResult _AddService(AddServiceVM vm)
+    {
+        if (ModelState.IsValid)
+        {
+            var code = "SRV";
+
+            // Combine to form the new ID
+            string newID = hp.IDGenerator(code);
+
+            db.Services.Add(new Service
+            {
+                ServiceID = newID,
+                ServiceName = vm.serviceName,
+                UnitPrice = vm.unitPrice,
+                ServiceDescription = vm.serviceDescription,
+                ServiceType = vm.serviceType,
+                Category = vm.category,
+                Status = vm.Status,
+            });
+
+            db.SaveChanges();
+            TempData["Info"] = "Services added successfully";
+            return RedirectToAction("Services");
+
+        }
+
+        return View(vm);
+    }
+
+    // Service - Update | Get
+    public IActionResult _UpdateService(string? id)
+    {
+        var sr = db.Services.Find(id);
+
+        if (sr == null)
+        {
+            return RedirectToAction("Services");
+        }
+
+        var vm = new UpdateServiceVM
+        {
+            serviceID = sr.ServiceID,
+            serviceName = sr.ServiceName,
+            unitPrice = sr.UnitPrice,
+            serviceDescription = sr.ServiceDescription,
+            serviceType = sr.ServiceType,
+            category = sr.Category,
+        };
+
+        return View(vm);
+    }
+
+    // Service - Update | Post
+    [HttpPost]
+    public IActionResult _UpdateService(UpdateServiceVM vm)
+    {
+        var sr = db.Services.Find(vm.serviceID);
+
+        if (ModelState.IsValid)
+        {
+            sr.ServiceName = vm.serviceName;
+            sr.UnitPrice = vm.unitPrice;
+            sr.ServiceDescription = vm.serviceDescription;
+            sr.ServiceType = vm.serviceType;
+            sr.Category = vm.category;
+            db.SaveChanges();
+
+            TempData["Info"] = "Service updated.";
+            return RedirectToAction("Services");
+        }
+
+        return View(vm);
+    }
+
+    // Service - Terminate | Post
+    [HttpPost]
+    public IActionResult TerminateService(string? id)
+    {
+        var sr = db.Services.Find(id);
+
+        if (sr != null)
+        {
+            sr.Status = "Terminate";
+
+            db.SaveChanges();
+
+        }
+
+        return Json(new { status = "success", message = "Terminated." });
+    }
+
+    // Service - Activate | Post
+    [HttpPost]
+    public IActionResult ActivateService(string? id)
+    {
+        var sr = db.Services.Find(id);
+
+        if (sr != null)
+        {
+            sr.Status = "Active";
+
+            db.SaveChanges();
+
+        }
+
+        return Json(new { status = "success", message = "Activated." });
     }
 
     // User
