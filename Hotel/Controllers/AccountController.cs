@@ -373,6 +373,7 @@ namespace Hotel.Controllers
             return RedirectToAction("Login");
         }
 
+        // GET: BookingHistory
         public IActionResult BookingHistory()
         {
             var userId = User.FindFirst("UserID")?.Value;
@@ -382,7 +383,7 @@ namespace Hotel.Controllers
                 .Include(b => b.Room)
                     .ThenInclude(r => r.Category)
                 .Where(b => b.UserID == userId)
-                .OrderByDescending(b => b.BookingID)
+                .OrderBy(b => b.BookingDate)
                 .ToList();
 
             var serviceBookings = db.ServiceBooking

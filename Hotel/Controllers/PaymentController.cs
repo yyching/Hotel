@@ -314,7 +314,7 @@ public class PaymentController : Controller
             .ToList();
         int sequence = todayBookings.Count + 1;
         var bookingID = $"BOK{sequence:D3}{today:yyyyMMdd}";
-        var serviceBookingID = $"SER{sequence:D3}{today:yyyyMMdd}";
+        string? serviceBookingID = null;
 
         // store the food and room service to a list
         var allServices = new List<ServiceItem>();
@@ -334,6 +334,8 @@ public class PaymentController : Controller
         // store the service
         foreach (var service in allServices)
         {
+            serviceBookingID = $"SER{sequence:D3}{today:yyyyMMdd}";
+
             if (service.quantity > 0)
             {
                 var serviceBooking = new ServiceBooking
