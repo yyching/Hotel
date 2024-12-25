@@ -24,6 +24,7 @@ public class PaymentController : Controller
 
     public IActionResult PaymentPage(string? categoryID, DateOnly checkIn, DateOnly checkOut, string[]? foodServiceIds, int[]? foodQuantities, string[]? roomServiceIds, int[]? roomQuantities)
     {
+        // check the room available
         var occupiedRooms = db.Bookings
                                   .Where(b => checkIn < b.CheckOutDate &&
                                          b.CheckInDate < checkOut)
@@ -48,13 +49,19 @@ public class PaymentController : Controller
                 CategoryID = categoryID,
                 CheckInDate = checkIn.ToString("yyyy-MM-dd"),
                 CheckOutDate = checkOut.ToString("yyyy-MM-dd"),
+                FoodServiceIds = foodServiceIds,
+                FoodQuantities = foodQuantities,
+                RoomServiceIds = roomServiceIds,
+                RoomQuantities = roomQuantities
             });
         }
 
+        // show the booking details
         ViewBag.categoryID = categoryID;
         ViewBag.checkIn = checkIn;
         ViewBag.checkOut = checkOut;
 
+        // calculate the price for room
         int numberOfDays = checkOut.DayNumber - checkIn.DayNumber;
         double roomTotalPrice = availableRooms.PricePerNight * numberOfDays;
         ViewBag.availableRoomID = availableRooms.RoomID;
@@ -63,6 +70,7 @@ public class PaymentController : Controller
         ViewBag.roomPrice = availableRooms.PricePerNight;
         ViewBag.roomTotalPrice = roomTotalPrice;
 
+        // show the selected food
         var selectedFoodServices = foodServiceIds
        .Zip(foodQuantities, (id, qty) => new { ServiceId = id, Quantity = qty })
        .Where(x => x.Quantity > 0)
@@ -81,6 +89,7 @@ public class PaymentController : Controller
        .ToList();
         ViewBag.SelectedFoodServices = selectedFoodServices;
 
+        //show the selected room service
         var selectedRoomServices = roomServiceIds
        .Zip(roomQuantities, (id, qty) => new { ServiceId = id, Quantity = qty })
        .Where(x => x.Quantity > 0)
@@ -99,6 +108,7 @@ public class PaymentController : Controller
        .ToList();
         ViewBag.SelectedRoomServices = selectedRoomServices;
 
+        // calculate the total
         double foodServicesSubtotal = selectedFoodServices.Sum(x => x.price ?? 0);
         double roomServicesSubtotal = selectedRoomServices.Sum(x => x.price ?? 0);
         double subtotal = roomTotalPrice + foodServicesSubtotal + roomServicesSubtotal;
@@ -142,17 +152,9 @@ public class PaymentController : Controller
         TempData["Subtotal"] = subtotal.ToString();
         TempData["Tax"] = tax.ToString();
 
-        var isRoomAvailable = !db.Bookings.Where(b => b.RoomID == roomId)
-                                          .Any(b => (checkIn < b.CheckOutDate && b.CheckInDate < checkOut));
-
-        if (!isRoomAvailable)
-        {
-            TempData["Info"] = "sorry. The room has been book";
-            return RedirectToAction("RoomPage", "Home");
-        }
-
         if (foodNames != null && foodQuantities != null)
         {
+            // store the foodservice to a new ServiceItem list
             var foodServices = foodNames.Select((name, i) => new ServiceItem
             {
                 category = foodCategories[i],
@@ -160,11 +162,12 @@ public class PaymentController : Controller
                 quantity = foodQuantities[i],
                 price = foodPrices[i]
             }).ToList();
-
+            // change the list data to JSON and store to tempData
             TempData["FoodServices"] = JsonSerializer.Serialize(foodServices);
         }
         if (roomNames != null && roomQuantities != null)
         {
+            // store the roomservice to a new ServiceItem list
             var roomServices = roomNames.Select((name, i) => new ServiceItem
             {
                 category = roomCategories[i],
@@ -172,11 +175,49 @@ public class PaymentController : Controller
                 quantity = roomQuantities[i],
                 price = roomPrices[i]
             }).ToList();
-
+            // change the list data to JSON and store to tempData
             TempData["RoomServices"] = JsonSerializer.Serialize(roomServices);
         }
 
-        // get the booking details
+        // Check the available room
+        var isRoomAvailable = !db.Bookings.Where(b => b.RoomID == roomId)
+                                          .Any(b => (checkIn < b.CheckOutDate && b.CheckInDate < checkOut));
+        if (!isRoomAvailable)
+        {
+            var categoryID = roomCategory != null
+                                ? db.Categories
+                                .Where(c => roomCategory.Contains(c.CategoryName))
+                                .Select(c => c.CategoryID) 
+                                : null;
+
+            var foodServiceIds = foodNames != null
+                                ? db.Services
+                                .Where(s => foodNames.Contains(s.ServiceName) && s.ServiceType == "Food")
+                                .Select(s => s.ServiceID)
+                                .ToArray()
+                                : null;
+
+            var roomServiceIds = roomNames != null
+                                ? db.Services
+                                .Where(s => roomNames.Contains(s.ServiceName) && s.ServiceType == "Room")
+                                .Select(s => s.ServiceID)
+                                .ToArray()
+                                : null;
+
+            TempData["Info"] = "sorry. The room has been book";
+            return RedirectToAction("RoomDetailsPage", "Home", new
+            {
+                CategoryID = categoryID,
+                CheckInDate = checkIn.ToString("yyyy-MM-dd"),
+                CheckOutDate = checkOut.ToString("yyyy-MM-dd"),
+                FoodServiceIds = foodServiceIds,
+                FoodQuantities = foodQuantities,
+                RoomServiceIds = roomServiceIds,
+                RoomQuantities = roomQuantities
+            });
+        }
+
+        // add the booking details to a list
         var productList = new List<(string name, string description, long amount, int quantity)>();
 
         productList.Add((

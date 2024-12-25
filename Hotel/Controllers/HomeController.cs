@@ -163,6 +163,7 @@ public class HomeController : Controller
                 }
             }
 
+            // check the room available
             var occupiedRooms = db.Bookings
                                   .Where(b => checkIn < b.CheckOutDate &&
                                          b.CheckInDate < checkOut)
@@ -182,6 +183,7 @@ public class HomeController : Controller
                 TempData["Info"] = "No rooms are available for the selected dates and capacity.";
             }
 
+            // sort by price
             if (!string.IsNullOrEmpty(sort))
             {
                 switch (sort.ToLower())
@@ -195,17 +197,20 @@ public class HomeController : Controller
                 }
             }
 
+            // filter by price
             if (minPrice.HasValue && maxPrice.HasValue)
             {
                 availableRooms = availableRooms.Where(c => c.PricePerNight >= minPrice && c.PricePerNight <= maxPrice).ToList();
             }
 
+            // filter by themes
             if (!string.IsNullOrEmpty(themes))
             {
                 var themeList = themes.Split(',').Select(t => t.Trim()).ToList();
                 availableRooms = availableRooms.Where(c => themeList.Contains(c.Theme)).ToList();
             }
 
+            // filter by category
             if (!string.IsNullOrEmpty(category))
             {
                 var categoryList = category.Split(',').Select(t => t.Trim()).ToList();
@@ -232,6 +237,7 @@ public class HomeController : Controller
             return View(sm);
         }
 
+        // sort by price
         if (!string.IsNullOrEmpty(sort))
         {
             switch (sort.ToLower())
@@ -245,17 +251,20 @@ public class HomeController : Controller
             }
         }
 
+        // filter by price
         if (minPrice.HasValue && maxPrice.HasValue)
         {
             categories = categories.Where(c => c.PricePerNight >= minPrice && c.PricePerNight <= maxPrice).ToList();
         }
 
+        // filter by theme
         if (!string.IsNullOrEmpty(themes))
         {
             var themeList = themes.Split(',').Select(t => t.Trim()).ToList();
             categories = categories.Where(c => themeList.Contains(c.Theme)).ToList();
         }
 
+        // filter by category
         if (!string.IsNullOrEmpty(category))
         {
             var categoryList = category.Split(',').Select(t => t.Trim()).ToList();
