@@ -140,7 +140,7 @@ namespace Hotel.Controllers
             return View(vm);
         }
 
-        // Account/Profile
+        // GET: Account/Profile
         [Authorize]
         [Authorize(Roles = "Member")]
         public IActionResult Profile()
@@ -449,7 +449,7 @@ namespace Hotel.Controllers
             return View();
         }
 
-        // Genrate receipt pdf
+        // POST: Generate receipt pdf
         [Authorize]
         [Authorize(Roles = "Member")]
         [HttpPost]

@@ -31,6 +31,7 @@ public class PaymentController : Controller
         this.hp = hp;
     }
 
+    // GET: Payment/PaymentPage
     public IActionResult PaymentPage(string? categoryID, DateOnly checkIn, DateOnly checkOut, string[]? foodServiceIds, int[]? foodQuantities, string[]? roomServiceIds, int[]? roomQuantities)
     {
         // check the room available
@@ -77,7 +78,7 @@ public class PaymentController : Controller
         ViewBag.numberOfDays = numberOfDays;
         ViewBag.roomCategory = availableRooms.CategoryName;
         ViewBag.roomPrice = availableRooms.PricePerNight;
-        ViewBag.roomTotalPrice = roomTotalPrice;
+        ViewBag.roomTotalPrice = roomTotalPrice.ToString("0.00");
 
         // show the selected food
         var selectedFoodServices = foodServiceIds
@@ -92,7 +93,7 @@ public class PaymentController : Controller
                     category = foodService?.Category,
                     quantity = x.Quantity,
                     unitPrice = foodService?.UnitPrice,
-                    price = x.Quantity * (foodService?.UnitPrice)
+                    price = (x.Quantity * (foodService?.UnitPrice ?? 0)).ToString("0.00")
                 };
             })
        .ToList();
@@ -111,25 +112,26 @@ public class PaymentController : Controller
                category = foodService?.Category,
                quantity = x.Quantity,
                unitPrice = foodService?.UnitPrice,
-               price = x.Quantity * (foodService?.UnitPrice)
+               price = (x.Quantity * (foodService?.UnitPrice ?? 0)).ToString("0.00")
            };
        })
        .ToList();
         ViewBag.SelectedRoomServices = selectedRoomServices;
 
         // calculate the total
-        double foodServicesSubtotal = selectedFoodServices.Sum(x => x.price ?? 0);
-        double roomServicesSubtotal = selectedRoomServices.Sum(x => x.price ?? 0);
+        double foodServicesSubtotal = selectedFoodServices.Sum(x => double.Parse(x.price));
+        double roomServicesSubtotal = selectedRoomServices.Sum(x => double.Parse(x.price));
         double subtotal = roomTotalPrice + foodServicesSubtotal + roomServicesSubtotal;
         double tax = Math.Round(subtotal * 0.1, 2);
         double total = subtotal + tax;
-        ViewBag.Subtotal = subtotal;
-        ViewBag.Tax = tax;
-        ViewBag.Total = total;
+        ViewBag.Subtotal = subtotal.ToString("0.00");
+        ViewBag.Tax = tax.ToString("0.00");
+        ViewBag.Total = total.ToString("0.00");
 
         return View();
     }
 
+    //POST: Payment/PaymentPage
     public IActionResult CreateCheckoutSession(
         string roomId,
         string roomCategory,
@@ -305,6 +307,7 @@ public class PaymentController : Controller
         return Redirect(session.Url);
     }
 
+    // GET: Payment/Success
     public IActionResult Success()
     {
         // Booking Data
@@ -419,6 +422,7 @@ public class PaymentController : Controller
         return View();
     }
 
+    // Convert html to pdf
     private byte[] GenerateReceiptPdf(string htmlContent)
     {
         byte[] pdfBytes;
@@ -444,6 +448,7 @@ public class PaymentController : Controller
         return pdfBytes;
     }
 
+    // GET: Payment/Cancel
     public IActionResult Cancel()
     {
         ViewBag.availableRoomID = TempData["RoomId"];

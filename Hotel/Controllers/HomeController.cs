@@ -23,7 +23,7 @@ public class HomeController : Controller
         this.hp = hp;
     }
 
-    // GET: HOMEPAGE
+    // GET: Home/Index
     public IActionResult Index(string? Category)
     {
         // Get distinct categories for food services
@@ -71,7 +71,7 @@ public class HomeController : Controller
         return View(vm);
     }
 
-    // POST: HOMEPAGE
+    // POST: Home/Index
     [HttpPost]
     public IActionResult Index([Bind(Prefix = "SearchVM")] RoomSearchVM sm, string? Category)
     {
@@ -112,7 +112,7 @@ public class HomeController : Controller
         return View();
     }
 
-    // GET: ROOMPAGE
+    // GET: Home/RoomPage
     public IActionResult RoomPage(DateOnly? checkIn, DateOnly? checkOut, int? persons, double? minPrice, double? maxPrice, string? themes, string? category, string? sort)
     {
         // Get category from room
@@ -291,7 +291,7 @@ public class HomeController : Controller
         return View(vm);
     }
 
-    // POST: ROOMPAGE
+    // POST: Home/RoomPage
     [HttpPost]
     public IActionResult RoomPage([Bind(Prefix = "SearchVM")] RoomSearchVM sm)
     {
@@ -332,7 +332,7 @@ public class HomeController : Controller
         return View();
     }
 
-    // GET: ROOMDEATILS
+    // GET: Home/RoomDetails
     [Authorize]
     [Authorize(Roles = "Member")]
     public IActionResult RoomDetailsPage(string categoryID, DateOnly? CheckInDate, DateOnly? CheckOutDate, DateOnly? month, 
@@ -420,6 +420,7 @@ public class HomeController : Controller
         return View(vm);
     }
 
+    //POST: Home/RoomDetails
     [Authorize]
     [Authorize(Roles = "Member")]
     [HttpPost]
