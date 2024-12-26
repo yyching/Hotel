@@ -390,7 +390,7 @@ namespace Hotel.Controllers
                 .Include(b => b.Room)
                     .ThenInclude(r => r.Category)
                 .Where(b => b.UserID == userId)
-                .OrderBy(b => b.BookingDate)
+                .OrderByDescending(b => b.BookingDate)
                 .ToList();
 
             var serviceBookings = db.ServiceBooking

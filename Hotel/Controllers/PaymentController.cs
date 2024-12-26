@@ -312,6 +312,7 @@ public class PaymentController : Controller
     {
         // Booking Data
         var roomId = TempData["RoomId"]?.ToString();
+        var bookingDate = DateTime.Now;
         var checkIn = TempData["CheckIn"]?.ToString();
         var checkOut = TempData["CheckOut"]?.ToString();
         var subtotal = double.Parse(TempData["Subtotal"]?.ToString());
@@ -321,13 +322,13 @@ public class PaymentController : Controller
         var checkOutDate = DateOnly.FromDateTime(DateTime.Parse(checkOut));
 
         // generate BookingID and ServiceBookingID
-        var today = DateTime.Today;
+        var now = DateTime.Today;
         var todayBookings = db.Bookings
-            .Where(b => b.BookingDate.Date == today)
+            .Where(b => b.BookingDate.Date == now)
             .OrderByDescending(b => b.BookingID)
             .ToList();
         int sequence = todayBookings.Count + 1;
-        var bookingID = $"BOK{sequence:D3}{today:yyyyMMdd}";
+        var bookingID = $"BOK{sequence:D3}{now:yyyyMMdd}";
         string? serviceBookingID = null;
 
         // store the food and room service to a list
@@ -348,7 +349,7 @@ public class PaymentController : Controller
         // store the service
         foreach (var service in allServices)
         {
-            serviceBookingID = $"SER{sequence:D3}{today:yyyyMMdd}";
+            serviceBookingID = $"SER{sequence:D3}{now:yyyyMMdd}";
 
             if (service.quantity > 0)
             {
@@ -367,7 +368,7 @@ public class PaymentController : Controller
         var booking = new Booking
         {
             BookingID = bookingID,
-            BookingDate = today,
+            BookingDate = bookingDate,
             CheckInDate = checkInDate,
             CheckOutDate = checkOutDate,
             TotalAmount = total,
@@ -389,7 +390,6 @@ public class PaymentController : Controller
         if (m != null)
         {
             var roomNumber = db.Rooms.Where(r => r.RoomID == roomId).Select(r => r.RoomNumber).FirstOrDefault();
-            DateTime bookingDate = today;
 
             // Pass data to the ReceiptTemplate.cs
             // Call the Receipt.cs
