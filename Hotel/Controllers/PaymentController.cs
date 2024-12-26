@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Net.Mail;
 using System.Text;
 using System.Text.Json;
 using Hotel.Models;
@@ -14,16 +15,21 @@ public class PaymentController : Controller
 {
     private readonly DB db;
     private readonly StripeSettings _stripeSettings;
+    private readonly IWebHostEnvironment en;
+    private readonly Helper hp;
 
-    public PaymentController(DB db, IOptions<StripeSettings> stripeSettings)
+    public PaymentController(DB db, IOptions<StripeSettings> stripeSettings, IWebHostEnvironment en, Helper hp)
     {
         this.db = db;
         _stripeSettings = stripeSettings.Value;
         StripeConfiguration.ApiKey = _stripeSettings.SecretKey;
+        this.en = en;
+        this.hp = hp;
     }
 
     public IActionResult PaymentPage(string? categoryID, DateOnly checkIn, DateOnly checkOut, string[]? foodServiceIds, int[]? foodQuantities, string[]? roomServiceIds, int[]? roomQuantities)
     {
+        // check the room available
         var occupiedRooms = db.Bookings
                                   .Where(b => checkIn < b.CheckOutDate &&
                                          b.CheckInDate < checkOut)
@@ -48,13 +54,19 @@ public class PaymentController : Controller
                 CategoryID = categoryID,
                 CheckInDate = checkIn.ToString("yyyy-MM-dd"),
                 CheckOutDate = checkOut.ToString("yyyy-MM-dd"),
+                FoodServiceIds = foodServiceIds,
+                FoodQuantities = foodQuantities,
+                RoomServiceIds = roomServiceIds,
+                RoomQuantities = roomQuantities
             });
         }
 
+        // show the booking details
         ViewBag.categoryID = categoryID;
         ViewBag.checkIn = checkIn;
         ViewBag.checkOut = checkOut;
 
+        // calculate the price for room
         int numberOfDays = checkOut.DayNumber - checkIn.DayNumber;
         double roomTotalPrice = availableRooms.PricePerNight * numberOfDays;
         ViewBag.availableRoomID = availableRooms.RoomID;
@@ -63,6 +75,7 @@ public class PaymentController : Controller
         ViewBag.roomPrice = availableRooms.PricePerNight;
         ViewBag.roomTotalPrice = roomTotalPrice;
 
+        // show the selected food
         var selectedFoodServices = foodServiceIds
        .Zip(foodQuantities, (id, qty) => new { ServiceId = id, Quantity = qty })
        .Where(x => x.Quantity > 0)
@@ -81,6 +94,7 @@ public class PaymentController : Controller
        .ToList();
         ViewBag.SelectedFoodServices = selectedFoodServices;
 
+        //show the selected room service
         var selectedRoomServices = roomServiceIds
        .Zip(roomQuantities, (id, qty) => new { ServiceId = id, Quantity = qty })
        .Where(x => x.Quantity > 0)
@@ -99,6 +113,7 @@ public class PaymentController : Controller
        .ToList();
         ViewBag.SelectedRoomServices = selectedRoomServices;
 
+        // calculate the total
         double foodServicesSubtotal = selectedFoodServices.Sum(x => x.price ?? 0);
         double roomServicesSubtotal = selectedRoomServices.Sum(x => x.price ?? 0);
         double subtotal = roomTotalPrice + foodServicesSubtotal + roomServicesSubtotal;
@@ -142,17 +157,9 @@ public class PaymentController : Controller
         TempData["Subtotal"] = subtotal.ToString();
         TempData["Tax"] = tax.ToString();
 
-        var isRoomAvailable = !db.Bookings.Where(b => b.RoomID == roomId)
-                                          .Any(b => (checkIn <= b.CheckOutDate && checkOut >= b.CheckInDate));
-
-        if (!isRoomAvailable)
-        {
-            TempData["Info"] = "sorry. The room has been book";
-            return RedirectToAction("RoomPage", "Home");
-        }
-
         if (foodNames != null && foodQuantities != null)
         {
+            // store the foodservice to a new ServiceItem list
             var foodServices = foodNames.Select((name, i) => new ServiceItem
             {
                 category = foodCategories[i],
@@ -160,11 +167,12 @@ public class PaymentController : Controller
                 quantity = foodQuantities[i],
                 price = foodPrices[i]
             }).ToList();
-
+            // change the list data to JSON and store to tempData
             TempData["FoodServices"] = JsonSerializer.Serialize(foodServices);
         }
         if (roomNames != null && roomQuantities != null)
         {
+            // store the roomservice to a new ServiceItem list
             var roomServices = roomNames.Select((name, i) => new ServiceItem
             {
                 category = roomCategories[i],
@@ -172,11 +180,49 @@ public class PaymentController : Controller
                 quantity = roomQuantities[i],
                 price = roomPrices[i]
             }).ToList();
-
+            // change the list data to JSON and store to tempData
             TempData["RoomServices"] = JsonSerializer.Serialize(roomServices);
         }
 
-        // get the booking details
+        // Check the available room
+        var isRoomAvailable = !db.Bookings.Where(b => b.RoomID == roomId)
+                                          .Any(b => (checkIn < b.CheckOutDate && b.CheckInDate < checkOut));
+        if (!isRoomAvailable)
+        {
+            var categoryID = roomCategory != null
+                                ? db.Categories
+                                .Where(c => roomCategory.Contains(c.CategoryName))
+                                .Select(c => c.CategoryID) 
+                                : null;
+
+            var foodServiceIds = foodNames != null
+                                ? db.Services
+                                .Where(s => foodNames.Contains(s.ServiceName) && s.ServiceType == "Food")
+                                .Select(s => s.ServiceID)
+                                .ToArray()
+                                : null;
+
+            var roomServiceIds = roomNames != null
+                                ? db.Services
+                                .Where(s => roomNames.Contains(s.ServiceName) && s.ServiceType == "Room")
+                                .Select(s => s.ServiceID)
+                                .ToArray()
+                                : null;
+
+            TempData["Info"] = "sorry. The room has been book";
+            return RedirectToAction("RoomDetailsPage", "Home", new
+            {
+                CategoryID = categoryID,
+                CheckInDate = checkIn.ToString("yyyy-MM-dd"),
+                CheckOutDate = checkOut.ToString("yyyy-MM-dd"),
+                FoodServiceIds = foodServiceIds,
+                FoodQuantities = foodQuantities,
+                RoomServiceIds = roomServiceIds,
+                RoomQuantities = roomQuantities
+            });
+        }
+
+        // add the booking details to a list
         var productList = new List<(string name, string description, long amount, int quantity)>();
 
         productList.Add((
@@ -273,7 +319,7 @@ public class PaymentController : Controller
             .ToList();
         int sequence = todayBookings.Count + 1;
         var bookingID = $"BOK{sequence:D3}{today:yyyyMMdd}";
-        var serviceBookingID = $"SER{sequence:D3}{today:yyyyMMdd}";
+        string? serviceBookingID = null;
 
         // store the food and room service to a list
         var allServices = new List<ServiceItem>();
@@ -293,6 +339,8 @@ public class PaymentController : Controller
         // store the service
         foreach (var service in allServices)
         {
+            serviceBookingID = $"SER{sequence:D3}{today:yyyyMMdd}";
+
             if (service.quantity > 0)
             {
                 var serviceBooking = new ServiceBooking
@@ -321,6 +369,99 @@ public class PaymentController : Controller
         };
         db.Bookings.Add(booking);
         db.SaveChanges();
+
+        // send receipt to user gmail
+        var userId = User.FindFirst("UserID")?.Value;
+        if (string.IsNullOrEmpty(userId)) return RedirectToAction("Index", "Home");
+
+        // Get member record based on UserID
+        var m = db.Users.FirstOrDefault(u => u.UserID == userId);
+
+        if (m != null)
+        {
+            var roomNumber = db.Rooms.Where(r => r.RoomID == roomId).Select(r => r.RoomNumber).FirstOrDefault();
+
+            var receiptHtml = $@"
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <style>
+                    body {{ font-family: Arial, sans-serif; }}
+                    .receipt {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                    .header {{ text-align: center; margin-bottom: 30px; }}
+                    .booking-info {{ margin-bottom: 20px; }}
+                    .services {{ margin-bottom: 20px; }}
+                    table {{ width: 100%; border-collapse: collapse; margin-bottom: 20px; }}
+                    th, td {{ padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }}
+                    .total {{ margin-top: 20px; text-align: right; }}
+                    .footer {{ margin-top: 30px; text-align: center; font-size: 14px; }}
+                </style>
+            </head>
+            <body>
+                <div class='receipt'>
+                    <div class='header'>
+                        <h1>EASYSTAYS HOTEL</h1>
+                        <h2>Booking Receipt</h2>
+                        <p>Booking ID: {bookingID}</p>
+                        <p>Date: {today:yyyy-MM-dd}</p>
+                    </div>
+
+                    <div class='booking-info'>
+                        <h3>Booking Details</h3>
+                        <table>
+                            <tr><td>Check-in Date:</td><td>{checkInDate:yyyy-MM-dd}</td></tr>
+                            <tr><td>Check-out Date:</td><td>{checkOutDate:yyyy-MM-dd}</td></tr>
+                            <tr><td>Room Number:</td><td>{roomNumber}</td></tr>
+                        </table>
+                    </div>
+            ";
+
+            if (allServices.Any(s => s.quantity > 0))
+            {
+                receiptHtml += @"
+                    <div class='services'>
+                        <h3>Services</h3>
+                        <table>
+                            <tr><th>Service</th><th>Quantity</th><th>Price</th><th>Total</th></tr>";
+
+                foreach (var service in allServices.Where(s => s.quantity > 0))
+                {
+                    var serviceTotal = service.price * service.quantity;
+                    receiptHtml += $@"
+                            <tr>
+                                <td>{service.serviceName}</td>
+                                <td>{service.quantity}</td>
+                                <td>RM {service.price:F2}</td>
+                                <td>RM {serviceTotal:F2}</td>
+                            </tr>";
+                }
+
+                receiptHtml += "</table></div>";
+            }
+
+            receiptHtml += $@"
+                    <div class='total'>
+                        <table>
+                            <tr><td>Subtotal:</td><td>RM {(total - (total * 0.1)):F2}</td></tr>
+                            <tr><td>Tax (10%):</td><td>RM {(total * 0.1):F2}</td></tr>
+                            <tr style='font-weight: bold'><td>Total:</td><td>RM {total:F2}</td></tr>
+                        </table>
+                    </div>
+
+                    <div class='footer'>
+                        <p>Thank you for choosing EASYSTAYS HOTEL!</p>
+                    </div>
+                </div>
+            </body>
+            </html>";
+
+            var mail = new MailMessage();
+            mail.To.Add(new MailAddress(m.Email, m.Name));
+            mail.Subject = "Reset Your Password";
+            mail.IsBodyHtml = true;
+            mail.Body = receiptHtml;
+            hp.SendEmail(mail);
+        }
 
         return View();
     }

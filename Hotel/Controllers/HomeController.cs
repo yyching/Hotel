@@ -163,6 +163,7 @@ public class HomeController : Controller
                 }
             }
 
+            // check the room available
             var occupiedRooms = db.Bookings
                                   .Where(b => checkIn < b.CheckOutDate &&
                                          b.CheckInDate < checkOut)
@@ -182,6 +183,7 @@ public class HomeController : Controller
                 TempData["Info"] = "No rooms are available for the selected dates and capacity.";
             }
 
+            // sort by price
             if (!string.IsNullOrEmpty(sort))
             {
                 switch (sort.ToLower())
@@ -195,17 +197,20 @@ public class HomeController : Controller
                 }
             }
 
+            // filter by price
             if (minPrice.HasValue && maxPrice.HasValue)
             {
                 availableRooms = availableRooms.Where(c => c.PricePerNight >= minPrice && c.PricePerNight <= maxPrice).ToList();
             }
 
+            // filter by themes
             if (!string.IsNullOrEmpty(themes))
             {
                 var themeList = themes.Split(',').Select(t => t.Trim()).ToList();
                 availableRooms = availableRooms.Where(c => themeList.Contains(c.Theme)).ToList();
             }
 
+            // filter by category
             if (!string.IsNullOrEmpty(category))
             {
                 var categoryList = category.Split(',').Select(t => t.Trim()).ToList();
@@ -232,6 +237,7 @@ public class HomeController : Controller
             return View(sm);
         }
 
+        // sort by price
         if (!string.IsNullOrEmpty(sort))
         {
             switch (sort.ToLower())
@@ -245,17 +251,20 @@ public class HomeController : Controller
             }
         }
 
+        // filter by price
         if (minPrice.HasValue && maxPrice.HasValue)
         {
             categories = categories.Where(c => c.PricePerNight >= minPrice && c.PricePerNight <= maxPrice).ToList();
         }
 
+        // filter by theme
         if (!string.IsNullOrEmpty(themes))
         {
             var themeList = themes.Split(',').Select(t => t.Trim()).ToList();
             categories = categories.Where(c => themeList.Contains(c.Theme)).ToList();
         }
 
+        // filter by category
         if (!string.IsNullOrEmpty(category))
         {
             var categoryList = category.Split(',').Select(t => t.Trim()).ToList();
@@ -326,10 +335,10 @@ public class HomeController : Controller
     // GET: ROOMDEATILS
     [Authorize]
     [Authorize(Roles = "Member")]
-    public IActionResult RoomDetailsPage(string categoryID, DateOnly? CheckInDate, DateOnly? CheckOutDate, string? FoodCategory, DateOnly? month)
+    public IActionResult RoomDetailsPage(string categoryID, DateOnly? CheckInDate, DateOnly? CheckOutDate, DateOnly? month, 
+                                         string[]? foodServiceIds, int[]? foodQuantities, string[]? roomServiceIds, int[]? roomQuantities)
     {
         var m = month.GetValueOrDefault(DateTime.Today.ToDateOnly());
-
         // Min = First day of the month
         // Max = First day of next month
         var min = new DateOnly(m.Year, m.Month, 1);
@@ -387,11 +396,15 @@ public class HomeController : Controller
        .ToList();
 
         // Get room services (ServiceType == "Room")
-        var roomServices = db.Services
+        ViewBag.RoomServices = db.Services
         .Where(s => s.ServiceType == "Room" && s.Status == "Active")
         .ToList();
 
-        ViewBag.RoomServices = roomServices;
+        // Get the selected service qty if no available room
+        ViewBag.FoodServiceIds = foodServiceIds;
+        ViewBag.FoodQuantities = foodQuantities;
+        ViewBag.RoomServiceIds = roomServiceIds;
+        ViewBag.RoomQuantities = roomQuantities;
 
         var vm = new RoomDetailsVM
         {

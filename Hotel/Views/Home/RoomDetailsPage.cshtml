@@ -117,11 +117,18 @@
                         </label>
                         <div class="quantity-container">
                             <label for="food-@b.ServiceID">Qty:</label>
+                            @{
+                                var qty = ViewBag.FoodServiceIds != null
+                                ? Array.IndexOf(ViewBag.FoodServiceIds, b.ServiceID) is var index && index != -1
+                                ? ViewBag.FoodQuantities[index]
+                                : 0
+                                : 0;
+                            }
                             <input type="number"
                                    id="@b.ServiceID"
                                    name="foodQuantities"
                                    min="0"
-                                   value="0" />
+                                   value="@qty" />
                             <input type="hidden"
                                    name="foodServiceIds"
                                    value="@b.ServiceID">
@@ -144,11 +151,18 @@
                         </label>
                         <div class="quantity-container">
                             <label for="food-@l.ServiceID">Qty:</label>
+                            @{
+                                var qty = ViewBag.FoodServiceIds != null
+                                ? Array.IndexOf(ViewBag.FoodServiceIds, l.ServiceID) is var index && index != -1
+                                ? ViewBag.FoodQuantities[index]
+                                : 0
+                                : 0;
+                            }
                             <input type="number"
                                    id="@l.ServiceID"
                                    name="foodQuantities"
                                    min="0"
-                                   value="0" />
+                                   value="@qty" />
                             <input type="hidden"
                                    name="foodServiceIds"
                                    value="@l.ServiceID">
@@ -171,11 +185,18 @@
                         </label>
                         <div class="quantity-container">
                             <label for="food-@d.ServiceID">Qty:</label>
+                            @{
+                                var qty = ViewBag.FoodServiceIds != null
+                                ? Array.IndexOf(ViewBag.FoodServiceIds, d.ServiceID) is var index && index != -1
+                                ? ViewBag.FoodQuantities[index]
+                                : 0
+                                : 0;
+                            }
                             <input type="number"
                                    id="@d.ServiceID"
                                    name="foodQuantities"
                                    min="0"
-                                   value="0" />
+                                   value="@qty" />
                             <input type="hidden"
                                    name="foodServiceIds"
                                    value="@d.ServiceID">
@@ -194,11 +215,18 @@
         {
             <div class="addon-item">
                 <label for="@service.ServiceID">@service.ServiceName RM(@service.UnitPrice)</label>
+                @{
+                    var qty = ViewBag.RoomServiceIds != null
+                    ? Array.IndexOf(ViewBag.RoomServiceIds, service.ServiceID) is var index && index != -1
+                    ? ViewBag.RoomQuantities[index]
+                    : 0
+                    : 0;
+                }
                 <input type="number"
                        name="roomQuantities"
                        id="@service.ServiceID"
                        min="0"
-                       value="0">
+                       value="@qty">
                 <input type="hidden"
                        name="roomServiceIds"
                        value="@service.ServiceID">
