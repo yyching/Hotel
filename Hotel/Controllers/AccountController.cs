@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Hotel.Models;
 using Microsoft.EntityFrameworkCore;
+using iText.Html2pdf;
+using iText.Kernel.Pdf;
+using Stripe;
 
 namespace Hotel.Controllers
 {
@@ -210,6 +213,7 @@ namespace Hotel.Controllers
 
         // GET: Account/UpdatePassword
         [Authorize]
+        [Authorize(Roles = "Member")]
         public IActionResult UpdatePassword()
         {
             var userId = User.FindFirst("UserID")?.Value;
@@ -227,6 +231,7 @@ namespace Hotel.Controllers
 
         // POST: Account/UpdatePassword
         [Authorize]
+        [Authorize(Roles = "Member")]
         [HttpPost]
         public IActionResult UpdatePassword(UpdatePasswordVM vm)
         {
@@ -295,7 +300,7 @@ namespace Hotel.Controllers
 
             // Save the token in the database
             var tokenExpireTime = DateTime.UtcNow.AddHours(1); // Token valid for 1 hour
-            db.Tokens.Add(new Token
+            db.Tokens.Add(new Models.Token
             {
                 Id = token,
                 UserID = u.UserID,
@@ -374,6 +379,8 @@ namespace Hotel.Controllers
         }
 
         // GET: BookingHistory
+        [Authorize]
+        [Authorize(Roles = "Member")]
         public IActionResult BookingHistory()
         {
             var userId = User.FindFirst("UserID")?.Value;
@@ -403,17 +410,29 @@ namespace Hotel.Controllers
 
                 if (services.Any())
                 {
-                    breakfastDict[booking.BookingID] = services
-                        .Where(s => s.Service.ServiceType == "Food" && s.Service.Category == "Breakfast")
-                        .ToDictionary(s => s.Service.ServiceName, s => s.Qty);
+                    var breakfastServices = services
+                    .Where(s => s.Service.ServiceType == "Food" && s.Service.Category == "Breakfast")
+                    .ToDictionary(s => s.Service.ServiceName, s => s.Qty);
+                    if (breakfastServices.Any())
+                    {
+                        breakfastDict[booking.BookingID] = breakfastServices;
+                    }
 
-                    lunchDict[booking.BookingID] = services
-                        .Where(s => s.Service.ServiceType == "Food" && s.Service.Category == "Lunch")
-                        .ToDictionary(s => s.Service.ServiceName, s => s.Qty);
+                    var lunchServices = services
+                    .Where(s => s.Service.ServiceType == "Food" && s.Service.Category == "Lunch")
+                    .ToDictionary(s => s.Service.ServiceName, s => s.Qty);
+                    if (lunchServices.Any())
+                    {
+                        lunchDict[booking.BookingID] = lunchServices;
+                    }
 
-                    dinnerDict[booking.BookingID] = services
-                        .Where(s => s.Service.ServiceType == "Food" && s.Service.Category == "Dinner")
-                        .ToDictionary(s => s.Service.ServiceName, s => s.Qty);
+                    var dinnerServices = services
+                    .Where(s => s.Service.ServiceType == "Food" && s.Service.Category == "Dinner")
+                    .ToDictionary(s => s.Service.ServiceName, s => s.Qty);
+                    if (dinnerServices.Any())
+                    {
+                        dinnerDict[booking.BookingID] = dinnerServices;
+                    }
 
                     roomDict[booking.BookingID] = services
                         .Where(s => s.Service.ServiceType == "Room" && s.Qty >= 1)
@@ -428,6 +447,106 @@ namespace Hotel.Controllers
             ViewBag.RoomServices = roomDict;
 
             return View();
+        }
+
+        // Genrate receipt pdf
+        [Authorize]
+        [Authorize(Roles = "Member")]
+        [HttpPost]
+        public IActionResult BookingHistory(string bookingID)
+        {
+            var booking = db.Bookings
+                            .Include(b => b.Room)
+                            .Include(b => b.Room.Category)
+                            .Where(b => b.BookingID == bookingID)
+                            .FirstOrDefault();
+
+            if (booking == null)
+            {
+                TempData["Info"] = $"Booking {bookingID} not found";
+                return RedirectToAction("BookingHistory", "Account");
+            }
+
+            DateTime bookingDate = booking.BookingDate;
+            DateOnly checkInDate = booking.CheckInDate;
+            DateOnly checkOutDate = booking.CheckOutDate;
+            var roomNumber = booking.Room.RoomNumber;
+
+            int numberOfDays = checkOutDate.DayNumber - checkInDate.DayNumber;
+            double roomTotalPrice = booking.Room.Category.PricePerNight * numberOfDays;
+            double serviceSubtotal = 0;
+
+            var allServices = new List<ServiceItem>();
+            if (!string.IsNullOrEmpty(booking.ServiceBookingID))
+            {
+                var services = db.ServiceBooking
+                    .Where(sb => sb.ServiceBookingID == booking.ServiceBookingID)
+                    .Include(sb => sb.Service)
+                    .Select(sb => new ServiceItem
+                    {
+                        serviceName = sb.Service.ServiceName,
+                        category = sb.Service.Category,
+                        quantity = sb.Qty,
+                        price = sb.Service.UnitPrice
+                    })
+                    .ToList();
+
+                allServices.AddRange(services);
+                serviceSubtotal = services.Sum(s => s.price * s.quantity);
+            }
+
+            double subtotal = roomTotalPrice + serviceSubtotal;
+            double tax = Math.Round(subtotal * 0.1, 2);
+            double total = booking.TotalAmount;
+
+            try
+            {
+                string receiptHtml = ReceiptTemplate.GenerateHtml(
+                    bookingID,
+                    bookingDate,
+                    checkInDate,
+                    checkOutDate,
+                    roomNumber,
+                    allServices,
+                    subtotal,
+                    tax,
+                    total
+                );
+
+                byte[] pdfBytes = GenerateReceiptPdf(receiptHtml);
+
+                return File(pdfBytes, "application/pdf", $"Receipt-{bookingID}.pdf");
+            }
+            catch (Exception ex)
+            {
+                TempData["Info"] = "Cant generate pdf";
+                return View();
+            }
+        }
+
+        private byte[] GenerateReceiptPdf(string htmlContent)
+        {
+            byte[] pdfBytes;
+            using (var memoryStream = new MemoryStream())
+            {
+                // create the convertor setting
+                ConverterProperties properties = new ConverterProperties();
+
+                // create pdf
+                using (var writer = new PdfWriter(memoryStream))
+                using (var pdf = new PdfDocument(writer))
+                {
+                    // pdf setting
+                    pdf.SetTagged();
+                    pdf.SetDefaultPageSize(iText.Kernel.Geom.PageSize.A4);
+
+                    // HTML to PDF
+                    HtmlConverter.ConvertToPdf(htmlContent, pdf, properties);
+                }
+
+                pdfBytes = memoryStream.ToArray();
+            }
+            return pdfBytes;
         }
     }
 }
