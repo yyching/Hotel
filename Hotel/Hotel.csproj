@@ -7,9 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
     <PackageReference Include="itext7" Version="9.0.0" />
     <PackageReference Include="itext7.bouncy-castle-adapter" Version="9.0.0" />
     <PackageReference Include="itext7.pdfhtml" Version="6.0.0" />
+=======
+    <Content Remove="Views\Admin\BookingDetail.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Views\Admin\BookingDetail.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+>>>>>>> 96551cdd0df448b1a176ac88cb7337c24aa0b601
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -21,6 +32,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Views\Admin\_AddService.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Update="wwwroot\uploads\double.jpg">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

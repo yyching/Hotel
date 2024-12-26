@@ -2,26 +2,7 @@
 @using X.PagedList.Mvc.Core
 @model IPagedList<Service>
 
-@{
-    ViewBag.Title = "Services";
-}
-
 <link href="/css/_Insert.css" rel="stylesheet" />
-
-<div class="section__content section__content--p30">
-    <div class="container-fluid">
-        <div class="row-table">
-            <div class="col-md-12">
-                <div class="overview-wrap">
-                    <h2 class="title-1">@ViewBag.Title</h2>
-                    <button id="addServiceBtn"  class="au-btn au-btn-icon au-btn--blue">
-                        <i class="zmdi zmdi-plus"></i>add item
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <p hidden>
     @Model.Count() of @Model.TotalItemCount record(s) |
@@ -52,8 +33,15 @@
                 <td>@sr.Category</td>
                 <td>@sr.Status</td>
                 <td>
-                    <button class="btn btn-primary btn-sm">Edit</button>
-                    <button class="btn btn-danger btn-sm">Terminate</button>
+                    <button class="btn btn-primary btn-sm editServiceBtn" data-id="@sr.ServiceID">Edit</button>
+                    @if (sr.Status == "Active")
+                    {
+                        <button data-post="/Admin/TerminateService/@sr.ServiceID" class="btn btn-danger btn-sm">Terminate</button>
+                    }
+                    else if (sr.Status == "Terminate")
+                    {
+                        <button data-post="/Admin/ActivateService/@sr.ServiceID" class="btn btn-success btn-sm">Activate</button>
+                    }
                 </td>
             </tr>
         }
@@ -89,11 +77,10 @@
 }
 
 @Html.PagedListPager(
-    Model,
-    p => $"?page={p}",
-    // TODO
-    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(options, ajaxOptions)
-)
+        Model,
+        p => $"?name={ViewBag.Name}&page={p}",
+        PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(options, ajaxOptions)
+    )
 
 <!-- JavaScript to Load the Partial View and Control Modal -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

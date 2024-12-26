@@ -1,0 +1,80 @@
+﻿@model AddServiceVM
+
+<form method="post" action="/Admin/_AddService">
+    <div class="form-row">
+        <label asp-for="serviceName">Service Name:</label>
+        <input asp-for="serviceName" required />
+        <span asp-validation-for="serviceName"></span>
+
+        <label asp-for="unitPrice">Unit Price:</label>
+        <input asp-for="unitPrice" required />
+        <span asp-validation-for="unitPrice"></span>
+    </div>
+
+    <br>
+
+    <label asp-for="serviceDescription">Description:</label>
+    <input asp-for="serviceDescription" style="min-width: 600px !important" required />
+    <span asp-validation-for="serviceDescription"></span><br><br>
+    
+    <div class="form-row">
+        <label asp-for="serviceType">Service Type:</label>
+            <select id="serviceType" asp-for="serviceType" required>
+                <option value="">- Select One -</option>
+                <option value="Room">Room</option>
+                <option value="Food">Food</option>
+            </select>
+        <span asp-validation-for="serviceType"></span>
+
+        <label asp-for="category">Category:</label>
+        <select id="category" asp-for="category" required>
+            <option value="">- Select One -</option>
+        </select>
+        <span asp-validation-for="category"></span>
+    </div>
+
+    <br>
+
+    <label asp-for="Status">Status:</label>
+    <select asp-for="Status">
+        <option value="Active">Active</option>
+        <option value="Terminate">Terminate</option>
+    </select>
+
+    <br><br>
+
+    <div class="modal-footer">
+        <button type="submit" class="submit-btn">Add Service</button>
+    </div>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#serviceType').change(function () {
+            const serviceType = $(this).val();
+            const categoryDropdown = $('#category');
+
+            // Clear existing options
+            categoryDropdown.html('<option value="">- Select One -</option>');
+
+            if (serviceType) {
+                // Perform AJAX request to fetch categories
+                $.ajax({
+                    url: '/Admin/GetCategories', // Adjust the endpoint to your route
+                    type: 'GET',
+                    data: { serviceType: serviceType },
+                    success: function (response) {
+                        // Populate the dropdown with the returned categories
+                        response.forEach(function (category) {
+                            categoryDropdown.append(`<option value="${category}">${category}</option>`);
+                        });
+                    },
+                    error: function () {
+                        alert('Failed to fetch categories. Please try again.');
+                    }
+                });
+            }
+        });
+    });
+</script>

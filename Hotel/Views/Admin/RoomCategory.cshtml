@@ -1,5 +1,4 @@
-﻿@model IEnumerable<Category>
-@{
+﻿@{
     Layout = "_NavigationBar";
     ViewBag.Title = "Room Category";
 }
@@ -9,8 +8,17 @@
         <div class="container-fluid">
             <div class="row-table">
                 <div class="col-md-12">
+                    <h2 class="title-1">@ViewBag.Title</h2>
                     <div class="overview-wrap">
-                        <h2 class="title-1">@ViewBag.Title</h2>
+                        <form data-ajax="true"
+                              data-ajax-update="#target"
+                              data-ajax-loading="#loader"
+                              id="f">
+                            @Html.TextBox("name", "",
+                                     new { type = "search", autofocus = "", data_trim = "", @class = "au-input au-input--xl" })
+
+                            <img src="/images/loader.gif" id="loader" style="display: none">
+                        </form>
                         <div>
                             <a class="au-btn au-btn-icon au-btn--blue" href="/Admin/AddRoomCategory">
                                 <i class="zmdi zmdi-plus"></i>add item
@@ -25,45 +33,18 @@
         </div>
     </div>
 
-    <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                <th>Category ID</th>
-                <th>Category Name</th>
-                <th>Theme</th>
-                <th>Size</th>
-                <th>Capacity</th>
-                <th>Bed</th>
-                <th>Price (Per Night)</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var ct in Model)
-            {
-                <tr>
-                    <td>@ct.CategoryID</td>
-                    <td>@ct.CategoryName</td>
-                    <td>@ct.Theme</td>
-                    <td>@ct.Size</td>
-                    <td>@ct.Capacity</td>
-                    <td>@ct.Bed</td>
-                    <td>@ct.PricePerNight</td>
-                    <td>@ct.Status</td>
-                    <td>
-                        <button data-get="/Admin/UpdateRoomCategory/@ct.CategoryID" class="btn btn-primary btn-sm">Edit</button>
-                        @if (ct.Status == "Active")
-                        {
-                            <button data-post="/Admin/TerminateRoomCategory/@ct.CategoryID" class="btn btn-danger btn-sm">Terminate</button>
-                        }
-                        else if (ct.Status == "Terminate")
-                        {
-                            <button data-post="/Admin/ActivateRoomCategory/@ct.CategoryID" class="btn btn-success btn-sm">Activate</button>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div id="target">
+        <partial name="_RoomCategory">
+    </div>
 </div>
+
+@section foot {
+    <script>
+        let timer = null;
+
+        $('#name').on('input', e => {
+            clearTimeout(timer);
+            timer = setTimeout(() => $(e.target.form).submit(), 500);
+        });
+    </script>
+}

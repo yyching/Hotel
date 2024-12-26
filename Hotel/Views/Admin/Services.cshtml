@@ -1,8 +1,46 @@
 ﻿@{
     Layout = "_NavigationBar";
-    
+    ViewBag.Title = "Services";
 }
 
-<div class="table-responsive" id="target">
-    <partial name="_Services">
+<link href="/css/_Insert.css" rel="stylesheet" />
+
+<div class="table-responsive">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="row-table">
+                <div class="col-md-12">
+                    <h2 class="title-1">@ViewBag.Title</h2>
+                    <div class="overview-wrap">
+                        <form data-ajax="true"
+                              data-ajax-update="#target"
+                              data-ajax-loading="#loader"
+                              id="f">
+                            @Html.TextBox("name", "",
+                                     new { type = "search", autofocus = "", data_trim = "" })
+
+                            <img src="/images/loader.gif" id="loader" style="display: none">
+                        </form>
+                        <button id="addServiceBtn" class="au-btn au-btn-icon au-btn--blue">
+                            <i class="zmdi zmdi-plus"></i>add item
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="target">
+        <partial name="_Services">
+    </div>
 </div>
+
+@section foot {
+    <script>
+        let timer = null;
+
+        $('#name').on('input', e => {
+            clearTimeout(timer);
+            timer = setTimeout(() => $(e.target.form).submit(), 500);
+        });
+    </script>
+}

@@ -1,7 +1,10 @@
-﻿using System.Reflection.Emit;
+﻿using System.Globalization;
+using System.Reflection.Emit;
+using Azure;
 using Hotel.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using X.PagedList.Extensions;
@@ -28,12 +31,6 @@ public class AdminController : Controller
         return View();
     }
 
-    // Booking
-    public IActionResult Bookings()
-    {
-        return View();
-    }
-
     // Admin Profile
     [Authorize]
     [Authorize(Roles = "Admin")]
@@ -55,7 +52,7 @@ public class AdminController : Controller
         return View();
     }
 
-    // Admin Profile - Edit
+    // Admin Profile - Edit | Get
     [Authorize]
     [Authorize(Roles = "Admin")]
     public IActionResult EditProfile()
@@ -78,6 +75,7 @@ public class AdminController : Controller
         return View(vm);
     }
 
+    // Admin Profile - Edit | Post
     [HttpPost]
     [Authorize]
     [Authorize(Roles = "Admin")]
@@ -110,13 +108,12 @@ public class AdminController : Controller
                     hp.DeletePhoto(m.UserImage, "photos");
                 }
 
-                m.UserImage = hp.SavePhoto(vm.Photo, "photos");
+                m.UserImage = hp.SavePhoto(vm.Photo, "uploads");
             }
 
             db.SaveChanges();
 
-            TempData["Info"] = "Profile updated.";
-            return RedirectToAction();
+            return RedirectToAction("Profile");
         }
 
         vm.Name = m.Name;
@@ -126,7 +123,7 @@ public class AdminController : Controller
         return View(vm);
     }
 
-    // Admin Profile - Change Password
+    // Admin Profile - Change Password | Get
     [Authorize]
     public IActionResult ChangePassword()
     {
@@ -144,6 +141,7 @@ public class AdminController : Controller
         return View();
     }
 
+    // Admin Profile - Change Password | Post
     [Authorize]
     [HttpPost]
     public IActionResult ChangePassword(UpdatePasswordVM vm)
@@ -167,8 +165,7 @@ public class AdminController : Controller
             u.Password = hp.HashPassword(vm.New);
             db.SaveChanges();
 
-            TempData["Info"] = "Password updated.";
-            return RedirectToAction();
+            return RedirectToAction("Profile");
         }
 
         ViewBag.userImage = u.UserImage;
@@ -178,16 +175,32 @@ public class AdminController : Controller
         return View();
     }
 
-    // Review
-    public IActionResult Reviews()
-    {
-        return View();
-    }
-
     // Room Category
-    public IActionResult RoomCategory()
+    public IActionResult RoomCategory(string? name, int page = 1)
     {
-        var m = db.Categories;
+        // Searching ------------------------
+        ViewBag.Name = name = name?.Trim() ?? "";
+
+        var searched = db.Categories
+                .Where(rc => rc.CategoryName.Contains(name));
+
+        // Paging ---------------------------
+        if (page < 1)
+        {
+            return RedirectToAction(null, new { name, page = 1 });
+        }
+
+        var m = searched.ToPagedList(page, 10);
+
+        if (page > m.PageCount && m.PageCount > 0)
+        {
+            return RedirectToAction(null, new { name, page = m.PageCount });
+        }
+
+        if (Request.IsAjax())
+        {
+            return PartialView("_RoomCategory", m);
+        }
 
         return View(m);
     }
@@ -315,12 +328,10 @@ public class AdminController : Controller
         if (rc != null)
         {
             rc.Status = "Terminate";
-
             db.SaveChanges();
-
-            TempData["Info"] = "Terminated.";
         }
 
+        TempData["Info"] = "Room Category terminated.";
         return RedirectToAction("RoomCategory");
     }
 
@@ -333,19 +344,40 @@ public class AdminController : Controller
         if (rc != null)
         {
             rc.Status = "Active";
-
             db.SaveChanges();
-
-            TempData["Info"] = "Activate.";
         }
 
+        TempData["Info"] = "Room Category activated.";
         return RedirectToAction("RoomCategory");
     }
 
     // Room
-    public IActionResult Rooms()
+    public IActionResult Rooms(string? name, int page = 1)
     {
-        var m = db.Rooms.Include(rm => rm.Category);
+        // Searching ------------------------
+        ViewBag.Name = name = name?.Trim() ?? "";
+
+        var searched = db.Rooms
+                       .Include(rm => rm.Category)
+                       .Where(rm => rm.RoomNumber.Contains(name) || rm.Category.CategoryName.Contains(name));
+
+        // Paging ---------------------------
+        if (page < 1)
+        {
+            return RedirectToAction(null, new { name, page = 1 });
+        }
+
+        var m = searched.ToPagedList(page, 10);
+
+        if (page > m.PageCount && m.PageCount > 0)
+        {
+            return RedirectToAction(null, new { name, page = m.PageCount });
+        }
+
+        if (Request.IsAjax())
+        {
+            return PartialView("_Room", m);
+        }
 
         return View(m);
     }
@@ -424,7 +456,7 @@ public class AdminController : Controller
         return View(vm);
     }
 
-    // Room - Add | Post
+    // Room - Update | Post
     [HttpPost]
     public IActionResult _UpdateRoom(UpdateRoomVMs vm)
     {
@@ -443,7 +475,7 @@ public class AdminController : Controller
         return View(vm);
     }
 
-    // Room Category - Terminate | Post
+    // Room - Terminate | Post
     [HttpPost]
     public IActionResult TerminateRoom(string? id)
     {
@@ -452,16 +484,15 @@ public class AdminController : Controller
         if (rc != null)
         {
             rc.Status = "Terminate";
-
             db.SaveChanges();
 
-            TempData["Info"] = "Terminated.";
         }
 
+        TempData["Info"] = "Room terminated.";
         return RedirectToAction("Rooms");
     }
 
-    // Room Category - Activate | Post
+    // Room - Activate | Post
     [HttpPost]
     public IActionResult ActivateRoom(string? id)
     {
@@ -470,33 +501,199 @@ public class AdminController : Controller
         if (rc != null)
         {
             rc.Status = "Active";
-
             db.SaveChanges();
 
-            TempData["Info"] = "Activate.";
         }
 
+        TempData["Info"] = "Room terminated.";
         return RedirectToAction("Rooms");
     }
 
     // Service
-    public IActionResult Services(int page = 1)
+    public IActionResult Services(string? name, int page = 1)
     {
+        // (1) Searching ------------------------
+        ViewBag.Name = name = name?.Trim() ?? "";
+
+        var searched = db.Services.Where(s => s.ServiceName.Contains(name));
+
+        // (2) Paging ---------------------------
         if (page < 1)
         {
-            return RedirectToAction(null, new { page = 1 });
+            return RedirectToAction(null, new { name, page = 1 });
         }
 
-        var m = db.Services.ToPagedList(page, 10);
+        var m = searched.ToPagedList(page, 10);
 
         if (page > m.PageCount && m.PageCount > 0)
         {
-            return RedirectToAction(null, new { page = m.PageCount });
+            return RedirectToAction(null, new { name, page = m.PageCount });
         }
 
         if (Request.IsAjax())
         {
             return PartialView("_Services", m);
+        }
+
+        return View(m);
+    }
+
+    // Service - Get Category
+    public IActionResult GetCategories(string serviceType)
+    {
+        List<string> categories = new List<string>();
+
+        if (serviceType == "Room")
+        {
+            categories.Add("Room");
+        }
+        else if (serviceType == "Food")
+        {
+            categories.Add("Breakfast");
+            categories.Add("Lunch");
+            categories.Add("Dinner");
+        }
+
+        return Json(categories);
+    }
+
+    // Service - Add | Get
+    public IActionResult _AddService() 
+    {
+        return View();
+    }
+
+    // Service - Add | Post
+    [HttpPost]
+    public IActionResult _AddService(AddServiceVM vm)
+    {
+        if (ModelState.IsValid)
+        {
+            var code = "SRV";
+
+            // Combine to form the new ID
+            string newID = hp.IDGenerator(code);
+
+            db.Services.Add(new Service
+            {
+                ServiceID = newID,
+                ServiceName = vm.serviceName,
+                UnitPrice = vm.unitPrice,
+                ServiceDescription = vm.serviceDescription,
+                ServiceType = vm.serviceType,
+                Category = vm.category,
+                Status = vm.Status,
+            });
+
+            db.SaveChanges();
+            TempData["Info"] = "Services added successfully";
+            return RedirectToAction("Services");
+
+        }
+
+        return View(vm);
+    }
+
+    // Service - Update | Get
+    public IActionResult _UpdateService(string? id)
+    {
+        var sr = db.Services.Find(id);
+
+        if (sr == null)
+        {
+            return RedirectToAction("Services");
+        }
+
+        var vm = new UpdateServiceVM
+        {
+            serviceID = sr.ServiceID,
+            serviceName = sr.ServiceName,
+            unitPrice = sr.UnitPrice,
+            serviceDescription = sr.ServiceDescription,
+            serviceType = sr.ServiceType,
+            category = sr.Category,
+        };
+
+        return View(vm);
+    }
+
+    // Service - Update | Post
+    [HttpPost]
+    public IActionResult _UpdateService(UpdateServiceVM vm)
+    {
+        var sr = db.Services.Find(vm.serviceID);
+
+        if (ModelState.IsValid)
+        {
+            sr.ServiceName = vm.serviceName;
+            sr.UnitPrice = vm.unitPrice;
+            sr.ServiceDescription = vm.serviceDescription;
+            sr.ServiceType = vm.serviceType;
+            sr.Category = vm.category;
+            db.SaveChanges();
+
+            TempData["Info"] = "Service updated.";
+            return RedirectToAction("Services");
+        }
+
+        return View(vm);
+    }
+
+    // Service - Terminate | Post
+    [HttpPost]
+    public IActionResult TerminateService(string? id)
+    {
+        var sr = db.Services.Find(id);
+
+        if (sr != null)
+        {
+            sr.Status = "Terminate";
+            db.SaveChanges();
+        }
+
+        TempData["Info"] = "Service terminated.";
+        return RedirectToAction("Services");
+    }
+
+    // Service - Activate | Post
+    [HttpPost]
+    public IActionResult ActivateService(string? id)
+    {
+        var sr = db.Services.Find(id);
+
+        if (sr != null)
+        {
+            sr.Status = "Active";
+            db.SaveChanges();
+        }
+
+        TempData["Info"] = "Service activated.";
+        return RedirectToAction("Services");
+    }
+
+    // Booking
+    public IActionResult Bookings(string? name, int page = 1)
+    {
+        // (1) Searching ------------------------
+        ViewBag.Name = name = name?.Trim() ?? "";
+
+        var searched = db.Bookings.Include(b => b.User).Where(b => b.BookingID.Contains(name));
+
+        // (2) Paging ---------------------------
+        if (page < 1)
+        {
+            return RedirectToAction(null, new { name, page = 1 });
+        }
+        var m = searched.ToPagedList(page, 10);
+
+        if (page > m.PageCount && m.PageCount > 0)
+        {
+            return RedirectToAction(null, new { name, page = m.PageCount });
+        }
+
+        if (Request.IsAjax())
+        {
+            return PartialView("_Bookings", m);
         }
 
         return View(m);
