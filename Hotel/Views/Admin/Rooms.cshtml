@@ -1,6 +1,4 @@
-﻿@model IEnumerable<Room>
-
-@{
+﻿@{
     Layout = "_NavigationBar";
     ViewBag.Title = "Rooms Management";
 }
@@ -12,8 +10,17 @@
         <div class="container-fluid">
             <div class="row-table">
                 <div class="col-md-12">
+                    <h2 class="title-1">@ViewBag.Title</h2>
                     <div class="overview-wrap">
-                        <h2 class="title-1">@ViewBag.Title</h2>
+                        <form data-ajax="true"
+                              data-ajax-update="#target"
+                              data-ajax-loading="#loader"
+                              id="f">
+                            @Html.TextBox("name", "",
+                                     new { type = "search", autofocus = "", data_trim = "", @class = "au-input au-input--xl" })
+
+                            <img src="/images/loader.gif" id="loader" style="display: none">
+                        </form>
                         <button id="addRoomBtn" class="au-btn au-btn-icon au-btn--blue">
                             <i class="zmdi zmdi-plus"></i>add item
                         </button>
@@ -22,44 +29,9 @@
             </div>
         </div>
     </div>
-    
-    <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                <th>Room ID</th>
-                <th>Room Number</th>
-                <th>Room Category</th>
-                <th>Theme</th>
-                <th>Capacity</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var rm in Model)
-            {
-                <tr>
-                    <td>@rm.RoomID</td>
-                    <td>@rm.RoomNumber</td>
-                    <td>@rm.Category.CategoryName</td>
-                    <td>@rm.Category.Theme</td>
-                    <td>@rm.Category.Capacity</td>
-                    <td>@rm.Status</td>
-                    <td>
-                        <button class="btn btn-primary btn-sm editRoomBtn" data-id="@rm.RoomID">Edit</button>
-                        @if (rm.Status == "Active")
-                        {
-                            <button data-id="@rm.RoomID" class="btn btn-danger btn-sm btn-terminate">Terminate</button>
-                        }
-                        else if (rm.Status == "Terminate")
-                        {
-                            <button data-id="@rm.RoomID" class="btn btn-success btn-sm btn-activate">Activate</button>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div id="target">
+        <partial name="_Room">
+    </div>
 </div>
 
 <!-- Popup Modal for Add or Edit Room -->
@@ -125,54 +97,20 @@
                 addRoomModal.css("display", "none");
             }
         });
-
-        // Handle Terminate Button Click
-        $('.btn-terminate').on('click', function () {
-            var roomId = $(this).data('id');  // Make sure this is an integer, or cast if needed.
-
-            $.ajax({
-                type: 'POST',
-                url: '/Admin/TerminateRoom/' + roomId,  // Ensure URL is correct for your route
-                success: function (response) {
-                    location.reload();  // Refresh the page to reflect changes
-                },
-                error: function (xhr, status, error) {
-                    alert("An error occurred while terminating the room.");
-                }
-            });
-        });
-    
-        // Handle Activate Button Click
-        $('.btn-activate').on('click', function () {
-            var roomId = $(this).data('id');  // Ensure roomId is correctly passed
-
-            $.ajax({
-                type: 'POST',
-                url: '/Admin/ActivateRoom/' + roomId,  // Ensure URL is correct for your route
-                success: function (response) {
-                    location.reload();  // Refresh the page to reflect changes
-                },
-                error: function (xhr, status, error) {
-                    alert("An error occurred while activating the room.");
-                }
-            });
-        });
-
-        // Function to handle Room status changes (Activate/Terminate)
-        function handleRoomStatusChange(roomId, action, newStatus) {
-            $.ajax({
-                type: 'POST',
-                url: '/Admin/' + action + '/' + roomId,
-                success: function () {
-                    location.reload();  // Refresh the page to reflect changes
-                },
-                error: function () {
-                    alert(`An error occurred while changing room status to ${newStatus}.`);
-                }
-            });
-        }
     });
 </script>
+
+@section foot {
+    <script>
+        let timer = null;
+
+        $('#name').on('input', e => {
+            clearTimeout(timer);
+            timer = setTimeout(() => $(e.target.form).submit(), 500);
+        });
+    </script>
+}
+
 
 
 

@@ -64,7 +64,7 @@
 
 h3 {
     color: #4CAF50;
-    margin-bottom: 25px;
+    margin-bottom: 45px;
     font-size: 40px;
 }
 
@@ -80,7 +80,7 @@ p {
 
 /* Button Styles */
 .button-container {
-    margin-top: 90px;
+    margin-top: 200px;
     display: flex;
     gap: 35px;
 }

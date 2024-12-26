@@ -1,0 +1,62 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<Room>
+
+<table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>Room ID</th>
+            <th>Room Number</th>
+            <th>Room Category</th>
+            <th>Theme</th>
+            <th>Capacity</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var rm in Model)
+        {
+            <tr>
+                <td>@rm.RoomID</td>
+                <td>@rm.RoomNumber</td>
+                <td>@rm.Category.CategoryName</td>
+                <td>@rm.Category.Theme</td>
+                <td>@rm.Category.Capacity</td>
+                <td>@rm.Status</td>
+                <td>
+                    <button class="btn btn-primary btn-sm editRoomBtn" data-id="@rm.RoomID">Edit</button>
+                    @if (rm.Status == "Active")
+                    {
+                        <button data-post="/Admin/TerminateRoom/@rm.RoomID" class="btn btn-danger btn-sm">Terminate</button>
+                    }
+                    else if (rm.Status == "Terminate")
+                    {
+                        <button data-post="/Admin/ActivateRoom/@rm.RoomID" class="btn btn-success btn-sm">Activate</button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var options = PagedListRenderOptions.ClassicPlusFirstAndLast;
+    options.LinkToFirstPageFormat    = "First";
+    options.LinkToLastPageFormat     = "Last";
+    options.LinkToPreviousPageFormat = "Previous";
+    options.LinkToNextPageFormat     = "Next";
+
+    var ajaxOptions = new AjaxOptions
+    {
+        HttpMethod       = "get",
+        UpdateTargetId   = "target",
+        LoadingElementId = "#loader",
+    };
+}
+
+@Html.PagedListPager(
+    Model,
+    p => $"?name={ViewBag.Name}&page={p}",
+    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(options, ajaxOptions)
+)

@@ -1,0 +1,58 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<Booking>
+
+<table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>User Name</th>
+            <th>Booking Date</th>
+            <th>Check In Date</th>
+            <th>Check Out Date</th>
+            <th>Room ID</th>
+            <th>Total Amount</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var bk in Model)
+        {
+            <tr>
+                <td>@bk.BookingID</td>
+                <td>@bk.User.Name</td>
+                <td>@bk.BookingDate</td>
+                <td>@bk.CheckInDate</td>
+                <td>@bk.CheckOutDate</td>
+                <td>@bk.RoomID</td>
+                <td>@bk.TotalAmount</td>
+                <td>@bk.Status</td>
+                <td>
+                    <button class="btn btn-primary btn-sm editRoomBtn" data-id="@bk.BookingID">View</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var options = PagedListRenderOptions.ClassicPlusFirstAndLast;
+    options.LinkToFirstPageFormat    = "First";
+    options.LinkToLastPageFormat     = "Last";
+    options.LinkToPreviousPageFormat = "Previous";
+    options.LinkToNextPageFormat     = "Next";
+
+    var ajaxOptions = new AjaxOptions
+    {
+        HttpMethod       = "get",
+        UpdateTargetId   = "target",
+        LoadingElementId = "#loader",
+    };
+}
+
+@Html.PagedListPager(
+    Model,
+    p => $"?name={ViewBag.Name}&page={p}",
+    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(options, ajaxOptions)
+)

@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject DB db
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -52,11 +54,6 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/Admin/Reviews">
-                            <i class="fas fa-comment-alt"></i>Reviews
-                        </a>
-                    </li>
-                    <li>
                         <a href="/Admin/Users">
                             <i class="fas fa-users"></i>Users
                         </a>
@@ -74,48 +71,38 @@
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
                         <div class="header-wrap">
-                            <form class="form-header" action="" method="POST">
-                                <input class="au-input au-input--xl" type="text" name="search" placeholder="Search for datas &amp; reports..." />
-                                <button class="au-btn--submit" type="submit">
-                                    <i class="zmdi zmdi-search"></i>
-                                </button>
-                            </form>
+
                             <div class="header-button">
                                 <div class="account-wrap">
                                     <div class="account-item clearfix js-item-menu">
-                                        <div class="image">
-                                            <img src="/images/icon.jpg"/>
-                                        </div>
-                                        <div class="content">
-                                            <a class="js-acc-btn" href="#">Lisa</a>
-                                        </div>
-                                        <div class="account-dropdown js-dropdown">
-                                            <div class="info clearfix">
+                                        @if (User.Identity?.IsAuthenticated == true)
+                                        {
+                                            var user = db.Users.FirstOrDefault(u => u.Email == User.Identity.Name); // Replace 'Username' with the actual field in your table
+
+                                            if (user != null)
+                                            {
                                                 <div class="image">
-                                                    <a href="#">
-                                                        <img src="/images/icon.jpg" />
-                                                    </a>
+                                                    <img src="@Url.Content("~/uploads/" + user.UserImage)" alt="Profile Picture" />
                                                 </div>
                                                 <div class="content">
-                                                    <h5 class="name">
-                                                        <a href="#">Lisa</a>
-                                                    </h5>
-                                                    <span class="email">lisa@example.com</span>
+                                                    <a class="js-acc-btn" href="#">@user.Name</a> <!-- Accessing the user's name -->
                                                 </div>
-                                            </div>
-                                            <div class="account-dropdown__body">
-                                                <div class="account-dropdown__item">
-                                                    <a href="/Admin/Profile">
-                                                        <i class="fas fa-user"></i>Account
-                                                    </a>
+                                                <div class="account-dropdown js-dropdown">
+                                                    <div class="account-dropdown__body">
+                                                        <div class="account-dropdown__item">
+                                                            <a href="/Admin/Profile">
+                                                                <i class="fas fa-user"></i>Account
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="account-dropdown__footer">
+                                                        <a href="/Account/Logout">
+                                                            <i class="fas fa-power-off"></i>Logout
+                                                        </a>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="account-dropdown__footer">
-                                                <a href="#">
-                                                    <i class="fas fa-power-off"></i>Logout
-                                                </a>
-                                            </div>
-                                        </div>
+                                            }
+                                        }
                                     </div>
                                 </div>
                             </div>

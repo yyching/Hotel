@@ -8,44 +8,34 @@
         <div class="container-fluid">
             <div class="row-table">
                 <div class="col-md-12">
+                    <h2 class="title-1">@ViewBag.Title</h2>
                     <div class="overview-wrap">
-                        <h2 class="title-1">@ViewBag.Title</h2>
-                        <button class="au-btn au-btn-icon au-btn--blue">
-                            <i class="zmdi zmdi-plus"></i>add item
-                        </button>
+                        <form data-ajax="true"
+                              data-ajax-update="#target"
+                              data-ajax-loading="#loader"
+                              id="f">
+                            @Html.TextBox("name", "",
+                                     new { type = "search", autofocus = "", data_trim = "", @class = "au-input au-input--xl" })
+
+                            <img src="/images/loader.gif" id="loader" style="display: none">
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                <th>ID</th>
-                <th>User Name</th>
-                <th>Booking Date</th>
-                <th>Check In Date</th>
-                <th>Check Out Date</th>
-                <th>Room ID</th>
-                <th>Total Amount</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>BK001</td>
-                <td>YYCHING</td>
-                <td>2024-12-03</td>
-                <td>2024-12-04</td>
-                <td>2024-12-12</td>
-                <td>RM001</td>
-                <td>900.00</td>
-                <td>
-                    <button class="btn btn-primary btn-sm">Edit</button>
-                    <button class="btn btn-danger btn-sm">Delete</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div id="target">
+        <partial name="_Bookings">
+    </div>
 </div>
+
+@section foot {
+    <script>
+        let timer = null;
+
+        $('#name').on('input', e => {
+            clearTimeout(timer);
+            timer = setTimeout(() => $(e.target.form).submit(), 500);
+        });
+    </script>
+}

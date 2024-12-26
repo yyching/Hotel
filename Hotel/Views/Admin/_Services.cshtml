@@ -2,26 +2,7 @@
 @using X.PagedList.Mvc.Core
 @model IPagedList<Service>
 
-@{
-    ViewBag.Title = "Services";
-}
-
 <link href="/css/_Insert.css" rel="stylesheet" />
-
-<div class="section__content section__content--p30">
-    <div class="container-fluid">
-        <div class="row-table">
-            <div class="col-md-12">
-                <div class="overview-wrap">
-                    <h2 class="title-1">@ViewBag.Title</h2>
-                    <button id="addServiceBtn"  class="au-btn au-btn-icon au-btn--blue">
-                        <i class="zmdi zmdi-plus"></i>add item
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <p hidden>
     @Model.Count() of @Model.TotalItemCount record(s) |
@@ -55,11 +36,11 @@
                     <button class="btn btn-primary btn-sm editServiceBtn" data-id="@sr.ServiceID">Edit</button>
                     @if (sr.Status == "Active")
                     {
-                        <button data-id="@sr.ServiceID" class="btn btn-danger btn-sm btn-terminate">Terminate</button>
+                        <button data-post="/Admin/TerminateService/@sr.ServiceID" class="btn btn-danger btn-sm">Terminate</button>
                     }
                     else if (sr.Status == "Terminate")
                     {
-                        <button data-id="@sr.ServiceID" class="btn btn-success btn-sm btn-activate">Activate</button>
+                        <button data-post="/Admin/ActivateService/@sr.ServiceID" class="btn btn-success btn-sm">Activate</button>
                     }
                 </td>
             </tr>
@@ -96,11 +77,10 @@
 }
 
 @Html.PagedListPager(
-    Model,
-    p => $"?page={p}",
-    // TODO
-    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(options, ajaxOptions)
-)
+        Model,
+        p => $"?name={ViewBag.Name}&page={p}",
+        PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(options, ajaxOptions)
+    )
 
 <!-- JavaScript to Load the Partial View and Control Modal -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -163,52 +143,6 @@
                 addServiceModal.css("display", "none");
             }
         });
-
-        // Handle Terminate Button Click
-        $('.btn-terminate').on('click', function () {
-            var serviceID = $(this).data('id');
-
-            $.ajax({
-                type: 'POST',
-                url: '/Admin/TerminateService/' + serviceID,  // Ensure URL is correct for your route
-                success: function (response) {
-                    location.reload();  // Refresh the page to reflect changes
-                },
-                error: function (xhr, status, error) {
-                    alert("An error occurred while terminating the service.");
-                }
-            });
-        });
-
-        // Handle Activate Button Click
-        $('.btn-activate').on('click', function () {
-            var serviceID = $(this).data('id'); 
-
-            $.ajax({
-                type: 'POST',
-                url: '/Admin/ActivateService/' + serviceID,  // Ensure URL is correct for your route
-                success: function (response) {
-                    location.reload();  // Refresh the page to reflect changes
-                },
-                error: function (xhr, status, error) {
-                    alert("An error occurred while activating the service.");
-                }
-            });
-        });
-
-        // Function to handle status changes (Activate/Terminate)
-        function handleRoomStatusChange(serviceID, action, newStatus) {
-            $.ajax({
-                type: 'POST',
-                url: '/Admin/' + action + '/' + serviceID,
-                success: function () {
-                    location.reload();
-                },
-                error: function () {
-                    alert(`An error occurred while changing status to ${newStatus}.`);
-                }
-            });
-        }
     });
 </script>
 

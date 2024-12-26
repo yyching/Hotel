@@ -1,0 +1,67 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<Category>
+
+<table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>Category ID</th>
+            <th>Category Name</th>
+            <th>Theme</th>
+            <th>Size</th>
+            <th>Capacity</th>
+            <th>Bed</th>
+            <th>Price (Per Night)</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ct in Model)
+        {
+            <tr>
+                <td>@ct.CategoryID</td>
+                <td>@ct.CategoryName</td>
+                <td>@ct.Theme</td>
+                <td>@ct.Size</td>
+                <td>@ct.Capacity</td>
+                <td>@ct.Bed</td>
+                <td>@ct.PricePerNight</td>
+                <td>@ct.Status</td>
+                <td>
+                    <button data-get="/Admin/UpdateRoomCategory/@ct.CategoryID" class="btn btn-primary btn-sm">Edit</button>
+                    @if (ct.Status == "Active")
+                    {
+                        <button data-post="/Admin/TerminateRoomCategory/@ct.CategoryID" class="btn btn-danger btn-sm">Terminate</button>
+                    }
+                    else if (ct.Status == "Terminate")
+                    {
+                        <button data-post="/Admin/ActivateRoomCategory/@ct.CategoryID" class="btn btn-success btn-sm">Activate</button>
+                    }
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var options = PagedListRenderOptions.ClassicPlusFirstAndLast;
+    options.LinkToFirstPageFormat    = "First";
+    options.LinkToLastPageFormat     = "Last";
+    options.LinkToPreviousPageFormat = "Previous";
+    options.LinkToNextPageFormat     = "Next";
+
+    var ajaxOptions = new AjaxOptions
+    {
+        HttpMethod       = "get",
+        UpdateTargetId   = "target",
+        LoadingElementId = "#loader",
+    };
+}
+
+@Html.PagedListPager(
+    Model,
+    p => $"?name={ViewBag.Name}&page={p}",
+    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(options, ajaxOptions)
+)

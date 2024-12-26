@@ -15,11 +15,11 @@
             <!-- Current Profile Picture -->
             <label class="upload">
                 <input asp-for="Photo" accept="image/jpeg,image/png" hidden>
-                <img src="/photos/@Model.UserImage" class="profile-pic">
+                <img src="/uploads/@Model.UserImage" class="profile-pic">
             </label>
             <span asp-validation-for="Photo"></span>
-            <h2 class="profile-name">John Doe</h2>
-            <p class="profile-role">Web Developer</p>
+            <h2 class="profile-name">@Model.Name</h2>
+            <p class="profile-role">Admin</p>
         </div>
         <div class="profile-right">
             <h3>Profile Details</h3>
