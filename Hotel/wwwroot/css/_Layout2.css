@@ -80,22 +80,95 @@
             color: rgb(234, 228, 228);
         }
 
-.nav-login {
-    padding-right: 50px;
-    font-weight: bold;
+.nav-user {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    margin-right: 20px;
 }
 
-    .nav-login a:hover {
-        color: rgb(234, 228, 228);
+    .nav-user .photos img {
+        width: 40px;
+        height: 45px;
+        width: 45px;
+        border-radius: 10px;
+        object-fit: cover;
+        border: 2px solid #ccc;
+        margin-right: 10px;
     }
 
-.login-button {
+    .nav-user .user-content .js-acc-btn {
+        font-size: 16px;
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .nav-user .dropdown-toggle {
+        display: none;
+    }
+
+    .nav-user .account-dropdown {
+        position: absolute;
+        top: 50px;
+        right: 0;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        display: none;
+        width: 160px;
+        z-index: 1000;
+    }
+
+    .nav-user .dropdown-toggle:checked ~ .account-dropdown {
+        display: block;
+    }
+
+    .nav-user .account-dropdown__body,
+    .nav-user .account-dropdown__footer {
+        padding: 10px;
+    }
+
+    .nav-user .account-dropdown__item,
+    .nav-user .account-dropdown__footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .nav-user .account-dropdown__item a,
+        .nav-user .account-dropdown__footer a {
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .nav-user .account-dropdown__item a:hover,
+            .nav-user .account-dropdown__footer a:hover {
+                color: #007bff;
+            }
+
+.nav-user .login-button {
+    margin-right: 20px;
     color: white;
-    padding: 8px 15px;
     text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s;
+    font-weight: bold;
+    font-size: 16px;
+    transition: color 0.3s;
 }
+
+    .nav-user .login-button:hover {
+        color: rgb(234, 228, 228);
+    }
 
 /* Footer Section */
 footer {
