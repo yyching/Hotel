@@ -157,6 +157,7 @@ namespace Hotel.Controllers
         // GET: Account/VerifyOtp
         public IActionResult VerifyOtp(string email)
         {
+            ViewBag.Email = email;
             return View();
         }
 
@@ -179,6 +180,7 @@ namespace Hotel.Controllers
                 if (model.Opt != storedOTP)
                 {
                     TempData["Info"] = "Invalid verification code";
+                    ViewBag.Email = email;
                     return View();
                 }
 
@@ -191,6 +193,7 @@ namespace Hotel.Controllers
             catch (Exception ex)
             {
                 TempData["Info"] = "An error occurred during verification";
+                ViewBag.Email = model.Email;
                 return View();
             }
         }
