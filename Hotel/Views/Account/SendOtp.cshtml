@@ -1,36 +1,34 @@
-﻿@model LoginVM
+﻿@model RegisterVM
 
 @{
     Layout = "_Layout2";
-    ViewBag.Title = "Login";
+    ViewBag.Title = "Register";
 }
 <link rel="stylesheet" href="/css/LoginRegister.css" asp-append-version="true">
 
-<div class="form-popup">
+<div class="form-popup" style="margin: 180px auto;">
     <div class="form-box login">
         <div class="form-details">
             <h2>Welcome Back</h2>
             <p>Please log in using your personal information to stay connected with us.</p>
         </div>
         <div class="form-content">
-            <h2>LOGIN</h2>
-            <form method="post">
+            <h2>Register</h2>
+            <form method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly"></div>
+
                 <div class="input-field">
-                    <input asp-for="Email" autofocus/>
+                    <input asp-for="Email" />
                     <span asp-validation-for="Email"></span>
                     <label asp-for="Email"></label>
                 </div>
-                <div class="input-field">
-                    <input asp-for="Password" />
-                    <span asp-validation-for="Password"></span>
-                    <label asp-for="Password"></label>
-                </div>
-                <a href="SendEmail" class="forgot-pass-link">Forgot password?</a>
-                <button type="submit">Log In</button>
+
+                <button type="submit">Submit</button>
             </form>
+
             <div class="bottom-link">
                 Don't have an account?
-                <a href="SendOtp" id="signup-link">Signup</a>
+                <a href="Login" id="signup-link">Log In</a>
             </div>
         </div>
     </div>

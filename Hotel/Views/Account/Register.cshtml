@@ -13,19 +13,18 @@
             <p>Please log in using your personal information to stay connected with us.</p>
         </div>
         <div class="form-content">
-            <h2>LOGIN</h2>
+            <h2>Register</h2>
             <form method="post" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly"></div>
+
+                <div class="input-field">
+                    <input asp-for="Email" readonly/>
+                </div>
 
                 <div class="input-field">
                     <input asp-for="Name" autofocus/>
                     <span asp-validation-for="Name"></span>
                     <label asp-for="Name"></label>
-                </div>
-                <div class="input-field">
-                    <input asp-for="Email"/>
-                    <span asp-validation-for="Email"></span>
-                    <label asp-for="Email"></label>
                 </div>
                 <div class="input-field">
                     <input asp-for="PhoneNumber"/>
@@ -45,11 +44,6 @@
 
                 <button type="submit">Register</button>
             </form>
-
-            <div class="bottom-link">
-                Don't have an account?
-                <a href="Login" id="signup-link">Log In</a>
-            </div>
         </div>
     </div>
 </div>
