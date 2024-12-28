@@ -1,4 +1,4 @@
-﻿@model RegisterVM
+﻿@model OptVM
 
 @{
     Layout = "_Layout2";
@@ -19,12 +19,12 @@
 
                 <div class="input-field">
                     <input asp-for="Email" readonly />
-                    <a>send again</a>
                 </div>
 
                 <div class="input-field">
-                    <input name="opt" autofocus/>
-                    <label>OPT</label>
+                    <input asp-for="Opt" />
+                    <span asp-validation-for="Opt"></span>
+                    <label asp-for="Opt"></label>
                 </div>
 
                 <button type="submit">Submit</button>

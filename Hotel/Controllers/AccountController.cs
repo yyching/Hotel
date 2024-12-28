@@ -21,7 +21,7 @@ namespace Hotel.Controllers
         private readonly IWebHostEnvironment en;
         private readonly Helper hp;
         private readonly IMemoryCache cache;
-        private const int OTP_VALIDITY_MINUTES = 5;
+        private const int OTP_VALIDITY_MINUTES = 1;
 
         public AccountController(DB db, IWebHostEnvironment en, Helper hp, IMemoryCache cache)
         {
@@ -95,14 +95,14 @@ namespace Hotel.Controllers
         }
 
         // GET: Account/SendOtp
-        public IActionResult SendOtp()
+        public IActionResult SendOtp(string? email)
         {
             return View();
         }
 
         // POST: Account/SendOtp
         [HttpPost]
-        public IActionResult SendOTP(RegisterVM model)
+        public IActionResult SendOTP(OptVM model)
         {
             if (string.IsNullOrEmpty(model.Email))
             {
@@ -162,28 +162,28 @@ namespace Hotel.Controllers
 
         // POST: Account/VerifyOtp
         [HttpPost]
-        public IActionResult VerifyOTP(string Email, string opt)
+        public IActionResult VerifyOTP(OptVM model)
         {
             try
             {
+                var email = model.Email;
+
                 // get the opt form the memory
-                if (!cache.TryGetValue($"OTP_{Email}", out string storedOTP))
+                if (!cache.TryGetValue($"OTP_{model.Email}", out string storedOTP))
                 {
                     TempData["Info"] = "Verification code has expired. Please request a new one.";
-                    return View();
+                    return RedirectToAction("SendOtp", new { Email = email});
                 }
 
                 // verify opt
-                if (opt != storedOTP)
+                if (model.Opt != storedOTP)
                 {
                     TempData["Info"] = "Invalid verification code";
                     return View();
                 }
 
                 // remove the opt if success
-                cache.Remove($"OTP_{Email}");
-
-                var email = Email;
+                cache.Remove($"OTP_{model.Email}");
 
                 TempData["Info"] = "Email verified successfully";
                 return RedirectToAction("Register", new { Email = email });

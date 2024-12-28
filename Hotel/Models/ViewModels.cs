@@ -20,6 +20,19 @@ public class LoginVM
     public bool RememberMe { get; set; }
 }
 
+public class OptVM
+{
+    [StringLength(100)]
+    [EmailAddress]
+    [Remote("CheckEmail", "Account", ErrorMessage = "Duplicated {0}.")]
+    public string Email { get; set; }
+
+    [StringLength(11)]
+    [RegularExpression(@"^\d{6}$")]
+    [Display(Name = "OPT")]
+    public string Opt { get; set; }
+}
+
 public class RegisterVM
 {
     [StringLength(100)]
