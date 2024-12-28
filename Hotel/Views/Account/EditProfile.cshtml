@@ -2,7 +2,7 @@
 
 @{
     Layout = "_Layout2";
-    ViewBag.Title = "User Profile";
+    ViewBag.Title = "Edit Profile";
 }
 <link rel="stylesheet" href="/css/Account.css" asp-append-version="true">
 
@@ -16,30 +16,35 @@
         </ul>
     </aside>
     <main class="content">
-        <h2>My Profile</h2>
-        <div class="profile-content">
+        <h2>Edit Profile</h2>
+        <form class="profile-content" method="post" enctype="multipart/form-data">
             <div class="profile-form">
                 <div class="form-group">
                     <label asp-for="Name"></label>
-                    <input asp-for="Name" readonly>
+                    <input asp-for="Name" autofocus>
+                    <span asp-validation-for="Name"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Email"></label>
-                    <input asp-for="Email" readonly>
+                    <input asp-for="Email">
+                    <span asp-validation-for="Email"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="PhoneNumber"></label>
-                    <input asp-for="PhoneNumber" readonly>
+                    <input asp-for="PhoneNumber">
+                    <span asp-validation-for="PhoneNumber"></span>
                 </div>
-                <button data-get="/Account/EditProfile" class="save-btn">Edit</button>
+                <button class="save-btn">Save</button>
             </div>
 
             <div class="profile-picture">
                 <label class="upload">
+                    <input asp-for="Photo" accept="image/jpeg,image/png" hidden>
                     <img src="/photos/@Model.UserImage" class="picture-placeholder">
                 </label>
+                <span asp-validation-for="Photo"></span>
                 <label>@Model.Name</label>
             </div>
-        </div>
+        </form>
     </main>
 </div>

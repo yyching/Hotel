@@ -272,10 +272,33 @@ namespace Hotel.Controllers
             return View(vm);
         }
 
-        // POST: Account/UpdateProfile
+        // GET: Account/EditProfile
+        [Authorize]
+        [Authorize(Roles = "Member")]
+        public IActionResult EditProfile()
+        {
+            var userId = User.FindFirst("UserID")?.Value;
+            if (string.IsNullOrEmpty(userId)) return RedirectToAction("Index", "Home");
+
+            // Get member record based on UserID
+            var m = db.Users.FirstOrDefault(u => u.UserID == userId);
+            if (m == null) return RedirectToAction("Index", "Home");
+
+            var vm = new UpdateProfileVM
+            {
+                Email = m.Email,
+                Name = m.Name,
+                PhoneNumber = m.PhoneNumber,
+                UserImage = m.UserImage,
+            };
+
+            return View(vm);
+        }
+
+        // POST: Account/EditProfile
         [Authorize(Roles = "Member")]
         [HttpPost]
-        public IActionResult Profile(UpdateProfileVM vm)
+        public IActionResult EditProfile(UpdateProfileVM vm)
         {
             var userId = User.FindFirst("UserID")?.Value;
             if (string.IsNullOrEmpty(userId)) return RedirectToAction("Index", "Home");
@@ -310,7 +333,7 @@ namespace Hotel.Controllers
                 db.SaveChanges();
 
                 TempData["Info"] = "Profile updated.";
-                return RedirectToAction();
+                return RedirectToAction("Profile", "Account");
             }
 
             vm.Name = m.Name;
