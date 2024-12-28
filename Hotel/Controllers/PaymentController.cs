@@ -34,6 +34,12 @@ public class PaymentController : Controller
     // GET: Payment/PaymentPage
     public IActionResult PaymentPage(string? categoryID, DateOnly checkIn, DateOnly checkOut, string[]? foodServiceIds, int[]? foodQuantities, string[]? roomServiceIds, int[]? roomQuantities)
     {
+        // Data for the back to RoomDetailsPage
+        ViewBag.foodServiceIds = foodServiceIds;
+        ViewBag.foodQuantities = foodQuantities;
+        ViewBag.roomServiceIds = roomServiceIds;
+        ViewBag.roomQuantities = roomQuantities;
+
         // check the room available
         var occupiedRooms = db.Bookings
                                   .Where(b => checkIn < b.CheckOutDate &&
@@ -474,7 +480,7 @@ public class PaymentController : Controller
                 TempData["RoomServices"].ToString());
         }
 
-        TempData["Info"] = "Payment was cancelled.";
+        TempData["Info"] = "Payment cancelled.";
         return View("PaymentPage");
     }
 }
