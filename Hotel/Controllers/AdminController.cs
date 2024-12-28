@@ -108,7 +108,7 @@ public class AdminController : Controller
                     hp.DeletePhoto(m.UserImage, "photos");
                 }
 
-                m.UserImage = hp.SavePhoto(vm.Photo, "uploads");
+                m.UserImage = hp.SavePhoto(vm.Photo, "photos");
             }
 
             db.SaveChanges();

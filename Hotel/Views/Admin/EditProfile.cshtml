@@ -15,7 +15,7 @@
             <!-- Current Profile Picture -->
             <label class="upload">
                 <input asp-for="Photo" accept="image/jpeg,image/png" hidden>
-                <img src="/uploads/@Model.UserImage" class="profile-pic">
+                <img src="/photos/@Model.UserImage" class="profile-pic">
             </label>
             <span asp-validation-for="Photo"></span>
             <h2 class="profile-name">@Model.Name</h2>
