@@ -46,6 +46,7 @@
                         <tr><td>Check-out Date:</td><td>{checkOutDate:yyyy-MM-dd}</td></tr>
                         <tr><td>Room Number:</td><td>{roomNumber}</td></tr>
                         <tr><td>Price Per Night:</td><td>RM {pricePerNight:F2}</td></tr>
+                       <tr><td>Total Days:</td><td>{(checkOutDate.DayNumber - checkInDate.DayNumber)}</td></tr>
                     </table>
                 </div>";
 
