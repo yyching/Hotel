@@ -12,6 +12,7 @@ using Stripe.Checkout;
 using iText.Layout;
 using iText.Html2pdf;
 using iText.Kernel.Pdf;
+using iText.IO.Font;
 
 namespace Hotel.Controllers;
 
@@ -158,6 +159,10 @@ public class PaymentController : Controller
         int[]? roomQuantities,
         double[]? roomPrices)
     {
+        TempData["FoodNames"] = foodNames;
+        TempData["FoodQuantities"] = foodQuantities;
+        TempData["RoomNames"] = roomNames;
+        TempData["RoomQuantities"] = roomQuantities;
         TempData["RoomId"] = roomId;
         TempData["RoomCategory"] = roomCategory;
         TempData["CheckIn"] = checkIn.ToString("yyyy-MM-dd");
@@ -459,8 +464,46 @@ public class PaymentController : Controller
     // GET: Payment/Cancel
     public IActionResult Cancel()
     {
+        var RoomCategory = TempData["RoomCategory"];
+        var categiryId = db.Categories.Where(c => c.CategoryName == RoomCategory).Select(c => c.CategoryID).FirstOrDefault();
+        ViewBag.categoryID = categiryId;
+
+        var foodNames = TempData["FoodNames"] as string[];
+        List<string> foodIds = new List<string>();
+        if (foodNames != null && foodNames.Length > 0)
+        {
+            foreach (var foodName in foodNames)
+            {
+                var service = db.Services.FirstOrDefault(s => s.ServiceName == foodName);
+                if (service != null)
+                {
+                    foodIds.Add(service.ServiceID);
+                }
+            }
+        }
+
+        var roomNames = TempData["RoomNames"] as string[];
+        List<string> roomIds = new List<string>();
+        if (roomNames != null && roomNames.Length > 0)
+        {
+            foreach (var roomName in roomNames)
+            {
+                var service = db.Services.FirstOrDefault(s => s.ServiceName == roomName);
+                if (service != null)
+                {
+                    roomIds.Add(service.ServiceID);
+                }
+            }
+        }
+
+        ViewBag.foodServiceIds = foodIds;
+        ViewBag.foodQuantities = TempData["FoodQuantities"];
+        ViewBag.roomServiceIds = roomIds;
+        ViewBag.roomQuantities = TempData["RoomQuantities"];
+
+
         ViewBag.availableRoomID = TempData["RoomId"];
-        ViewBag.roomCategory = TempData["RoomCategory"];
+        ViewBag.roomCategory = RoomCategory;
         ViewBag.checkIn = TempData["CheckIn"];
         ViewBag.checkOut = TempData["CheckOut"];
         ViewBag.roomPrice = double.Parse(TempData["RoomPrice"]?.ToString());
