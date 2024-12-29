@@ -14,78 +14,73 @@
         </ul>
     </aside>
     <div class="history-container">
+        <h2 class="history-title">Booking History</h2>
+
         @foreach (var booking in ViewBag.Bookings)
         {
             <div class="history-section">
-                <div class="history-header">
-                    <h2>@booking.Room.Category.CategoryName (@booking.Room.Category.Theme)</h2>
-                    <p>Order # @booking.BookingID</p>
+                <div class="status-header">
+                    <p class="booking-date">Booking Date: @booking.BookingDate.ToString("MMM dd, yyyy")</p>
                 </div>
-                <h3 class="price">RM @booking.TotalAmount</h3>
                 <div class="content-section">
-                    <div class="image-container">
-                        <img src="/uploads/@booking.Room.Category.RoomImage">
+                    <div class="left-section">
+                        <img src="/uploads/@booking.Room.Category.RoomImage" alt="@booking.Room.Category.CategoryName" class="room-image">
                     </div>
-                    <div class="info-section">
-                        <h1><strong>Booking Date:</strong> @booking.BookingDate.ToString("MMM dd, yyyy")</h1>
+                    <div class="middle-section">
+                        <h4>@booking.Room.Category.CategoryName (@booking.Room.Category.Theme)</h4>
                         <p><strong>Check-in:</strong> @booking.CheckInDate.ToString("MMM dd, yyyy")</p>
                         <p><strong>Check-out:</strong> @booking.CheckOutDate.ToString("MMM dd, yyyy")</p>
-
+                        <p class="price"><strong>Total:</strong> RM @booking.TotalAmount</p>
+                    </div>
+                    <div class="right-section">
                         @if (ViewBag.BreakfastServices.ContainsKey(booking.BookingID) ||
-                             ViewBag.LunchServices.ContainsKey(booking.BookingID) ||
-                             ViewBag.DinnerServices.ContainsKey(booking.BookingID))
+                       ViewBag.LunchServices.ContainsKey(booking.BookingID) ||
+                       ViewBag.DinnerServices.ContainsKey(booking.BookingID))
                         {
-                            <h1><strong>Food</strong></h1>
-
-                            @if (ViewBag.BreakfastServices.ContainsKey(booking.BookingID))
-                            {
-                                <p>
-                                    <strong>Breakfast:</strong>
+                            <p><strong>Food Services:</strong></p>
+                            <ul>
+                                @if (ViewBag.BreakfastServices.ContainsKey(booking.BookingID))
+                                {
                                     @foreach (var service in ViewBag.BreakfastServices[booking.BookingID])
                                     {
-                                    <p><strong>@service.Key:</strong> @service.Value</p>
+                                        <li>@service.Key: @service.Value</li>
                                     }
-                                </p>
-                            }
-
-                            @if (ViewBag.LunchServices.ContainsKey(booking.BookingID))
-                            {
-                                <p>
-                                    <strong>Lunch:</strong>
+                                }
+                                @if (ViewBag.LunchServices.ContainsKey(booking.BookingID))
+                                {
                                     @foreach (var service in ViewBag.LunchServices[booking.BookingID])
                                     {
-                                    <p><strong>@service.Key:</strong> @service.Value</p>
+                                        <li>@service.Key: @service.Value</li>
                                     }
-                                </p>
-                            }
-
-                            @if (ViewBag.DinnerServices.ContainsKey(booking.BookingID))
-                            {
-                                <p>
-                                    <strong>Dinner:</strong>
+                                }
+                                @if (ViewBag.DinnerServices.ContainsKey(booking.BookingID))
+                                {
                                     @foreach (var service in ViewBag.DinnerServices[booking.BookingID])
                                     {
-                                    <p><strong>@service.Key:</strong> @service.Value</p>
+                                        <li>@service.Key: @service.Value</li>
                                     }
-                                </p>
-                            }
+                                }
+                            </ul>
                         }
-
                         @if (ViewBag.RoomServices.ContainsKey(booking.BookingID))
                         {
-                            <h1><strong>Add On</strong></h1>
-                            @foreach (var service in ViewBag.RoomServices[booking.BookingID])
-                            {
-                                <p><strong>@service.Key:</strong> @service.Value</p>
-                            }
+                            <p><strong>Room Services:</strong></p>
+                            <ul>
+                                @foreach (var service in ViewBag.RoomServices[booking.BookingID])
+                                {
+                                    <li>@service.Key: @service.Value</li>
+                                }
+                            </ul>
                         }
                     </div>
+                    <div >
+                        <form method="post" class="action-buttons">
+                            <input type="hidden" name="bookingID" value="@booking.BookingID" />
+                            <button class="track-order">Download Receipt</button>
+                            <a href="/Home/RoomDetailsPage?categoryID=@booking.Room.Category.CategoryID" class="view-details" target="_blank">View Details</a>
+                        </form>
+                    </div>
                 </div>
-                <form class="action-buttons" method="post">
-                    <input type="hidden" name="bookingID" value="@booking.BookingID" />
-                    <button class="receipt">Download Receipt</button>
-                    <a class="view-details" href="/Home/RoomDetailsPage?categoryID=@booking.Room.Category.CategoryID" target="_blank">View Room Details</a>
-                </form>
             </div>
         }
     </div>
