@@ -146,6 +146,13 @@
         }
 
     .action-buttons .view-details {
+        text-decoration: none;
+        padding: 10px 20px;
+        font-size: 1em;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
         background-color: #f4f4f9;
         color: #3a3f58;
         border: 1px solid #3a3f58;

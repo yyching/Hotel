@@ -84,7 +84,7 @@
                 <form class="action-buttons" method="post">
                     <input type="hidden" name="bookingID" value="@booking.BookingID" />
                     <button class="receipt">Download Receipt</button>
-                    <button class="view-details" onclick="window.open('/Home/RoomDetailsPage?categoryID=@booking.Room.Category.CategoryID', '_blank')">View Room Details</button>
+                    <a class="view-details" href="/Home/RoomDetailsPage?categoryID=@booking.Room.Category.CategoryID" target="_blank">View Room Details</a>
                 </form>
             </div>
         }
