@@ -396,6 +396,7 @@ public class PaymentController : Controller
         if (m != null)
         {
             var roomNumber = db.Rooms.Where(r => r.RoomID == roomId).Select(r => r.RoomNumber).FirstOrDefault();
+            var pricePerNight = db.Rooms.Where(r => r.RoomID == roomId).Select(r => r.Category.PricePerNight).FirstOrDefault();
 
             // Pass data to the ReceiptTemplate.cs
             // Call the Receipt.cs
@@ -405,6 +406,7 @@ public class PaymentController : Controller
                                                 checkInDate,
                                                 checkOutDate,
                                                 roomNumber,
+                                                pricePerNight,
                                                 allServices,
                                                 subtotal,
                                                 tax,

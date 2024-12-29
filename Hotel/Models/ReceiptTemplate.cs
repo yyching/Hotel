@@ -8,6 +8,7 @@
             DateOnly checkInDate,
             DateOnly checkOutDate,
             string roomNumber,
+            double pricePerNight,
             List<ServiceItem> services,
             double subtotal,
             double tax,
@@ -44,6 +45,7 @@
                         <tr><td>Check-in Date:</td><td>{checkInDate:yyyy-MM-dd}</td></tr>
                         <tr><td>Check-out Date:</td><td>{checkOutDate:yyyy-MM-dd}</td></tr>
                         <tr><td>Room Number:</td><td>{roomNumber}</td></tr>
+                        <tr><td>Price Per Night:</td><td>RM {pricePerNight:F2}</td></tr>
                     </table>
                 </div>";
 

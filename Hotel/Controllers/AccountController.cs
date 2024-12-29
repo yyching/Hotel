@@ -603,6 +603,7 @@ namespace Hotel.Controllers
             DateOnly checkInDate = booking.CheckInDate;
             DateOnly checkOutDate = booking.CheckOutDate;
             var roomNumber = booking.Room.RoomNumber;
+            var pricePerNight = booking.Room.Category.PricePerNight;
 
             int numberOfDays = checkOutDate.DayNumber - checkInDate.DayNumber;
             double roomTotalPrice = booking.Room.Category.PricePerNight * numberOfDays;
@@ -639,6 +640,7 @@ namespace Hotel.Controllers
                     checkInDate,
                     checkOutDate,
                     roomNumber,
+                    pricePerNight,
                     allServices,
                     subtotal,
                     tax,
