@@ -80,38 +80,55 @@
             color: rgb(234, 228, 228);
         }
 
-.nav-user {
+
+.nav-login {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: 5px;
-    margin-right: 20px;
+    margin-right: 50px;
 }
 
-    .nav-user .photos img {
-        width: 40px;
-        height: 45px;
-        width: 45px;
-        border-radius: 10px;
-        object-fit: cover;
-        border: 2px solid #ccc;
-        margin-right: 10px;
-    }
-
-    .nav-user .user-content .js-acc-btn {
-        font-size: 16px;
+    .nav-login .more-icon i {
+        font-size: 20px;
         color: white;
-        text-decoration: none;
-        font-weight: bold;
-        cursor: pointer;
+        transition: color 0.3s ease;
     }
 
-    .nav-user .dropdown-toggle {
+    .nav-login .more-icon:hover i {
+        color: rgb(234, 228, 228);
+    }
+
+    .nav-login .user-details {
+        display: flex;
+        justify-content: center;
+    }
+
+        .nav-login .user-details label {
+            color: black;
+        }
+
+        .nav-login .user-details .image img {
+            width: 40px;
+            height: 45px;
+            width: 45px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 2px solid #ccc;
+        }
+
+        .nav-login .user-details .profile-info {
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+    .nav-login .dropdown-toggle {
         display: none;
     }
 
-    .nav-user .account-dropdown {
+    .nav-login .account-dropdown {
         position: absolute;
         top: 50px;
         right: 0;
@@ -124,25 +141,25 @@
         z-index: 1000;
     }
 
-    .nav-user .dropdown-toggle:checked ~ .account-dropdown {
+    .nav-login .dropdown-toggle:checked ~ .account-dropdown {
         display: block;
     }
 
-    .nav-user .account-dropdown__body,
-    .nav-user .account-dropdown__footer {
+    .nav-login .account-dropdown__body,
+    .nav-login .account-dropdown__footer {
         padding: 10px;
     }
 
-    .nav-user .account-dropdown__item,
-    .nav-user .account-dropdown__footer {
+    .nav-login .account-dropdown__item,
+    .nav-login .account-dropdown__footer {
         display: flex;
         justify-content: center;
         align-items: center;
         gap: 10px;
     }
 
-        .nav-user .account-dropdown__item a,
-        .nav-user .account-dropdown__footer a {
+        .nav-login .account-dropdown__item a,
+        .nav-login .account-dropdown__footer a {
             text-decoration: none;
             color: #333;
             font-size: 14px;
@@ -152,23 +169,23 @@
             gap: 8px;
         }
 
-            .nav-user .account-dropdown__item a:hover,
-            .nav-user .account-dropdown__footer a:hover {
+            .nav-login .account-dropdown__item a:hover,
+            .nav-login .account-dropdown__footer a:hover {
                 color: #007bff;
             }
 
-.nav-user .login-button {
-    margin-right: 20px;
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 16px;
-    transition: color 0.3s;
-}
-
-    .nav-user .login-button:hover {
-        color: rgb(234, 228, 228);
+    .nav-login .login-button {
+        margin-right: 20px;
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 16px;
+        transition: color 0.3s;
     }
+
+        .nav-login .login-button:hover {
+            color: black;
+        }
 
 /* Footer Section */
 footer {
