@@ -566,9 +566,13 @@ namespace Hotel.Controllers
                         dinnerDict[booking.BookingID] = dinnerServices;
                     }
 
-                    roomDict[booking.BookingID] = services
+                    var roomServices = services
                         .Where(s => s.Service.ServiceType == "Room" && s.Qty >= 1)
                         .ToDictionary(s => s.Service.ServiceName, s => s.Qty);
+                    if (roomServices.Any())
+                    {
+                        roomDict[booking.BookingID] = roomServices;
+                    }
                 }
             }
 
