@@ -31,7 +31,9 @@ public class AdminController : Controller
         return View();
     }
 
-    // Admin Profile
+    // =======================================================================================================================================
+    // Admin Profile                        ==================================================================================================
+    // =======================================================================================================================================
     [Authorize]
     [Authorize(Roles = "Admin")]
     public IActionResult Profile()
@@ -175,7 +177,11 @@ public class AdminController : Controller
         return View();
     }
 
-    // Room Category
+    // =======================================================================================================================================
+
+    // =======================================================================================================================================
+    // Room Category                        ==================================================================================================
+    // =======================================================================================================================================
     public IActionResult RoomCategory(string? name, int page = 1)
     {
         // Searching ------------------------
@@ -211,7 +217,7 @@ public class AdminController : Controller
         return View();
     }
 
-    //// Room Category - Add | Post
+    // Room Category - Add | Post
     [HttpPost]
     public IActionResult AddRoomCategory(AddRoomCategoryVM vm)
     {
@@ -387,7 +393,6 @@ public class AdminController : Controller
         return View(vm);
     }
 
-
     // Room Category - Terminate | Post
     [HttpPost]
     public IActionResult TerminateRoomCategory(string? id)
@@ -420,7 +425,11 @@ public class AdminController : Controller
         return RedirectToAction("RoomCategory");
     }
 
-    // Room
+    // =======================================================================================================================================
+
+    // =======================================================================================================================================
+    // Room                                 ==================================================================================================
+    // =======================================================================================================================================
     public IActionResult Rooms(string? name, int page = 1)
     {
         // Searching ------------------------
@@ -578,7 +587,11 @@ public class AdminController : Controller
         return RedirectToAction("Rooms");
     }
 
-    // Service
+    // =======================================================================================================================================
+
+    // =======================================================================================================================================
+    // Service                              ==================================================================================================
+    // =======================================================================================================================================
     public IActionResult Services(string? name, int page = 1)
     {
         // (1) Searching ------------------------
@@ -740,7 +753,84 @@ public class AdminController : Controller
         return RedirectToAction("Services");
     }
 
-    // Booking
+    //Import - Service Function
+    [HttpPost]
+    public IActionResult Import_Service(IFormFile file)
+    {
+        if (file != null
+            && file.FileName.EndsWith(".txt")
+            && file.ContentType == "text/plain")
+        {
+            int n = ImportService(file);
+            TempData["Info"] = $"{n} services imported.";
+        }
+
+        return RedirectToAction("Services");
+    }
+
+    //Import - Service Logic
+    private int ImportService(IFormFile file)
+    {
+        // Read from uploaded file --> import services
+        // Return the number of new services inserted
+        using var stream = file.OpenReadStream();
+        using var reader = new StreamReader(stream);
+
+        int insertedCount = 0;
+
+        while (!reader.EndOfStream)
+        {
+            var line = reader.ReadLine()?.Trim() ?? "";
+
+            if (string.IsNullOrEmpty(line)) continue;
+
+            var data = line.Split("\t", StringSplitOptions.TrimEntries);
+
+            try
+            {
+                // Check if a service with the same ServiceID already exists
+                var existingService = db.Services.FirstOrDefault(s => s.ServiceID == data[0]);
+                if (existingService != null)
+                {
+                    Console.WriteLine($"Service with ID {data[0]} already exists. Skipping.");
+                    continue; // Skip to the next line if the service already exists
+                }
+
+                // Attempt to parse the price to a double
+                if (double.TryParse(data[2], out var price))
+                {
+                    db.Services.Add(new Service
+                    {
+                        ServiceID = data[0],
+                        ServiceName = data[1],
+                        UnitPrice = price,
+                        ServiceDescription = data[3],
+                        ServiceType = data[4],
+                        Category = data[5],
+                        Status = data[6]
+                    });
+
+                    insertedCount++; // Increment the count of inserted services
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid price format for service: {data[0]}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing line: {line}. Error: {ex.Message}");
+            }
+        }
+
+        return db.SaveChanges(); // Returns the number of records saved to the database
+    }
+
+    // =======================================================================================================================================
+
+    // =======================================================================================================================================
+    // Booking                              ==================================================================================================
+    // =======================================================================================================================================
     public IActionResult Bookings(string? name, int page = 1)
     {
         // (1) Searching ------------------------
@@ -768,11 +858,72 @@ public class AdminController : Controller
         return View(m);
     }
 
-    // User
-    public IActionResult Users()
+    // =======================================================================================================================================
+
+    // =======================================================================================================================================
+    // User                                 ==================================================================================================
+    // =======================================================================================================================================
+    public IActionResult Users(string? name, int page = 1)
     {
-        var m = db.Users.Where(u => u.Role == "Member").ToList();
+        // Searching ------------------------
+        ViewBag.Name = name = name?.Trim() ?? "";
+
+        var searched = db.Users
+                .Where(u => u.Role == "Member" && u.Name.Contains(name));
+
+        // Paging ---------------------------
+        if (page < 1)
+        {
+            return RedirectToAction(null, new { name, page = 1 });
+        }
+
+        var m = searched.ToPagedList(page, 10);
+
+        if (page > m.PageCount && m.PageCount > 0)
+        {
+            return RedirectToAction(null, new { name, page = m.PageCount });
+        }
+
+        if (Request.IsAjax())
+        {
+            return PartialView("_User", m);
+        }
 
         return View(m);
     }
+
+    // User - Terminate | Post
+    [HttpPost]
+    public IActionResult TerminateUser(string? id)
+    {
+        var u = db.Users.Find(id);
+
+        if (u != null)
+        {
+            u.Status = "Terminate";
+            db.SaveChanges();
+        }
+
+        TempData["Info"] = "User terminated.";
+        return RedirectToAction("Users");
+    }
+
+    // User - Activate | Post
+    [HttpPost]
+    public IActionResult ActivateUser(string? id)
+    {
+        var u = db.Users.Find(id);
+
+        if (u != null)
+        {
+            u.Status = "Active";
+            db.SaveChanges();
+        }
+
+        TempData["Info"] = "User activated.";
+        return RedirectToAction("Users");
+    }
+
+    // =======================================================================================================================================
+
 }
