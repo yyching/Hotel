@@ -28,7 +28,6 @@ public class OptVM
     public string Email { get; set; }
 
     [StringLength(6)]
-    [RegularExpression(@"6 digit")]
     [Display(Name = "OPT")]
     public string Opt { get; set; }
 }
@@ -44,7 +43,6 @@ public class RegisterVM
     public string Email { get; set; }
 
     [StringLength(11, MinimumLength = 10)]
-    [RegularExpression(@"10 or 11 digit")]
     [Display(Name = "Phone Number")]
     public string? PhoneNumber { get; set; }
 
@@ -88,7 +86,6 @@ public class UpdateProfileVM
     public string? Email { get; set; }
 
     [StringLength(11, MinimumLength = 10)]
-    [RegularExpression(@"10 or 11 digit")]
     public string? PhoneNumber { get; set; }
 
     public string? UserImage { get; set; }
