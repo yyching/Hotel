@@ -97,6 +97,11 @@ form .input-field {
         border: 1px solid #00bcd4;
     }
 
+.input-field span {
+    color: red;
+    font-size: 0.9em;
+}
+
 .input-field label {
     position: absolute;
     top: 50%;

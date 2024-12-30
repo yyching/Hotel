@@ -27,8 +27,8 @@ public class OptVM
     [Remote("CheckEmail", "Account", ErrorMessage = "Duplicated {0}.")]
     public string Email { get; set; }
 
-    [StringLength(11)]
-    [RegularExpression(@"^\d{6}$")]
+    [StringLength(6)]
+    [RegularExpression(@"6 digit")]
     [Display(Name = "OPT")]
     public string Opt { get; set; }
 }
@@ -44,7 +44,7 @@ public class RegisterVM
     public string Email { get; set; }
 
     [StringLength(11, MinimumLength = 10)]
-    [RegularExpression(@"^\d{10,11}$")]
+    [RegularExpression(@"10 or 11 digit")]
     [Display(Name = "Phone Number")]
     public string? PhoneNumber { get; set; }
 
@@ -88,7 +88,7 @@ public class UpdateProfileVM
     public string? Email { get; set; }
 
     [StringLength(11, MinimumLength = 10)]
-    [RegularExpression(@"^\d{10,11}$")]
+    [RegularExpression(@"10 or 11 digit")]
     public string? PhoneNumber { get; set; }
 
     public string? UserImage { get; set; }

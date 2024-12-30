@@ -19,6 +19,7 @@
         <h2>Edit Profile</h2>
         <form class="profile-content" method="post" enctype="multipart/form-data">
             <div class="profile-form">
+                <div asp-validation-summary="ModelOnly"></div>
                 <div class="form-group">
                     <label asp-for="Name"></label>
                     <input asp-for="Name" autofocus>
