@@ -1,0 +1,59 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<User>
+
+<table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>User Name</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var u in Model)
+        {
+            <tr class="@(u.Status == "Terminated" ? "table-danger" : "")">
+                <td>@u.UserID</td>
+                <td>@u.Name</td>
+                <td>@u.Email</td>
+                <td>@u.PhoneNumber</td>
+                <td>@u.Status</td>
+                <td>
+                    @if (u.Status == "Active")
+                    {
+                        <button data-post="/Admin/TerminateUser/@u.UserID" class="btn btn-danger btn-sm">Terminate</button>
+                    }
+                    else if (u.Status == "Terminate")
+                    {
+                        <button data-post="/Admin/ActivateUser/@u.UserID" class="btn btn-success btn-sm">Activate</button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var options = PagedListRenderOptions.ClassicPlusFirstAndLast;
+    options.LinkToFirstPageFormat = "First";
+    options.LinkToLastPageFormat = "Last";
+    options.LinkToPreviousPageFormat = "Previous";
+    options.LinkToNextPageFormat = "Next";
+
+    var ajaxOptions = new AjaxOptions
+            {
+                HttpMethod = "get",
+                UpdateTargetId = "target",
+                LoadingElementId = "#loader",
+            };
+}
+
+@Html.PagedListPager(
+        Model,
+        p => $"?name={ViewBag.Name}&page={p}",
+        PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(options, ajaxOptions)
+    )

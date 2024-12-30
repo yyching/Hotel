@@ -17,13 +17,28 @@
                               data-ajax-loading="#loader"
                               id="f">
                             @Html.TextBox("name", "",
-                                     new { type = "search", autofocus = "", data_trim = "" })
+                                     new { type = "search", autofocus = "", data_trim = "", @class = "au-input au-input--xl" })
 
                             <img src="/images/loader.gif" id="loader" style="display: none">
                         </form>
-                        <button id="addServiceBtn" class="au-btn au-btn-icon au-btn--blue">
-                            <i class="zmdi zmdi-plus"></i>add item
-                        </button>
+
+                        <div>
+                            <!-- Add Item Button -->
+                            <button id="addServiceBtn" class="au-btn au-btn-icon au-btn--blue">
+                                <i class="zmdi zmdi-plus"></i>Add Item
+                            </button>
+
+                            <!-- Import Button triggers the file input -->
+                            <button id="importBtn" class="au-btn au-btn-icon au-btn--green" onclick="triggerFileUpload()">
+                                <i class="zmdi zmdi-plus"></i>Import
+                            </button>
+
+                            <!-- Import Form -->
+                            <form id="importForm" method="post" action="/Admin/Import_Service" enctype="multipart/form-data" style="display: none;">
+                                <input type="file" name="file" accept="text/plain" id="fileInput" onchange="submitImportForm()">
+                                <!-- Hidden file input -->
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -42,5 +57,18 @@
             clearTimeout(timer);
             timer = setTimeout(() => $(e.target.form).submit(), 500);
         });
+
+        // Function to trigger the file input click when "Import" is clicked
+        function triggerFileUpload() {
+            document.getElementById('fileInput').click(); // Trigger the file input
+        }
+
+        // Function to submit the import form after a file is selected
+        function submitImportForm() {
+            const fileInput = document.getElementById('fileInput');
+            if (fileInput.files.length > 0) {
+                document.getElementById('importForm').submit(); // Submit the form if a file is selected
+            }
+        }
     </script>
 }
