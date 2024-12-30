@@ -106,26 +106,6 @@ namespace Hotel.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ServiceBooking",
-                columns: table => new
-                {
-                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ServiceBookingID = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Qty = table.Column<int>(type: "int", nullable: false),
-                    ServiceID = table.Column<string>(type: "nvarchar(100)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ServiceBooking", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_ServiceBooking_Services_ServiceID",
-                        column: x => x.ServiceID,
-                        principalTable: "Services",
-                        principalColumn: "ServiceID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Reviews",
                 columns: table => new
                 {
@@ -177,8 +157,7 @@ namespace Hotel.Migrations
                     TotalAmount = table.Column<double>(type: "float", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserID = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    RoomID = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    ServiceBookingID = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    RoomID = table.Column<string>(type: "nvarchar(100)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -190,11 +169,6 @@ namespace Hotel.Migrations
                         principalColumn: "RoomID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Bookings_ServiceBooking_ServiceBookingID",
-                        column: x => x.ServiceBookingID,
-                        principalTable: "ServiceBooking",
-                        principalColumn: "ID");
-                    table.ForeignKey(
                         name: "FK_Bookings_Users_UserID",
                         column: x => x.UserID,
                         principalTable: "Users",
@@ -202,15 +176,36 @@ namespace Hotel.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ServiceBooking",
+                columns: table => new
+                {
+                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Qty = table.Column<int>(type: "int", nullable: false),
+                    ServiceID = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    BookingID = table.Column<string>(type: "nvarchar(100)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServiceBooking", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_ServiceBooking_Bookings_BookingID",
+                        column: x => x.BookingID,
+                        principalTable: "Bookings",
+                        principalColumn: "BookingID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ServiceBooking_Services_ServiceID",
+                        column: x => x.ServiceID,
+                        principalTable: "Services",
+                        principalColumn: "ServiceID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_RoomID",
                 table: "Bookings",
                 column: "RoomID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bookings_ServiceBookingID",
-                table: "Bookings",
-                column: "ServiceBookingID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_UserID",
@@ -233,6 +228,11 @@ namespace Hotel.Migrations
                 column: "CategoryID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ServiceBooking_BookingID",
+                table: "ServiceBooking",
+                column: "BookingID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ServiceBooking_ServiceID",
                 table: "ServiceBooking",
                 column: "ServiceID");
@@ -247,31 +247,31 @@ namespace Hotel.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Bookings");
-
-            migrationBuilder.DropTable(
                 name: "CategoryImages");
 
             migrationBuilder.DropTable(
                 name: "Reviews");
 
             migrationBuilder.DropTable(
+                name: "ServiceBooking");
+
+            migrationBuilder.DropTable(
                 name: "Tokens");
 
             migrationBuilder.DropTable(
-                name: "Rooms");
+                name: "Bookings");
 
             migrationBuilder.DropTable(
-                name: "ServiceBooking");
+                name: "Services");
+
+            migrationBuilder.DropTable(
+                name: "Rooms");
 
             migrationBuilder.DropTable(
                 name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Categories");
-
-            migrationBuilder.DropTable(
-                name: "Services");
         }
     }
 }

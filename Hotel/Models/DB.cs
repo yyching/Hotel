@@ -137,12 +137,11 @@ public class Booking
     // Foreign Key
     public string UserID { get; set; }
     public string RoomID { get; set; }
-    public string? ServiceBookingID { get; set; }
 
     // Navigation
     public User User { get; set; }
     public Room Room { get; set; }
-    public ServiceBooking ServiceBooking { get; set; }
+    public List<ServiceBooking> ServiceBookings { get; set; }
 }
 
 public class Service
@@ -162,17 +161,18 @@ public class Service
     public List<ServiceBooking> ServiceBookings { get; set; }
 }
 
-public class ServiceBooking 
+public class ServiceBooking
 {
     // Column
+    [Key]
     public string ID { get; set; }
-    [MaxLength(100)]
-    public string ServiceBookingID { get; set; }
     public int Qty { get; set; }
 
     // Foreign Key
     public string ServiceID { get; set; }
+    public string BookingID { get; set; }
 
     // Navigation Properties
     public Service Service { get; set; }
+    public Booking Bookings { get; set; }
 }

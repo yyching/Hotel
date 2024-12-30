@@ -340,7 +340,6 @@ public class PaymentController : Controller
             .ToList();
         int sequence = todayBookings.Count + 1;
         var bookingID = $"BOK{sequence:D3}{now:yyyyMMdd}";
-        string? serviceBookingID = null;
 
         // store the food and room service to a list
         var allServices = new List<ServiceItem>();
@@ -357,24 +356,6 @@ public class PaymentController : Controller
             allServices.AddRange(roomServices);
         }
 
-        // store the service
-        foreach (var service in allServices)
-        {
-            serviceBookingID = $"SER{sequence:D3}{now:yyyyMMdd}";
-
-            if (service.quantity > 0)
-            {
-                var serviceBooking = new ServiceBooking
-                {
-                    ID = Guid.NewGuid().ToString(),
-                    ServiceBookingID = serviceBookingID,
-                    ServiceID = db.Services.First(s => s.ServiceName == service.serviceName).ServiceID,
-                    Qty = service.quantity
-                };
-                db.ServiceBooking.Add(serviceBooking);
-            }
-        }
-
         // store the booking
         var booking = new Booking
         {
@@ -386,9 +367,26 @@ public class PaymentController : Controller
             Status = "Paid",
             UserID = User.FindFirst("UserID")?.Value,
             RoomID = roomId,
-            ServiceBookingID = serviceBookingID
         };
         db.Bookings.Add(booking);
+
+        // store the service
+        foreach (var service in allServices)
+        {
+
+            if (service.quantity > 0)
+            {
+                var serviceBooking = new ServiceBooking
+                {
+                    ID = Guid.NewGuid().ToString(),
+                    ServiceID = db.Services.First(s => s.ServiceName == service.serviceName).ServiceID,
+                    Qty = service.quantity,
+                    BookingID = bookingID
+                };
+                db.ServiceBooking.Add(serviceBooking);
+            }
+        }
+
         db.SaveChanges();
 
         // send receipt to user gmail

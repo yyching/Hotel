@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.Migrations
 {
     [DbContext(typeof(DB))]
-    [Migration("20241227163631_CreateDB")]
+    [Migration("20241230191837_CreateDB")]
     partial class CreateDB
     {
         /// <inheritdoc />
@@ -44,9 +44,6 @@ namespace Hotel.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("ServiceBookingID")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -61,8 +58,6 @@ namespace Hotel.Migrations
                     b.HasKey("BookingID");
 
                     b.HasIndex("RoomID");
-
-                    b.HasIndex("ServiceBookingID");
 
                     b.HasIndex("UserID");
 
@@ -232,19 +227,20 @@ namespace Hotel.Migrations
                     b.Property<string>("ID")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("BookingID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<int>("Qty")
                         .HasColumnType("int");
-
-                    b.Property<string>("ServiceBookingID")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ServiceID")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("BookingID");
 
                     b.HasIndex("ServiceID");
 
@@ -323,10 +319,6 @@ namespace Hotel.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hotel.Models.ServiceBooking", "ServiceBooking")
-                        .WithMany()
-                        .HasForeignKey("ServiceBookingID");
-
                     b.HasOne("Hotel.Models.User", "User")
                         .WithMany("Bookings")
                         .HasForeignKey("UserID")
@@ -334,8 +326,6 @@ namespace Hotel.Migrations
                         .IsRequired();
 
                     b.Navigation("Room");
-
-                    b.Navigation("ServiceBooking");
 
                     b.Navigation("User");
                 });
@@ -375,11 +365,19 @@ namespace Hotel.Migrations
 
             modelBuilder.Entity("Hotel.Models.ServiceBooking", b =>
                 {
+                    b.HasOne("Hotel.Models.Booking", "Bookings")
+                        .WithMany("ServiceBookings")
+                        .HasForeignKey("BookingID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Hotel.Models.Service", "Service")
                         .WithMany("ServiceBookings")
                         .HasForeignKey("ServiceID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Bookings");
 
                     b.Navigation("Service");
                 });
@@ -393,6 +391,11 @@ namespace Hotel.Migrations
                         .IsRequired();
 
                     b.Navigation("user");
+                });
+
+            modelBuilder.Entity("Hotel.Models.Booking", b =>
+                {
+                    b.Navigation("ServiceBookings");
                 });
 
             modelBuilder.Entity("Hotel.Models.Category", b =>

@@ -537,7 +537,7 @@ namespace Hotel.Controllers
             foreach (var booking in bookings)
             {
                 var services = serviceBookings
-                    .Where(s => s.ServiceBookingID == booking.ServiceBookingID)
+                    .Where(s => s.BookingID == booking.BookingID)
                     .ToList();
 
                 if (services.Any())
@@ -575,6 +575,18 @@ namespace Hotel.Controllers
                     }
                 }
             }
+
+            var categoryImages = db.CategoryImages
+                           .Include(r => r.Category)
+                           .ToList();
+
+            var categoryImageDict = categoryImages
+                                    .GroupBy(ci => ci.CategoryID)
+                                    .Select(g => g.First())
+                                    .ToDictionary(ci => ci.CategoryID, ci => ci.ImagePath);
+
+            // Get the category Image
+            ViewBag.categoryImage = categoryImageDict;
 
             ViewBag.Bookings = bookings;
             ViewBag.BreakfastServices = breakfastDict;
@@ -614,10 +626,10 @@ namespace Hotel.Controllers
             double serviceSubtotal = 0;
 
             var allServices = new List<ServiceItem>();
-            if (!string.IsNullOrEmpty(booking.ServiceBookingID))
+            if (!string.IsNullOrEmpty(booking.BookingID))
             {
                 var services = db.ServiceBooking
-                    .Where(sb => sb.ServiceBookingID == booking.ServiceBookingID)
+                    .Where(sb => sb.BookingID == booking.BookingID)
                     .Include(sb => sb.Service)
                     .Select(sb => new ServiceItem
                     {

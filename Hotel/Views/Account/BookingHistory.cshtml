@@ -20,11 +20,11 @@
         {
             <div class="history-section">
                 <div class="status-header">
-                    <p class="booking-date">Booking Date: @booking.BookingDate.ToString("MMM dd, yyyy")</p>
+                    <h3 class="booking-date">Booking Date: @booking.BookingDate.ToString("MMM dd, yyyy")</h3>
                 </div>
                 <div class="content-section">
-                    <div class="image-container">
-                        <img src="/uploads/double.jpg">
+                    <div class="room-image">
+                        <img src="/uploads/@ViewBag.categoryImage[@booking.Room.Category.CategoryID]" class="room-image">
                     </div>
                     <div class="middle-section">
                         <h4>@booking.Room.Category.CategoryName (@booking.Room.Category.Theme)</h4>
