@@ -53,6 +53,18 @@ public class HomeController : Controller
 
         ViewBag.Room = categories;
 
+        var categoryImages = db.CategoryImages
+                            .Include(r => r.Category)
+                            .ToList();
+
+        var categoryImageDict = categoryImages
+                                .GroupBy(ci => ci.CategoryID)
+                                .Select(g => g.First())
+                                .ToDictionary(ci => ci.CategoryID, ci => ci.ImagePath);
+
+        // Get the category Image
+        ViewBag.categoryImage = categoryImageDict;
+
         var vm = new HomePageVM
         {
             SearchVM = new RoomSearchVM
@@ -122,6 +134,18 @@ public class HomeController : Controller
                     .GroupBy(r => r.Category.CategoryID)
                     .Select(g => g.First().Category)
                     .ToList();
+
+        var categoryImages = db.CategoryImages
+                           .Include(r => r.Category)
+                           .ToList();
+
+        var categoryImageDict = categoryImages
+                                .GroupBy(ci => ci.CategoryID)
+                                .Select(g => g.First())
+                                .ToDictionary(ci => ci.CategoryID, ci => ci.ImagePath);
+
+        // Get the category Image
+        ViewBag.categoryImage = categoryImageDict;
 
         // Get themes for room
         ViewBag.Themes = db.Categories
@@ -338,6 +362,7 @@ public class HomeController : Controller
     public IActionResult RoomDetailsPage(string categoryID, DateOnly? CheckInDate, DateOnly? CheckOutDate, DateOnly? month, 
                                          string[]? foodServiceIds, int[]? foodQuantities, string[]? roomServiceIds, int[]? roomQuantities)
     {
+        // show the reservation table
         var m = month.GetValueOrDefault(DateTime.Today.ToDateOnly());
         // Min = First day of the month
         // Max = First day of next month
@@ -368,7 +393,7 @@ public class HomeController : Controller
         }
         ViewBag.RoomReservations = dict;
 
-        // Get the room from roomID
+        // Get the category from categoryID
         var categories = db.Categories
         .FirstOrDefault(c => c.CategoryID == categoryID);
 
@@ -379,6 +404,20 @@ public class HomeController : Controller
             TempData["Info"] = "Invalid Room";
             return RedirectToAction("RoomPage", "Home");
         }
+
+        // Get the first ImagePath
+        var categoryImagePath = db.CategoryImages
+                          .Where(ci => ci.CategoryID == categoryID)
+                          .Select(ci => ci.ImagePath)
+                          .FirstOrDefault();
+        ViewBag.CategoryImagePath = categoryImagePath;
+
+        // Get the ImagePath list
+        var categoryImagePaths = db.CategoryImages
+                           .Where(ci => ci.CategoryID == categoryID)
+                           .Select(ci => ci.ImagePath)
+                           .ToList();
+        ViewBag.CategotyImagePaths = categoryImagePaths;
 
         // Get distinct categories for food services
         ViewBag.breakfastServices = db.Services
@@ -463,68 +502,6 @@ public class HomeController : Controller
                 roomQuantities = sm.RoomQuantities
             });
         }
-
-        var m = month.GetValueOrDefault(DateTime.Today.ToDateOnly());
-        var min = new DateOnly(m.Year, m.Month, 1);
-        var max = min.AddMonths(1);
-        ViewBag.Min = min;
-        ViewBag.Max = max;
-
-        var rooms = db.Rooms
-           .Where(rm => rm.CategoryID == categoryID)
-           .OrderBy(rm => rm.RoomNumber)
-           .ToList();
-
-        var dict = rooms.ToDictionary(rm => rm, rn => new List<DateOnly>());
-
-        var roomIds = rooms.Select(r => r.RoomID).ToList();
-
-        var reservations = db.Bookings
-           .Where(rs => roomIds.Contains(rs.RoomID))
-           .Where(rs => rs.CheckInDate < max && min < rs.CheckOutDate);
-
-        foreach (var rs in reservations)
-        {
-            for (var d = rs.CheckInDate; d < rs.CheckOutDate; d = d.AddDays(1))
-            {
-                dict[rs.Room].Add(d);
-            }
-        }
-        ViewBag.RoomReservations = dict;
-
-        // Get the room from roomID
-        var categories = db.Categories
-        .FirstOrDefault(c => c.CategoryID == categoryID);
-
-        ViewBag.Categories = categories;
-
-        if (categories == null)
-        {
-            TempData["Info"] = "Invalid Room";
-            return RedirectToAction("RoomPage", "Home");
-        }
-
-        // Get distinct categories for food services
-        ViewBag.breakfastServices = db.Services
-       .Where(s => s.Category == "Breakfast" && s.Status == "Active")
-       .ToList();
-
-        // Get distinct categories for food services
-        ViewBag.lunchServices = db.Services
-       .Where(s => s.Category == "Lunch" && s.Status == "Active")
-       .ToList();
-
-        // Get distinct categories for food services
-        ViewBag.dinnerServices = db.Services
-       .Where(s => s.Category == "Dinner" && s.Status == "Active")
-       .ToList();
-
-        // Get room services (ServiceType == "Room")
-        var roomServices = db.Services
-        .Where(s => s.ServiceType == "Room" && s.Status == "Active")
-        .ToList();
-
-        ViewBag.RoomServices = roomServices;
 
         return View();
     }

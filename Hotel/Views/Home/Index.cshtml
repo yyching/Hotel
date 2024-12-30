@@ -128,7 +128,7 @@
     @foreach (var category in ViewBag.Room)
     {
         <div class="room-card">
-            <div class="room-image" style="background-image: url('/uploads/double.jpg')"></div>
+            <div class="room-image" style="background-image: url('/uploads/@ViewBag.categoryImage[@category.CategoryID]')"></div>
             <div class="room-overlay">
                 <h2 class="room-title">@category.CategoryName</h2>
                 <div class="room-price">RM @category.PricePerNight/Pernight</div>

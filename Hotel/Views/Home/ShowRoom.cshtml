@@ -17,7 +17,7 @@
         @foreach (var category in ViewBag.Categories)
         {
             <tr>
-                <td><img src='/uploads/double.jpg' alt="Hotel 1" class="hotel-image"></td>
+                <td><img src='/uploads/@ViewBag.categoryImage[@category.CategoryID]' alt="Hotel 1" class="hotel-image"></td>
                 <td>@category.CategoryName</td>
                 <td>@category.Theme</td>
                 <td>@category.Size sq. ft.</td>

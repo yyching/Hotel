@@ -16,7 +16,7 @@
 <!-- Room Section -->
 <div class="room-container">
     <div class="room-image">
-        <img src="/uploads/double.jpg" alt="Room Image">
+        <img src="/uploads/@ViewBag.CategoryImagePath" alt="Room Image">
     </div>
     <div class="room-details">
         <h1>@ViewBag.Categories.CategoryName</h1>
@@ -39,14 +39,10 @@
     <div class="more-images">
         <h2>More Images</h2>
         <div class="image-grid">
-            <img src="/img/RoomImg/double.jpg" alt="Image 1">
-            <img src="/img/RoomImg/double_nature.jpg" alt="Image 2">
-            <img src="/img/RoomImg/family.jpg" alt="Image 3">
-            <img src="/img/RoomImg/family_nature.jpg" alt="Image 4">
-            <img src="/img/RoomImg/premingking_nature.jpg" alt="Image 5">
-            <img src="/img/RoomImg/Premium King.jpg" alt="Image 6">
-            <img src="/img/RoomImg/single.jpg" alt="Image 6">
-            <img src="/img/RoomImg/single_nature.jpg" alt="Image 6">
+            @foreach (var imagePath in ViewBag.CategotyImagePaths)
+            {
+            <img src="/uploads/@imagePath" alt="Room Image">
+            }
         </div>
     </div>
 </div>
