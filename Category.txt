@@ -1,10 +1,10 @@
 Category :
 
-RCT001	Single Room	City	25	1	Double Bed	WIFI, Television, Bathroom	199.0	single.jpg	Active
-RCT002	Double Room	City	30	2	King Bed	WIFI, Television, Bathroom	159.0	double.jpg	Active
-RCT003	Family Room	City	35	5	Queen Bed	WIFI, Television, Bathroom, Mini Bar	198.0	family.jpg	Active
-RCT004	Premium King Room	City	45	6	King Bed + 2 Single Beds	WIFI, Television, Bathroom, Balcony	299.0	premiumKing.jpg	Active
-RCT005	Single Room	Nature	25	1	Double Bed	WIFI, Television, Bathroom	199.0	single_nature.jpg	Active
-RCT006	Double Room	Nature	30	2	King Bed	WIFI, Television, Bathroom	159.0	double_nature.jpg	Active
-RCT007	Family Room	Nature	35	5	Queen Bed	WIFI, Television, Bathroom, Mini Bar	198.0	family_nature.jpg	Active
-RCT008	Premium King Room	Nature	45	6	King Bed + 2 Single Beds	WIFI, Television, Bathroom, Balcony	299.0	premiumking_nature.jpg	Active
+RCT001	Single Room	City	25	1	Double Bed	WIFI, Television, Bathroom	199.0	Active
+RCT002	Double Room	City	30	2	King Bed	WIFI, Television, Bathroom	159.0	Active
+RCT003	Family Room	City	35	5	Queen Bed	WIFI, Television, Bathroom, Mini Bar	198.0	Active
+RCT004	Premium King Room	City	45	6	King Bed + 2 Single Beds	WIFI, Television, Bathroom, Balcony	299.0	Active
+RCT005	Single Room	Nature	25	1	Double Bed	WIFI, Television, Bathroom	199.0	Active
+RCT006	Double Room	Nature	30	2	King Bed	WIFI, Television, Bathroom	159.0	Active
+RCT007	Family Room	Nature	35	5	Queen Bed	WIFI, Television, Bathroom, Mini Bar	198.0	Active
+RCT008	Premium King Room	Nature	45	6	King Bed + 2 Single Beds	WIFI, Television, Bathroom, Balcony	299.0	Active
