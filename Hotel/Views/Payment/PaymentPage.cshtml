@@ -17,6 +17,45 @@
     <form class="right-side" method="post" action="/Payment/CreateCheckoutSession">
         <div class="receipt">
             <div>
+                @{
+                    var url = $"/Home/RoomDetailsPage?CategoryID={ViewBag.categoryID}&CheckInDate={ViewBag.checkIn:yyyy-MM-dd}&CheckOutDate={ViewBag.checkOut:yyyy-MM-dd}";
+
+                    var parameters = new System.Text.StringBuilder();
+
+                    if (ViewBag.foodServiceIds != null)
+                    {
+                        foreach (var id in ViewBag.foodServiceIds)
+                        {
+                            parameters.Append("&FoodServiceIds=").Append(id);
+                        }
+                    }
+
+                    if (ViewBag.foodQuantities != null)
+                    {
+                        foreach (var q in ViewBag.foodQuantities)
+                        {
+                            parameters.Append("&FoodQuantities=").Append(q);
+                        }
+                    }
+
+                    if (ViewBag.roomServiceIds != null)
+                    {
+                        foreach (var id in ViewBag.roomServiceIds)
+                        {
+                            parameters.Append("&RoomServiceIds=").Append(id);
+                        }
+                    }
+
+                    if (ViewBag.roomQuantities != null)
+                    {
+                        foreach (var q in ViewBag.roomQuantities)
+                        {
+                            parameters.Append("&RoomQuantities=").Append(q);
+                        }
+                    }
+                }
+                <a href="@(url + parameters.ToString())" class="back">X</a>
+
                 <h2 class="receipt-heading">Receipt Summary</h2>
                 <h3>
                     @ViewBag.roomCategory

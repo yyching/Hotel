@@ -1,0 +1,35 @@
+﻿@model OptVM
+
+@{
+    Layout = "_Layout2";
+    ViewBag.Title = "Register";
+}
+<link rel="stylesheet" href="/css/LoginRegister.css" asp-append-version="true">
+
+<div class="form-popup" style="margin: 150px auto;">
+    <div class="form-box login">
+        <div class="form-details">
+            <h2>Welcome Back</h2>
+            <p>Please log in using your personal information to stay connected with us.</p>
+        </div>
+        <div class="form-content">
+            <h2>Register</h2>
+            <a href="/Account/SendOtp?Email=@ViewBag.Email" class="back">X</a>
+            <form method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly"></div>
+
+                <div class="input-field">
+                    <input asp-for="Email" readonly />
+                </div>
+
+                <div class="input-field">
+                    <input asp-for="Opt" />
+                    <span asp-validation-for="Opt"></span>
+                    <label asp-for="Opt"></label>
+                </div>
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>

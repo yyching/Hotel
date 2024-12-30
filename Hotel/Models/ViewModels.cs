@@ -20,6 +20,18 @@ public class LoginVM
     public bool RememberMe { get; set; }
 }
 
+public class OptVM
+{
+    [StringLength(100)]
+    [EmailAddress]
+    [Remote("CheckEmail", "Account", ErrorMessage = "Duplicated {0}.")]
+    public string Email { get; set; }
+
+    [StringLength(6)]
+    [Display(Name = "OPT")]
+    public string Opt { get; set; }
+}
+
 public class RegisterVM
 {
     [StringLength(100)]
@@ -31,7 +43,6 @@ public class RegisterVM
     public string Email { get; set; }
 
     [StringLength(11, MinimumLength = 10)]
-    [RegularExpression(@"^\d{10,11}$")]
     [Display(Name = "Phone Number")]
     public string? PhoneNumber { get; set; }
 
@@ -75,7 +86,6 @@ public class UpdateProfileVM
     public string? Email { get; set; }
 
     [StringLength(11, MinimumLength = 10)]
-    [RegularExpression(@"^\d{10,11}$")]
     public string? PhoneNumber { get; set; }
 
     public string? UserImage { get; set; }

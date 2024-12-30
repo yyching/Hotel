@@ -41,6 +41,7 @@ $('#SearchVM_CheckInDate,#SearchVM_CheckOutDate').on('input', e => {
 // 5. Run #CheckIn input event for once
 $('#SearchVM_CheckInDate').trigger('input');
 
+
 const rangeInput = document.querySelectorAll(".range-input input"),
     priceInput = document.querySelectorAll(".price-input input"),
     range = document.querySelector(".slider .progress");
@@ -111,7 +112,7 @@ const updatePriceFilter = debounce(() => {
             window.history.pushState({}, '', `${url.pathname}?${params.toString()}`);
         })
         .catch(error => console.error('Error:', error));
-}, 1000);
+}, 1000); // 1 second
 
 priceInput.forEach((input) => {
     input.addEventListener("input", (e) => {

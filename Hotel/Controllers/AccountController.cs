@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using iText.Html2pdf;
 using iText.Kernel.Pdf;
 using Stripe;
+using System;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Hotel.Controllers
 {
@@ -18,12 +20,15 @@ namespace Hotel.Controllers
         private readonly DB db;
         private readonly IWebHostEnvironment en;
         private readonly Helper hp;
+        private readonly IMemoryCache cache;
+        private const int OTP_VALIDITY_MINUTES = 1;
 
-        public AccountController(DB db, IWebHostEnvironment en, Helper hp)
+        public AccountController(DB db, IWebHostEnvironment en, Helper hp, IMemoryCache cache)
         {
             this.db = db;
             this.en = en;
             this.hp = hp;
+            this.cache = cache;
         }
 
 
@@ -89,8 +94,112 @@ namespace Hotel.Controllers
             return !db.Users.Any(u => u.Email == email);
         }
 
+        // GET: Account/SendOtp
+        public IActionResult SendOtp(string? email)
+        {
+            return View();
+        }
+
+        // POST: Account/SendOtp
+        [HttpPost]
+        public IActionResult SendOTP(OptVM model)
+        {
+            if (string.IsNullOrEmpty(model.Email))
+            {
+                TempData["Info"] = "Please enter an email address";
+                return View();
+            }
+
+            try
+            {
+                // Generate OTP
+                Random random = new Random();
+                string otp = random.Next(100000, 999999).ToString();
+
+                // Save OTP to cache with 5 minutes expiration
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(OTP_VALIDITY_MINUTES));
+
+                cache.Set($"OTP_{model.Email}", otp, cacheOptions);
+
+                // Create and send email
+                var mail = new MailMessage();
+                mail.To.Add(new MailAddress(model.Email));
+                mail.Subject = "Verification Code - Account Registration";
+                mail.IsBodyHtml = true;
+                mail.Body = $@"
+                <html>
+                <body style='font-family: Arial, sans-serif;'>
+                    <div style='padding: 20px; background-color: #f5f5f5;'>
+                        <h2 style='color: #333;'>Verify Your Email</h2>
+                        <p>Your verification code is:</p>
+                        <h1 style='color: #007bff; font-size: 32px; letter-spacing: 5px;'>{otp}</h1>
+                        <p>This code will expire in {OTP_VALIDITY_MINUTES} minutes.</p>
+                        <p style='color: #666; font-size: 12px;'>If you didn't request this code, please ignore this email.</p>
+                    </div>
+                </body>
+                </html>";
+
+                hp.SendEmail(mail);
+
+                var email = model.Email;
+
+                TempData["Info"] = "OTP send to your email";
+                return RedirectToAction("VerifyOtp", new { Email = email});
+            }
+            catch (Exception ex)
+            {
+                TempData["Info"] = "Failed to send verification code. Please try again.";
+                return View();
+            }
+        }
+
+        // GET: Account/VerifyOtp
+        public IActionResult VerifyOtp(string email)
+        {
+            ViewBag.Email = email;
+            return View();
+        }
+
+        // POST: Account/VerifyOtp
+        [HttpPost]
+        public IActionResult VerifyOTP(OptVM model)
+        {
+            try
+            {
+                var email = model.Email;
+
+                // get the opt form the memory
+                if (!cache.TryGetValue($"OTP_{model.Email}", out string storedOTP))
+                {
+                    TempData["Info"] = "Verification code has expired. Please request a new one.";
+                    return RedirectToAction("SendOtp", new { Email = email});
+                }
+
+                // verify opt
+                if (model.Opt != storedOTP)
+                {
+                    TempData["Info"] = "Invalid verification code";
+                    ViewBag.Email = email;
+                    return View();
+                }
+
+                // remove the opt if success
+                cache.Remove($"OTP_{model.Email}");
+
+                TempData["Info"] = "Email verified successfully";
+                return RedirectToAction("Register", new { Email = email });
+            }
+            catch (Exception ex)
+            {
+                TempData["Info"] = "An error occurred during verification";
+                ViewBag.Email = model.Email;
+                return View();
+            }
+        }
+
         // GET: Account/Register
-        public IActionResult Register()
+        public IActionResult Register(string email)
         {
             return View();
         }
@@ -163,10 +272,33 @@ namespace Hotel.Controllers
             return View(vm);
         }
 
-        // POST: Account/UpdateProfile
+        // GET: Account/EditProfile
+        [Authorize]
+        [Authorize(Roles = "Member")]
+        public IActionResult EditProfile()
+        {
+            var userId = User.FindFirst("UserID")?.Value;
+            if (string.IsNullOrEmpty(userId)) return RedirectToAction("Index", "Home");
+
+            // Get member record based on UserID
+            var m = db.Users.FirstOrDefault(u => u.UserID == userId);
+            if (m == null) return RedirectToAction("Index", "Home");
+
+            var vm = new UpdateProfileVM
+            {
+                Email = m.Email,
+                Name = m.Name,
+                PhoneNumber = m.PhoneNumber,
+                UserImage = m.UserImage,
+            };
+
+            return View(vm);
+        }
+
+        // POST: Account/EditProfile
         [Authorize(Roles = "Member")]
         [HttpPost]
-        public IActionResult Profile(UpdateProfileVM vm)
+        public IActionResult EditProfile(UpdateProfileVM vm)
         {
             var userId = User.FindFirst("UserID")?.Value;
             if (string.IsNullOrEmpty(userId)) return RedirectToAction("Index", "Home");
@@ -201,7 +333,7 @@ namespace Hotel.Controllers
                 db.SaveChanges();
 
                 TempData["Info"] = "Profile updated.";
-                return RedirectToAction();
+                return RedirectToAction("Profile", "Account");
             }
 
             vm.Name = m.Name;
@@ -434,9 +566,13 @@ namespace Hotel.Controllers
                         dinnerDict[booking.BookingID] = dinnerServices;
                     }
 
-                    roomDict[booking.BookingID] = services
+                    var roomServices = services
                         .Where(s => s.Service.ServiceType == "Room" && s.Qty >= 1)
                         .ToDictionary(s => s.Service.ServiceName, s => s.Qty);
+                    if (roomServices.Any())
+                    {
+                        roomDict[booking.BookingID] = roomServices;
+                    }
                 }
             }
 
@@ -471,6 +607,7 @@ namespace Hotel.Controllers
             DateOnly checkInDate = booking.CheckInDate;
             DateOnly checkOutDate = booking.CheckOutDate;
             var roomNumber = booking.Room.RoomNumber;
+            var pricePerNight = booking.Room.Category.PricePerNight;
 
             int numberOfDays = checkOutDate.DayNumber - checkInDate.DayNumber;
             double roomTotalPrice = booking.Room.Category.PricePerNight * numberOfDays;
@@ -507,6 +644,7 @@ namespace Hotel.Controllers
                     checkInDate,
                     checkOutDate,
                     roomNumber,
+                    pricePerNight,
                     allServices,
                     subtotal,
                     tax,

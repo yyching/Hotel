@@ -1,8 +1,8 @@
-﻿@model SendEmailVM
+﻿@model OptVM
 
 @{
     Layout = "_Layout2";
-    ViewBag.Title = "Reset Password";
+    ViewBag.Title = "Register";
 }
 <link rel="stylesheet" href="/css/LoginRegister.css" asp-append-version="true">
 
@@ -13,16 +13,23 @@
             <p>Please log in using your personal information to stay connected with us.</p>
         </div>
         <div class="form-content">
-            <h2>RESET PASSWORD</h2>
-            <a href="/Account/Login" class="back">X</a>
-            <form method="post">
+            <h2>Register</h2>
+            <form method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly"></div>
+
                 <div class="input-field">
-                    <input asp-for="Email" autofocus/>
+                    <input asp-for="Email" />
                     <span asp-validation-for="Email"></span>
                     <label asp-for="Email"></label>
                 </div>
+
                 <button type="submit">Submit</button>
             </form>
+
+            <div class="bottom-link">
+                Don't have an account?
+                <a href="Login" id="signup-link">Log In</a>
+            </div>
         </div>
     </div>
 </div>

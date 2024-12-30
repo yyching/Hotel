@@ -32,9 +32,46 @@
             <div class="nav-login">
                 @if (User.IsInRole("Member"))
                 {
-                    <a href="/Account/Profile" class="login-button">Profile</a>
-                    <a href="/Account/Logout" class="login-button">Logout</a>
-                }else{
+                    <label for="dropdownToggle" class="more-icon">
+                        <i class="fa fa-bars"></i>
+                    </label>
+
+                    <input type="checkbox" id="dropdownToggle" class="dropdown-toggle">
+
+                    <div class="account-dropdown">
+                        <div class="user-details">
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                                var user = db.Users.FirstOrDefault(u => u.Email == User.Identity.Name);
+
+                                if (user != null)
+                                {
+                                    <div class="profile-info">
+                                        <div class="image">
+                                            <img src="@Url.Content("~/photos/" + user.UserImage)" alt="Profile Picture" />
+                                        </div>
+                                        <label class="js-acc-btn">@user.Name</label>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="account-dropdown__body">
+                            <div class="account-dropdown__item">
+                                <a href="/Account/Profile">
+                                    <i class="fas fa-user"></i> Account
+                                </a>
+                            </div>
+                        </div>
+                        <div class="account-dropdown__footer">
+                            <a href="/Account/Logout">
+                                <i class="fas fa-power-off"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+
+                }
+                else
+                {
                     <a href="/Account/Login" class="login-button">Login</a>
                 }
             </div>
