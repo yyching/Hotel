@@ -177,7 +177,7 @@ namespace Hotel.Controllers
                 }
 
                 // verify opt
-                if (model.Opt != storedOTP)
+                if (model.Otp != storedOTP)
                 {
                     TempData["Info"] = "Invalid verification code";
                     ViewBag.Email = email;

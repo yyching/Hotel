@@ -13,7 +13,8 @@ public class LoginVM
     [EmailAddress]
     public string Email { get; set; }
 
-    [StringLength(100, MinimumLength = 5)]
+    [StringLength(100, MinimumLength = 5, ErrorMessage = "The password must be more than 5 characters.")]
+    [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$", ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, and one digit.")]
     [DataType(DataType.Password)]
     public string Password { get; set; }
 
@@ -27,9 +28,10 @@ public class OptVM
     [Remote("CheckEmail", "Account", ErrorMessage = "Duplicated {0}.")]
     public string Email { get; set; }
 
-    [StringLength(6)]
-    [Display(Name = "OPT")]
-    public string Opt { get; set; }
+    [StringLength(6, ErrorMessage = "OPT must be 6 characters long.")]
+    [RegularExpression(@"^\d{6}$", ErrorMessage = "OPT must be exactly 6 digits.")]
+    [Display(Name = "OTP")]
+    public string Otp { get; set; }
 }
 
 public class RegisterVM
@@ -42,11 +44,13 @@ public class RegisterVM
     [Remote("CheckEmail", "Account", ErrorMessage = "Duplicated {0}.")]
     public string Email { get; set; }
 
-    [StringLength(11, MinimumLength = 10)]
+    [StringLength(11, MinimumLength = 10, ErrorMessage = "Phone number must be between 10 and 11 characters.")]
+    [RegularExpression(@"^\d+$", ErrorMessage = "Phone number can only contain digits.")]
     [Display(Name = "Phone Number")]
     public string? PhoneNumber { get; set; }
 
-    [StringLength(100, MinimumLength = 5)]
+    [StringLength(100, MinimumLength = 5, ErrorMessage = "The password must be more than 5 characters.")]
+    [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$", ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, and one digit.")]
     [DataType(DataType.Password)]
     public string Password { get; set; }
 
@@ -59,17 +63,19 @@ public class RegisterVM
 
 public class UpdatePasswordVM
 {
-    [StringLength(100, MinimumLength = 5)]
-    [DataType(DataType.Password)]
+    [StringLength(100, MinimumLength = 5, ErrorMessage = "The password must be more than 5 characters.")]
+    [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$", ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, and one digit.")]
     [Display(Name = "Current Password")]
     public string Current { get; set; }
 
-    [StringLength(100, MinimumLength = 5)]
+    [StringLength(100, MinimumLength = 5, ErrorMessage = "The password must be more than 5 characters.")]
+    [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$", ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, and one digit.")]
     [DataType(DataType.Password)]
     [Display(Name = "New Password")]
     public string New { get; set; }
 
-    [StringLength(100, MinimumLength = 5)]
+    [StringLength(100, MinimumLength = 5, ErrorMessage = "The password must be more than 5 characters.")]
+    [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$", ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, and one digit.")]
     [Compare("New")]
     [DataType(DataType.Password)]
     [Display(Name = "Confirm Password")]
@@ -81,11 +87,11 @@ public class UpdateProfileVM
     [StringLength(100)]
     public string? Name { get; set; }
 
-    [StringLength(100)]
-    [EmailAddress]
     public string? Email { get; set; }
 
-    [StringLength(11, MinimumLength = 10)]
+    [StringLength(11, MinimumLength = 10, ErrorMessage = "Phone number must be between 10 and 11 characters.")]
+    [RegularExpression(@"^\d+$", ErrorMessage = "Phone number can only contain digits.")]
+    [Display(Name = "Phone Number")]
     public string? PhoneNumber { get; set; }
 
     public string? UserImage { get; set; }
