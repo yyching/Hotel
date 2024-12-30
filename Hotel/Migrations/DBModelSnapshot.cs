@@ -42,7 +42,7 @@ namespace Hotel.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("ServiceBookingID")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -58,6 +58,8 @@ namespace Hotel.Migrations
                     b.HasKey("BookingID");
 
                     b.HasIndex("RoomID");
+
+                    b.HasIndex("ServiceBookingID");
 
                     b.HasIndex("UserID");
 
@@ -90,10 +92,6 @@ namespace Hotel.Migrations
                     b.Property<double>("PricePerNight")
                         .HasColumnType("float");
 
-                    b.Property<string>("RoomImage")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Size")
                         .HasColumnType("int");
 
@@ -108,6 +106,29 @@ namespace Hotel.Migrations
                     b.HasKey("CategoryID");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("Hotel.Models.CategoryImage", b =>
+                {
+                    b.Property<int>("ImageID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageID"));
+
+                    b.Property<string>("CategoryID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ImageID");
+
+                    b.HasIndex("CategoryID");
+
+                    b.ToTable("CategoryImages");
                 });
 
             modelBuilder.Entity("Hotel.Models.Review", b =>
@@ -299,6 +320,10 @@ namespace Hotel.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Hotel.Models.ServiceBooking", "ServiceBooking")
+                        .WithMany()
+                        .HasForeignKey("ServiceBookingID");
+
                     b.HasOne("Hotel.Models.User", "User")
                         .WithMany("Bookings")
                         .HasForeignKey("UserID")
@@ -307,7 +332,20 @@ namespace Hotel.Migrations
 
                     b.Navigation("Room");
 
+                    b.Navigation("ServiceBooking");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Hotel.Models.CategoryImage", b =>
+                {
+                    b.HasOne("Hotel.Models.Category", "Category")
+                        .WithMany("CategoryImages")
+                        .HasForeignKey("CategoryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Hotel.Models.Review", b =>
@@ -356,6 +394,8 @@ namespace Hotel.Migrations
 
             modelBuilder.Entity("Hotel.Models.Category", b =>
                 {
+                    b.Navigation("CategoryImages");
+
                     b.Navigation("Rooms");
                 });
 

@@ -211,46 +211,66 @@ public class AdminController : Controller
         return View();
     }
 
-    // Room Category - Add | Post
+    //// Room Category - Add | Post
     [HttpPost]
     public IActionResult AddRoomCategory(AddRoomCategoryVM vm)
     {
-        if (vm.Photo != null)
+        if (vm.Photos != null && vm.Photos.Any())
         {
-            var err = hp.ValidatePhoto(vm.Photo);
-            if (err != "") ModelState.AddModelError("Photo", err);
+            foreach (var photo in vm.Photos)
+            {
+                var err = hp.ValidatePhoto(photo); // Assuming `ValidatePhoto` checks the file
+                if (!string.IsNullOrEmpty(err))
+                {
+                    ModelState.AddModelError("Photos", err);
+                    break;
+                }
+            }
         }
 
-        if (ModelState.IsValid) 
+        if (ModelState.IsValid)
         {
-            // Generate random ID
+            // Handle category creation logic
             var random = new Random();
-            // Generate a random number
             string randomPart = random.Next(100, 999).ToString();
-
-            // Get the current date and time
             string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
-
-            // Combine to form the new ID
             string newID = $"RCT{randomPart}{timestamp}";
 
-            db.Categories.Add(new() 
+            var category = new Category
             {
-                CategoryID      = newID,
-                CategoryName    = vm.categoryName,
-                Theme           = vm.theme,
-                Size            = vm.size,
-                Capacity        = vm.capacity,
-                Bed             = vm.bed,
-                Description     = vm.description,
-                PricePerNight   = vm.price,
-                RoomImage       = hp.SavePhoto(vm.Photo, "uploads"),
-                Status          = "Active",
-            });
+                CategoryID = newID,
+                CategoryName = vm.categoryName,
+                Theme = vm.theme,
+                Size = vm.size,
+                Capacity = vm.capacity,
+                Bed = vm.bed,
+                Description = vm.description,
+                PricePerNight = vm.price,
+                Status = "Active",
+            };
 
+            db.Categories.Add(category);
             db.SaveChanges();
 
-            TempData["Info"] = "Room Category added successfully";
+            // Process and Save Photos
+            if (vm.Photos != null && vm.Photos.Any())
+            {
+                foreach (var photo in vm.Photos)
+                {
+                    var savedFileName = hp.SavePhoto(photo, "uploads");
+
+                    var categoryImage = new CategoryImage
+                    {
+                        ImagePath = savedFileName,
+                        CategoryID = newID,
+                    };
+
+                    db.CategoryImages.Add(categoryImage);
+                    db.SaveChanges();
+                }
+            }
+
+            TempData["Info"] = "Room Category added successfully with images.";
             return RedirectToAction("RoomCategory");
         }
 
@@ -258,9 +278,11 @@ public class AdminController : Controller
     }
 
     // Room Category - Update | Get
-    public IActionResult UpdateRoomCategory(string? id) 
-    { 
-        var rc = db.Categories.Find(id);
+    public IActionResult UpdateRoomCategory(string? id)
+    {
+        var rc = db.Categories
+                   .Include(c => c.CategoryImages)  // Ensure CategoryImages are included
+                   .FirstOrDefault(c => c.CategoryID == id);
 
         if (rc == null)
         {
@@ -269,15 +291,16 @@ public class AdminController : Controller
 
         var vm = new UpdateRoomCategoryVM
         {
-            categoryID      = rc.CategoryID,
-            categoryName    = rc.CategoryName,
-            theme           = rc.Theme,
-            size            = rc.Size,
-            capacity        = rc.Capacity,
-            bed             = rc.Bed,
-            description     = rc.Description,
-            price           = rc.PricePerNight,
-            roomImage       = rc.RoomImage,
+            categoryID = rc.CategoryID,
+            categoryName = rc.CategoryName,
+            theme = rc.Theme,
+            size = rc.Size,
+            capacity = rc.Capacity,
+            bed = rc.Bed,
+            description = rc.Description,
+            price = rc.PricePerNight,
+            CategoryImages = rc.CategoryImages,
+            OldImagePaths = rc.CategoryImages?.Select(ci => ci.ImagePath).ToList()  // Old image paths
         };
 
         return View(vm);
@@ -289,35 +312,81 @@ public class AdminController : Controller
     {
         var rc = db.Categories.Find(vm.categoryID);
 
-        if (vm.Photo != null)
+        if (rc == null)
         {
-            // TODO
-            var e = hp.ValidatePhoto(vm.Photo);
-            if (e != "") ModelState.AddModelError("Photo", e);
+            TempData["Error"] = "Room category not found.";
+            return RedirectToAction("RoomCategory");
         }
 
         if (ModelState.IsValid)
         {
-            rc.CategoryName  = vm.categoryName;
-            rc.Theme         = vm.theme;
-            rc.Size          = vm.size;
-            rc.Capacity      = vm.capacity;
-            rc.Bed           = vm.bed;
-            rc.Description   = vm.description;
+            // Update category details
+            rc.CategoryName = vm.categoryName;
+            rc.Theme = vm.theme;
+            rc.Size = vm.size;
+            rc.Capacity = vm.capacity;
+            rc.Bed = vm.bed;
+            rc.Description = vm.description;
             rc.PricePerNight = vm.price;
-            if (vm.Photo != null)
-            {
-                hp.DeletePhoto(rc.RoomImage, "uploads");
-                rc.RoomImage = hp.SavePhoto(vm.Photo, "uploads");
-            }
+
+            // Save updated category details
             db.SaveChanges();
 
-            TempData["Info"] = "Room Category updated.";
+            // Process Images
+            if (vm.Photos != null && vm.Photos.Any())
+            {
+                // Get all existing images for this category
+                var existingImages = db.CategoryImages.Where(ci => ci.CategoryID == rc.CategoryID).ToList();
+
+                // Remove all existing images (both files and database records)
+                foreach (var existingImage in existingImages)
+                {
+                    // If the image path is in the RemoveImagePaths, delete it
+                    if (vm.RemoveImagePaths != null && vm.RemoveImagePaths.Contains(existingImage.ImagePath))
+                    {
+                        // Delete the file from the server
+                        var filePath = existingImage.ImagePath;
+                        hp.DeletePhoto(filePath, "uploads");
+
+                        // Remove the record from the database
+                        db.CategoryImages.Remove(existingImage);
+                    }
+                }
+
+                // Save changes to clear the existing images
+                db.SaveChanges();
+            }
+
+            // Insert new images
+            if (vm.Photos != null && vm.Photos.Any())
+            {
+                foreach (var photo in vm.Photos)
+                {
+                    // Save the new photo file to the server
+                    var savedFileName = hp.SavePhoto(photo, "uploads");
+
+                    // Add the new photo record to the database
+                    var categoryImage = new CategoryImage
+                    {
+                        ImagePath = savedFileName,
+                        CategoryID = rc.CategoryID
+                    };
+                    db.CategoryImages.Add(categoryImage);
+                }
+
+                // Save changes after adding new images
+                db.SaveChanges();
+            }
+
+            TempData["Info"] = "Room Category updated successfully with updated images.";
             return RedirectToAction("RoomCategory");
         }
 
+        // Reload existing images in case of an error
+        vm.CategoryImages = db.CategoryImages.Where(ci => ci.CategoryID == rc.CategoryID).ToList();
         return View(vm);
     }
+
 
     // Room Category - Terminate | Post
     [HttpPost]

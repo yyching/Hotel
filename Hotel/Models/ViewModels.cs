@@ -157,27 +157,20 @@ public class RoomDetailsVM
     public int[]? RoomQuantities { get; set; }
 }
 
-public class AddRoomCategoryVM 
+public class AddRoomCategoryVM
 {
     [StringLength(100)]
     public string categoryName { get; set; }
-
     [StringLength(100)]
     public string theme { get; set; }
-
     public int size { get; set; }
-
     [StringLength(100)]
     public string capacity { get; set; }
-
     [StringLength(100)]
     public string bed { get; set; }
-
     public double price { get; set; }
-
     public string description { get; set; }
-
-    public IFormFile? Photo { get; set; }
+    public List<IFormFile>? Photos { get; set; }
 }
 
 public class UpdateRoomCategoryVM
@@ -202,10 +195,21 @@ public class UpdateRoomCategoryVM
 
     public string description { get; set; }
 
-    public string? roomImage { get; set; }
+    // List of CategoryImage entities for existing images
+    public List<CategoryImage>? CategoryImages { get; set; }
 
-    public IFormFile? Photo { get; set; }
+    // List of uploaded photos by the user
+    public List<IFormFile>? Photos { get; set; }
+
+    // List of paths of the old images (to be shown in the UI)
+    public List<string>? OldImagePaths { get; set; }
+
+    // List of paths of images to be deleted (selected by the user)
+    public List<string>? RemoveImagePaths { get; set; }
 }
+
+
+
 
 public class AddRoomVMs
 {

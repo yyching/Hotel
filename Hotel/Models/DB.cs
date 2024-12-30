@@ -13,6 +13,7 @@ public class DB : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Token> Tokens { get; set; }
     public DbSet<Category> Categories { get; set; }
+    public DbSet<CategoryImage> CategoryImages { get; set; }
     public DbSet<Room> Rooms { get; set; }
     public DbSet<Review> Reviews { get; set; }
     public DbSet<Booking> Bookings { get; set; }
@@ -69,11 +70,22 @@ public class Category
     public string Bed { get; set; }
     public string Description { get; set; }
     public double PricePerNight { get; set; }
-    public string RoomImage { get; set; }
     public string Status { get; set; }
 
     // Navigation
     public List<Room> Rooms { get; set; }
+    public List<CategoryImage> CategoryImages { get; set; }
+}
+
+public class CategoryImage
+{
+    [Key]
+    public int ImageID { get; set; }
+    public string ImagePath { get; set; }
+
+    // Foreign key relationship
+    public string CategoryID { get; set; }
+    public Category Category { get; set; }
 }
 
 public class Room
