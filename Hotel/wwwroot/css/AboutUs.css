@@ -1,0 +1,133 @@
+﻿* {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Welcome Section */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.wel {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 40px;
+}
+
+    .wel h1 {
+        font-size: 50px;
+        margin-bottom: 30px;
+    }
+
+    .wel p {
+        font-size: 20px;
+        margin-bottom: 20px;
+        padding-right: 20%;
+    }
+
+.text-content {
+    flex: 1;
+    text-align: left;
+    margin-top: 7%;
+}
+
+.features {
+    list-style: none;
+    text-align: left;
+    max-width: 600px;
+    margin-top: 9%;
+}
+
+    .features li {
+        font-size: 20px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+        .features li:before {
+            content: "✔️";
+            color: #008000;
+            margin-right: 10px;
+        }
+
+
+/* Video Section */
+.video-section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-align: center;
+}
+
+.background-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+}
+
+.video-content {
+    position: relative;
+    padding: 20px;
+}
+
+    .video-content h1 {
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+
+    .video-content p {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+
+/* Activity Section */
+.activities {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.activity {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.act {
+    font-size: 50px;
+    text-align: center;
+    margin-bottom: 5%;
+    margin-top: -100px;
+}
+
+.activity img {
+    width: 200px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.activity h1 {
+    font-size: 30px;
+    margin-top: 10px;
+}
+
+.activity h3 {
+    font-size: 15px;
+    color: gray;
+}
