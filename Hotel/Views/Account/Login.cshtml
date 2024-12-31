@@ -23,9 +23,10 @@
                 <div class="input-field">
                     <input asp-for="Password" />
                     <span asp-validation-for="Password"></span>
+                    <a href="SendEmail" class="forgot-pass-link">Forgot password?</a>
                     <label asp-for="Password"></label>
                 </div>
-                <a href="SendEmail" class="forgot-pass-link">Forgot password?</a>
+                
                 <button type="submit">Log In</button>
             </form>
             <div class="bottom-link">
