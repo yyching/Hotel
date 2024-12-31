@@ -11,7 +11,7 @@ public class LoginVM
 {
     [StringLength(100)]
     [EmailAddress]
-    [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+\.com$", ErrorMessage = "Invalid Email")]
+    [RegularExpression(@"^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$", ErrorMessage = "Invalid Email")]
     public string Email { get; set; }
 
     [StringLength(100, MinimumLength = 5, ErrorMessage = "The password must be more than 5 characters.")]
@@ -26,7 +26,7 @@ public class OptVM
 {
     [StringLength(100)]
     [EmailAddress]
-    [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+\.com$", ErrorMessage = "Invalid Email")]
+    [RegularExpression(@"^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$", ErrorMessage = "Invalid Email")]
     [Remote("CheckEmail", "Account", ErrorMessage = "Duplicated {0}.")]
     public string Email { get; set; }
 
@@ -105,7 +105,7 @@ public class SendEmailVM
 {
     [StringLength(100)]
     [EmailAddress]
-    [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+\.com$", ErrorMessage = "Invalid Email")]
+    [RegularExpression(@"^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$", ErrorMessage = "Invalid Email")]
     public string Email { get; set; }
 }
 
