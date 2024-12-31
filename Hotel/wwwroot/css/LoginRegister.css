@@ -80,52 +80,53 @@ body {
         text-decoration: none;
     }
 
-form .input-field {
+.input-field {
     position: relative;
-    height: 50px;
     width: 100%;
     margin-top: 20px;
 }
 
-.input-field input {
-    height: 100%;
-    width: 100%;
-    background: none;
-    outline: none;
-    font-size: 0.95rem;
-    padding: 0 15px;
-    border: 1px solid #717171;
-    border-radius: 3px;
-}
-
-    .input-field input:focus {
-        border: 1px solid #00bcd4;
+    .input-field input {
+        height: 50px;
+        width: 100%;
+        background: none;
+        outline: none;
+        font-size: 0.95rem;
+        padding: 16px 15px 0;
+        border: 1px solid #717171;
+        border-radius: 3px;
+        transition: border 0.3s;
     }
 
-.input-field span {
-    color: red;
-    font-size: 0.9em;
-}
+        .input-field input:focus {
+            border: 1px solid #00bcd4;
+        }
 
-.input-field label {
-    position: absolute;
-    top: 50%;
-    left: 15px;
-    transform: translateY(-50%);
-    color: #4a4646;
-    pointer-events: none;
-    transition: 0.2s ease;
-}
+    .input-field label {
+        position: absolute;
+        top: 16px;
+        left: 15px;
+        color: #4a4646;
+        pointer-events: none;
+        transition: 0.2s ease;
+    }
 
-.input-field input:is(:focus, :valid) {
-    padding: 16px 15px 0;
-}
-
-    .input-field input:is(:focus, :valid) ~ label {
-        transform: translateY(-120%);
+    .input-field label{
+        top: 6px;
         color: #00bcd4;
         font-size: 0.75rem;
     }
+
+    .input-field span {
+        color: red;
+        font-size: 0.9em;
+        display: block;
+        margin-top: 5px;
+    }
+
+        .input-field span:not(:empty) {
+            margin-bottom: 10px;
+        }
 
 .form-box a {
     color: #00bcd4;
@@ -151,7 +152,7 @@ form button {
     font-weight: 500;
     border-radius: 3px;
     cursor: pointer;
-    margin-top: 60px;
+    margin-top: 30px;
     margin-bottom: 10px;
     background: #00bcd4;
     transition: 0.2s ease;

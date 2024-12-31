@@ -15,11 +15,13 @@
             </div>
             <div class="form-content">
                 <h2>Register</h2>
+                <a href="/Account/SendOtp?Email=@ViewBag.Email" class="back">X</a>
                 <form method="post" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly"></div>
 
                     <div class="input-field">
                         <input asp-for="Email" readonly />
+                        <label asp-for="Email"></label>
                     </div>
 
                     <div class="input-field">

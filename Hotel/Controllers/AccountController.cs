@@ -202,6 +202,7 @@ namespace Hotel.Controllers
         // GET: Account/Register
         public IActionResult Register(string email)
         {
+            ViewBag.Email = email;
             return View();
         }
 
@@ -247,6 +248,7 @@ namespace Hotel.Controllers
                 return RedirectToAction("Login");
             }
 
+            ViewBag.Email = vm.Email;
             return View(vm);
         }
 
