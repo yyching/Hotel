@@ -372,7 +372,8 @@ public class HomeController : Controller
         ViewBag.Max = max;
 
         var rooms = db.Rooms
-           .Where(rm => rm.CategoryID == categoryID && rm.Status == "Active")
+           .Include(rm => rm.Category)
+           .Where(rm => rm.CategoryID == categoryID && rm.Status == "Active" && rm.Category.Status == "Active")
            .OrderBy(rm => rm.RoomNumber)
            .ToList();
 
