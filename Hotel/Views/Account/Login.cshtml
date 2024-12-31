@@ -6,32 +6,34 @@
 }
 <link rel="stylesheet" href="/css/LoginRegister.css" asp-append-version="true">
 
-<div class="form-popup">
-    <div class="form-box login">
-        <div class="form-details">
-            <h2>Welcome Back</h2>
-            <p>Please log in using your personal information to stay connected with us.</p>
-        </div>
-        <div class="form-content">
-            <h2>LOGIN</h2>
-            <form method="post">
-                <div class="input-field">
-                    <input asp-for="Email" autofocus/>
-                    <span asp-validation-for="Email"></span>
-                    <label asp-for="Email"></label>
+<div class="login-container">
+    <div class="form-popup">
+        <div class="form-box login">
+            <div class="form-details">
+                <h2>Welcome Back</h2>
+                <p>Please log in using your personal information to stay connected with us.</p>
+            </div>
+            <div class="form-content">
+                <h2>LOGIN</h2>
+                <form method="post">
+                    <div class="input-field">
+                        <input asp-for="Email" autofocus />
+                        <span asp-validation-for="Email"></span>
+                        <label asp-for="Email"></label>
+                    </div>
+                    <div class="input-field">
+                        <input asp-for="Password" />
+                        <span asp-validation-for="Password"></span>
+                        <a href="SendEmail" class="forgot-pass-link">Forgot password?</a>
+                        <label asp-for="Password"></label>
+                    </div>
+
+                    <button type="submit">Log In</button>
+                </form>
+                <div class="bottom-link">
+                    Don't have an account?
+                    <a href="SendOtp" id="signup-link">Signup</a>
                 </div>
-                <div class="input-field">
-                    <input asp-for="Password" />
-                    <span asp-validation-for="Password"></span>
-                    <a href="SendEmail" class="forgot-pass-link">Forgot password?</a>
-                    <label asp-for="Password"></label>
-                </div>
-                
-                <button type="submit">Log In</button>
-            </form>
-            <div class="bottom-link">
-                Don't have an account?
-                <a href="SendOtp" id="signup-link">Signup</a>
             </div>
         </div>
     </div>

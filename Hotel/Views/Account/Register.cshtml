@@ -6,44 +6,46 @@
 }
 <link rel="stylesheet" href="/css/LoginRegister.css" asp-append-version="true">
 
-<div class="form-popup">
-    <div class="form-box login">
-        <div class="form-details">
-            <h2>Welcome Back</h2>
-            <p>Please log in using your personal information to stay connected with us.</p>
-        </div>
-        <div class="form-content">
-            <h2>Register</h2>
-            <form method="post" enctype="multipart/form-data">
-                <div asp-validation-summary="ModelOnly"></div>
+<div class="login-container">
+    <div class="form-popup">
+        <div class="form-box login">
+            <div class="form-details">
+                <h2>Welcome Back</h2>
+                <p>Please log in using your personal information to stay connected with us.</p>
+            </div>
+            <div class="form-content">
+                <h2>Register</h2>
+                <form method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly"></div>
 
-                <div class="input-field">
-                    <input asp-for="Email" readonly/>
-                </div>
+                    <div class="input-field">
+                        <input asp-for="Email" readonly />
+                    </div>
 
-                <div class="input-field">
-                    <input asp-for="Name" autofocus/>
-                    <span asp-validation-for="Name"></span>
-                    <label asp-for="Name"></label>
-                </div>
-                <div class="input-field">
-                    <input asp-for="PhoneNumber"/>
-                    <span asp-validation-for="PhoneNumber"></span>
-                    <label asp-for="PhoneNumber"></label>
-                </div>
-                <div class="input-field">
-                    <input asp-for="Password" />
-                    <span asp-validation-for="Password"></span>
-                    <label asp-for="Password"></label>
-                </div>
-                <div class="input-field">
-                    <input asp-for="ConfirmPassword"/>
-                    <span asp-validation-for="ConfirmPassword"></span>
-                    <label asp-for="ConfirmPassword"></label>
-                </div>
+                    <div class="input-field">
+                        <input asp-for="Name" autofocus />
+                        <span asp-validation-for="Name"></span>
+                        <label asp-for="Name"></label>
+                    </div>
+                    <div class="input-field">
+                        <input asp-for="PhoneNumber" />
+                        <span asp-validation-for="PhoneNumber"></span>
+                        <label asp-for="PhoneNumber"></label>
+                    </div>
+                    <div class="input-field">
+                        <input asp-for="Password" />
+                        <span asp-validation-for="Password"></span>
+                        <label asp-for="Password"></label>
+                    </div>
+                    <div class="input-field">
+                        <input asp-for="ConfirmPassword" />
+                        <span asp-validation-for="ConfirmPassword"></span>
+                        <label asp-for="ConfirmPassword"></label>
+                    </div>
 
-                <button type="submit">Register</button>
-            </form>
+                    <button type="submit">Register</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
