@@ -306,7 +306,6 @@ public class AdminController : Controller
             description = rc.Description,
             price = rc.PricePerNight,
             CategoryImages = rc.CategoryImages,
-            OldImagePaths = rc.CategoryImages?.Select(ci => ci.ImagePath).ToList()  // Old image paths
         };
 
         return View(vm);
@@ -339,27 +338,23 @@ public class AdminController : Controller
             db.SaveChanges();
 
             // Process Images
-            if (vm.Photos != null && vm.Photos.Any())
+            if (vm.RemoveImagePaths != null && vm.RemoveImagePaths.Any())
             {
-                // Get all existing images for this category
-                var existingImages = db.CategoryImages.Where(ci => ci.CategoryID == rc.CategoryID).ToList();
-
-                // Remove all existing images (both files and database records)
-                foreach (var existingImage in existingImages)
+                // Remove selected images (both files and database records)
+                foreach (var imagePath in vm.RemoveImagePaths)
                 {
-                    // If the image path is in the RemoveImagePaths, delete it
-                    if (vm.RemoveImagePaths != null && vm.RemoveImagePaths.Contains(existingImage.ImagePath))
+                    var existingImage = db.CategoryImages.FirstOrDefault(ci => ci.ImagePath == imagePath && ci.CategoryID == rc.CategoryID);
+                    if (existingImage != null)
                     {
                         // Delete the file from the server
-                        var filePath = existingImage.ImagePath;
-                        hp.DeletePhoto(filePath, "uploads");
+                        hp.DeletePhoto(existingImage.ImagePath, "uploads");
 
                         // Remove the record from the database
                         db.CategoryImages.Remove(existingImage);
                     }
                 }
 
-                // Save changes to clear the existing images
+                // Save changes after removing images
                 db.SaveChanges();
             }
 
@@ -393,6 +388,8 @@ public class AdminController : Controller
         return View(vm);
     }
 
+
+
     // Room Category - Terminate | Post
     [HttpPost]
     public IActionResult TerminateRoomCategory(string? id)
@@ -423,6 +420,141 @@ public class AdminController : Controller
 
         TempData["Info"] = "Room Category activated.";
         return RedirectToAction("RoomCategory");
+    }
+
+    //Import - RoomCategory Function
+    [HttpPost]
+    public IActionResult Import_RoomCategory(IFormFile file)
+    {
+        if (file != null
+            && file.FileName.EndsWith(".txt")
+            && file.ContentType == "text/plain")
+        {
+            int n = ImportRoomCategory(file);
+            ImportRoomCategoryImage(file);
+            TempData["Info"] = $"{n} Room Category imported.";
+        }
+
+        return RedirectToAction("RoomCategory");
+    }
+
+    //Import - RoomCategory Logic
+    private int ImportRoomCategory(IFormFile file)
+    {
+        using var stream = file.OpenReadStream();
+        using var reader = new StreamReader(stream);
+
+        int insertedCount = 0;
+
+        while (!reader.EndOfStream)
+        {
+            var line = reader.ReadLine()?.Trim() ?? "";
+
+            if (string.IsNullOrEmpty(line)) continue;
+
+            var data = line.Split("\t", StringSplitOptions.TrimEntries);
+
+            try
+            {
+                if (data.Length == 9) // Process category data
+                {
+                    var existingCategory = db.Categories.FirstOrDefault(c => c.CategoryID == data[0]);
+                    if (existingCategory != null)
+                    {
+                        Console.WriteLine($"Category with ID {data[0]} already exists. Skipping.");
+                        continue;
+                    }
+
+                    var category = new Category
+                    {
+                        CategoryID = data[0],
+                        CategoryName = data[1],
+                        Theme = data[2],
+                        Size = int.Parse(data[3]),
+                        Capacity = data[4],
+                        Bed = data[5],
+                        Description = data[6],
+                        PricePerNight = double.Parse(data[7]),
+                        Status = data[8],
+                    };
+
+                    db.Categories.Add(category);
+                    insertedCount++;
+
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid data format: {line}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing line: {line}. Error: {ex.Message}");
+            }
+        }
+
+        return db.SaveChanges();
+    }
+
+    //Import - RoomCategory Image Logic
+    private int ImportRoomCategoryImage(IFormFile file)
+    {
+        using var stream = file.OpenReadStream();
+        using var reader = new StreamReader(stream);
+
+        int insertedCount = 0;
+
+        while (!reader.EndOfStream)
+        {
+            var line = reader.ReadLine()?.Trim() ?? "";
+
+            if (string.IsNullOrEmpty(line)) continue;
+
+            var data = line.Split("\t", StringSplitOptions.TrimEntries);
+
+            try
+            {
+                if (data.Length == 2) // Process category data
+                {
+                    var imagePath = data[0];  // Image path
+                    var categoryId = data[1];  // Category ID
+
+                    // Check if the category exists for the image
+                    var existingCategory = db.Categories.FirstOrDefault(c => c.CategoryID == categoryId);
+                    if (existingCategory == null)
+                    {
+                        Console.WriteLine($"Category with ID {categoryId} does not exist. Skipping image.");
+                        continue;
+                    }
+
+                    // Check if the image already exists
+                    var existingImage = db.CategoryImages.FirstOrDefault(ci => ci.ImagePath == imagePath && ci.CategoryID == categoryId);
+                    if (existingImage != null)
+                    {
+                        Console.WriteLine($"Image with path {imagePath} already exists for Category {categoryId}. Skipping.");
+                        continue;
+                    }
+
+                    // Create and add the new image (let the database auto-generate the ImageID)
+                    var image = new CategoryImage
+                    {
+                        ImagePath = imagePath,
+                        CategoryID = categoryId,
+                    };
+                    db.CategoryImages.Add(image);
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid data format: {line}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing line: {line}. Error: {ex.Message}");
+            }
+        }
+
+        return db.SaveChanges();
     }
 
     // =======================================================================================================================================

@@ -44,8 +44,14 @@
 
         <div class="form-row">
             <div class="form-group">
-                <label asp-for="bed">Bed Type</label>
-                <input asp-for="bed" placeholder="Enter Bed Type">
+                <label asp-for="bed">Bed:</label>
+                <select asp-for="bed" required>
+                    <option value="">- Select One -</option>
+                    <option value="Double Bed">Double Bed</option>
+                    <option value="King Bed">King Bed</option>
+                    <option value="Queen Bed">Queen Bed</option>
+                    <option value="King Bed + 2 Single Beds	">King Bed + 2 Single Beds</option>
+                </select>
                 <span asp-validation-for="bed"></span>
             </div>
             <div class="form-group">
@@ -75,6 +81,7 @@
                     <button type="button" class="btn-remove-photo" disabled>&times;</button>
                 </div>
             </div>
+            <span asp-validation-for="Photos"></span>
         </div>
 
         <!-- Form Actions -->
@@ -87,77 +94,89 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-    const photoUploadContainer = document.getElementById("photo-upload-container");
-    const maxPhotos = 6; // Maximum allowed photos
+        const photoUploadContainer = document.getElementById("photo-upload-container");
+        const maxPhotos = 6; // Maximum allowed photos
+        const form = document.querySelector("form");
 
-    // Add button for adding more photo inputs with an image
-    const addButton = document.createElement("button");
-    addButton.type = "button";
-    addButton.classList.add("btn-add-photo");
+        // Add button for adding more photo inputs with an image
+        const addButton = document.createElement("button");
+        addButton.type = "button";
+        addButton.classList.add("btn-add-photo");
 
-    // Add an image inside the button
-    const addButtonImage = document.createElement("img");
-    addButtonImage.src = "/images/addBtn.png";
-    addButtonImage.alt = "Add Photo";
-    addButtonImage.classList.add("add-button-image");
-    addButton.appendChild(addButtonImage);
+        // Add an image inside the button
+        const addButtonImage = document.createElement("img");
+        addButtonImage.src = "/images/addBtn.png";
+        addButtonImage.alt = "Add Photo";
+        addButtonImage.classList.add("add-button-image");
+        addButton.appendChild(addButtonImage);
 
-    photoUploadContainer.appendChild(addButton);
+        photoUploadContainer.appendChild(addButton);
 
-    // Add event listener to the Add Photo button
-    addButton.addEventListener("click", () => {
-        if (photoUploadContainer.querySelectorAll(".photo-upload-item").length < maxPhotos) {
-            showNewFileInput();
-        }
-        checkAddButtonVisibility();
-    });
-
-    // Function to show a new photo input form
-    function showNewFileInput() {
-        const newPhotoUpload = document.createElement("div");
-        newPhotoUpload.classList.add("photo-upload-item");
-        newPhotoUpload.innerHTML = `
-            <label class="upload">
-                <input name="Photos" type="file" accept="image/jpeg,image/png" hidden>
-                <img src="/images/photo.jpg" class="picture-placeholder">
-            </label>
-            <button type="button" class="btn-remove-photo">&times;</button>
-        `;
-        photoUploadContainer.insertBefore(newPhotoUpload, addButton);
-
-        const newFileInput = newPhotoUpload.querySelector("input[type='file']");
-        const newImgPreview = newPhotoUpload.querySelector("img");
-        const removeButton = newPhotoUpload.querySelector(".btn-remove-photo");
-
-        // Handle the change event for the new file input
-        newFileInput.addEventListener("change", () => {
-            if (newFileInput.files && newFileInput.files[0]) {
-                newImgPreview.src = URL.createObjectURL(newFileInput.files[0]);
+        // Add event listener to the Add Photo button
+        addButton.addEventListener("click", () => {
+            if (photoUploadContainer.querySelectorAll(".photo-upload-item").length < maxPhotos) {
+                showNewFileInput();
             }
-        });
-
-        // Remove photo item when clicking the remove button
-        removeButton.addEventListener("click", () => {
-            newPhotoUpload.remove();
             checkAddButtonVisibility();
         });
-    }
 
-    // Function to check if the "Add Photo" button should be visible
-    function checkAddButtonVisibility() {
-        const currentPhotos = photoUploadContainer.querySelectorAll(".photo-upload-item").length;
-        if (currentPhotos >= maxPhotos) {
-            addButton.style.display = "none"; // Hide the Add Photo button
-        } else {
-            addButton.style.display = "block"; // Show the Add Photo button
+        // Function to show a new photo input form
+        function showNewFileInput() {
+            const newPhotoUpload = document.createElement("div");
+            newPhotoUpload.classList.add("photo-upload-item");
+            newPhotoUpload.innerHTML = `
+                <label class="upload">
+                    <input name="Photos" type="file" accept="image/jpeg,image/png" hidden>
+                    <img src="/images/photo.jpg" class="picture-placeholder">
+                </label>
+                <button type="button" class="btn-remove-photo">&times;</button>
+            `;
+            photoUploadContainer.insertBefore(newPhotoUpload, addButton);
+
+            const newFileInput = newPhotoUpload.querySelector("input[type='file']");
+            const newImgPreview = newPhotoUpload.querySelector("img");
+            const removeButton = newPhotoUpload.querySelector(".btn-remove-photo");
+
+            // Handle the change event for the new file input
+            newFileInput.addEventListener("change", () => {
+                if (newFileInput.files && newFileInput.files[0]) {
+                    newImgPreview.src = URL.createObjectURL(newFileInput.files[0]);
+                }
+            });
+
+            // Remove photo item when clicking the remove button
+            removeButton.addEventListener("click", () => {
+                newPhotoUpload.remove();
+                checkAddButtonVisibility();
+            });
         }
-    }
 
-    // Initial check for the Add Photo button visibility
-    checkAddButtonVisibility();
-});
+        // Function to check if the "Add Photo" button should be visible
+        function checkAddButtonVisibility() {
+            const currentPhotos = photoUploadContainer.querySelectorAll(".photo-upload-item").length;
+            if (currentPhotos >= maxPhotos) {
+                addButton.style.display = "none"; // Hide the Add Photo button
+            } else {
+                addButton.style.display = "block"; // Show the Add Photo button
+            }
+        }
 
+        // Initial check for the Add Photo button visibility
+        checkAddButtonVisibility();
+
+        // Validate that at least one image is uploaded before submitting
+        form.addEventListener("submit", (event) => {
+            const photoInputs = photoUploadContainer.querySelectorAll("input[type='file']");
+            const isAnyPhotoUploaded = Array.from(photoInputs).some(input => input.files.length > 0);
+
+            if (!isAnyPhotoUploaded) {
+                event.preventDefault(); // Prevent form submission
+                alert("Please upload at least one image.");
+            }
+        });
+    });
 </script>
+
 
 
 

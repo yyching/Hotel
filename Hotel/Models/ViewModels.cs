@@ -180,36 +180,53 @@ public class AddRoomCategoryVM
 {
     [StringLength(100)]
     public string categoryName { get; set; }
+
     [StringLength(100)]
     public string theme { get; set; }
+
+    [Range(12, int.MaxValue, ErrorMessage = "Size must be greater than 11.")]
     public int size { get; set; }
-    [StringLength(100)]
+
+    [RegularExpression(@"^\d+$", ErrorMessage = "Capacity must be a positive number.")]
+    [Range(1, int.MaxValue, ErrorMessage = "Capacity must be 1 or more.")]
     public string capacity { get; set; }
+
     [StringLength(100)]
     public string bed { get; set; }
+
+    [Range(40, 2000, ErrorMessage = "Price must be between 40 and 2000.")]
     public double price { get; set; }
+
     public string description { get; set; }
+
+    [Required(ErrorMessage = "Please upload at least one photo.")]
     public List<IFormFile>? Photos { get; set; }
 }
+
 
 public class UpdateRoomCategoryVM
 {
     public string categoryID { get; set; }
 
+    [Required]
     [StringLength(100)]
     public string categoryName { get; set; }
 
+    [Required]
     [StringLength(100)]
     public string theme { get; set; }
 
+    [Range(12, int.MaxValue, ErrorMessage = "Size must be greater than 11.")]
     public int size { get; set; }
 
-    [StringLength(100)]
+    [RegularExpression(@"^\d+$", ErrorMessage = "Capacity must be a positive number.")]
+    [Range(1, int.MaxValue, ErrorMessage = "Capacity must be 1 or more.")]
     public string capacity { get; set; }
 
     [StringLength(100)]
     public string bed { get; set; }
 
+    [Range(40, 2000, ErrorMessage = "Price must be between 40 and 2000.")]
     public double price { get; set; }
 
     public string description { get; set; }
@@ -220,14 +237,9 @@ public class UpdateRoomCategoryVM
     // List of uploaded photos by the user
     public List<IFormFile>? Photos { get; set; }
 
-    // List of paths of the old images (to be shown in the UI)
-    public List<string>? OldImagePaths { get; set; }
-
-    // List of paths of images to be deleted (selected by the user)
-    public List<string>? RemoveImagePaths { get; set; }
+    // List of image paths marked for removal
+    public List<string>? RemoveImagePaths { get; set; } // Add this property to track removed images
 }
-
-
 
 
 public class AddRoomVMs
