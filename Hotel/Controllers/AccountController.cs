@@ -48,7 +48,7 @@ namespace Hotel.Controllers
             // (2) Custom validation -> verify password
             if (u == null || !hp.VerifyPassword(u.Password, vm.Password))
             {
-                TempData["Info"] = "Login credentials not matched.";
+                TempData["Info"] = "Invalid Password";
                 return View();
             }
 
