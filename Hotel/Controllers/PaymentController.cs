@@ -50,7 +50,7 @@ public class PaymentController : Controller
         var availableRooms = db.Rooms
            .Include(r => r.Category)
            .Where(r => !occupiedRooms.Contains(r.RoomID))
-           .Where(r => r.Category.CategoryID == categoryID)
+           .Where(r => r.Category.CategoryID == categoryID && r.Status == "Active" && r.Category.Status == "Active")
            .Select(r => new {
                r.RoomID,
                r.Category.PricePerNight,
