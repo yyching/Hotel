@@ -40,6 +40,12 @@ html {
         padding: 8px;
         border: 1px solid #ccc;
         border-radius: 5px;
+        color: black;
+    }
+
+    .form-group span {
+        color: red;
+        font-size: 0.9em;
     }
 
 input,
