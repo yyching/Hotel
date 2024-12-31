@@ -33,7 +33,7 @@ public class PaymentController : Controller
     }
 
     // GET: Payment/PaymentPage
-    public IActionResult PaymentPage(string? categoryID, DateOnly checkIn, DateOnly checkOut, string[]? foodServiceIds, int[]? foodQuantities, string[]? roomServiceIds, int[]? roomQuantities)
+    public IActionResult PaymentPage(string categoryID, DateOnly checkIn, DateOnly checkOut, string[]? foodServiceIds, int[]? foodQuantities, string[]? roomServiceIds, int[]? roomQuantities)
     {
         // Data for the back to RoomDetailsPage
         ViewBag.foodServiceIds = foodServiceIds;

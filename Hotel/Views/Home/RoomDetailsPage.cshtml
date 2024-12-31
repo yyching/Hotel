@@ -49,7 +49,7 @@
 
 
 <form class="service-container" method="post">
-    
+    <div asp-validation-summary="ModelOnly"></div>
     <h1 class="hotel-booking">Hotel Booking</h1>
     <input type="hidden" value="@ViewBag.Categories.CategoryID">
 
@@ -124,7 +124,10 @@
                                    id="@b.ServiceID"
                                    name="foodQuantities"
                                    min="0"
-                                   value="@qty" />
+                                   max="5"
+                                   value="@qty"
+                                   onkeydown="return false;"
+                                   onblur="setDefaultValue(this);" />
                             <input type="hidden"
                                    name="foodServiceIds"
                                    value="@b.ServiceID">
@@ -158,7 +161,10 @@
                                    id="@l.ServiceID"
                                    name="foodQuantities"
                                    min="0"
-                                   value="@qty" />
+                                   max="5"
+                                   value="@qty"
+                                   onkeydown="return false;"
+                                   onblur="setDefaultValue(this);" />
                             <input type="hidden"
                                    name="foodServiceIds"
                                    value="@l.ServiceID">
@@ -192,7 +198,10 @@
                                    id="@d.ServiceID"
                                    name="foodQuantities"
                                    min="0"
-                                   value="@qty" />
+                                   max="5"
+                                   value="@qty"
+                                   onkeydown="return false;"
+                                   onblur="setDefaultValue(this);" />
                             <input type="hidden"
                                    name="foodServiceIds"
                                    value="@d.ServiceID">
@@ -222,7 +231,10 @@
                        name="roomQuantities"
                        id="@service.ServiceID"
                        min="0"
-                       value="@qty">
+                       max="2"
+                       value="@qty"
+                       onkeydown="return false;"
+                       onblur="setDefaultValue(this);">
                 <input type="hidden"
                        name="roomServiceIds"
                        value="@service.ServiceID">
@@ -232,3 +244,14 @@
         <button class="book-btn" id="book-btn">Book Now</button>
     </div>
 </form>
+
+<section foot>
+    <script>
+        function setDefaultValue(input) {
+            // if the input is empty auto show 0
+            if (input.value === '') {
+                input.value = 0;
+            }
+        }
+    </script>
+</section>
