@@ -14,74 +14,9 @@
         </ul>
     </aside>
     <div class="history-container">
-        <h2 class="history-title">Booking History</h2>
 
-        @foreach (var booking in ViewBag.Bookings)
-        {
-            <div class="history-section">
-                <div class="status-header">
-                    <h3 class="booking-date">Booking Date: @booking.BookingDate.ToString("MMM dd, yyyy")</h3>
-                </div>
-                <div class="content-section">
-                    <div class="image-section">
-                        <img src="/uploads/@ViewBag.categoryImage[@booking.Room.Category.CategoryID]" class="room-image">
-                    </div>
-                    <div class="middle-section">
-                        <h4>@booking.Room.Category.CategoryName (@booking.Room.Category.Theme)</h4>
-                        <p><strong>Check-in:</strong> @booking.CheckInDate.ToString("MMM dd, yyyy")</p>
-                        <p><strong>Check-out:</strong> @booking.CheckOutDate.ToString("MMM dd, yyyy")</p>
-                        <p class="price"><strong>Total:</strong> RM @booking.TotalAmount</p>
-                    </div>
-                    <div class="right-section">
-                        @if (ViewBag.BreakfastServices.ContainsKey(booking.BookingID) ||
-                       ViewBag.LunchServices.ContainsKey(booking.BookingID) ||
-                       ViewBag.DinnerServices.ContainsKey(booking.BookingID))
-                        {
-                            <p><strong>Food Services:</strong></p>
-                            <ul>
-                                @if (ViewBag.BreakfastServices.ContainsKey(booking.BookingID))
-                                {
-                                    @foreach (var service in ViewBag.BreakfastServices[booking.BookingID])
-                                    {
-                                        <li>@service.Key: @service.Value</li>
-                                    }
-                                }
-                                @if (ViewBag.LunchServices.ContainsKey(booking.BookingID))
-                                {
-                                    @foreach (var service in ViewBag.LunchServices[booking.BookingID])
-                                    {
-                                        <li>@service.Key: @service.Value</li>
-                                    }
-                                }
-                                @if (ViewBag.DinnerServices.ContainsKey(booking.BookingID))
-                                {
-                                    @foreach (var service in ViewBag.DinnerServices[booking.BookingID])
-                                    {
-                                        <li>@service.Key: @service.Value</li>
-                                    }
-                                }
-                            </ul>
-                        }
-                        @if (ViewBag.RoomServices.ContainsKey(booking.BookingID))
-                        {
-                            <p><strong>Room Services:</strong></p>
-                            <ul>
-                                @foreach (var service in ViewBag.RoomServices[booking.BookingID])
-                                {
-                                    <li>@service.Key: @service.Value</li>
-                                }
-                            </ul>
-                        }
-                    </div>
-                    <div >
-                        <form method="post" class="action-buttons">
-                            <input type="hidden" name="bookingID" value="@booking.BookingID" />
-                            <button class="track-order">Download Receipt</button>
-                            <a href="/Home/RoomDetailsPage?categoryID=@booking.Room.Category.CategoryID" class="view-details" target="_blank">View Details</a>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        }
+        <div id="target">
+            <partial name="History">
+        </div>
     </div>
 </div>

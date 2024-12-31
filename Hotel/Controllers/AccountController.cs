@@ -12,6 +12,7 @@ using iText.Kernel.Pdf;
 using Stripe;
 using System;
 using Microsoft.Extensions.Caching.Memory;
+using X.PagedList.Extensions;
 
 namespace Hotel.Controllers
 {
@@ -513,7 +514,7 @@ namespace Hotel.Controllers
         // GET: BookingHistory
         [Authorize]
         [Authorize(Roles = "Member")]
-        public IActionResult BookingHistory()
+        public IActionResult BookingHistory(int page = 1)
         {
             var userId = User.FindFirst("UserID")?.Value;
             if (string.IsNullOrEmpty(userId)) return RedirectToAction("Index", "Home");
@@ -524,6 +525,10 @@ namespace Hotel.Controllers
                 .Where(b => b.UserID == userId)
                 .OrderByDescending(b => b.BookingDate)
                 .ToList();
+
+            // For the paging
+            int pageSize = 5;
+            var pagedBookings = bookings.ToPagedList(page, pageSize);
 
             var serviceBookings = db.ServiceBooking
                 .Include(s => s.Service)
@@ -576,6 +581,8 @@ namespace Hotel.Controllers
                 }
             }
 
+            ViewBag.bookingCount = bookings.Count;
+
             var categoryImages = db.CategoryImages
                            .Include(r => r.Category)
                            .ToList();
@@ -588,13 +595,18 @@ namespace Hotel.Controllers
             // Get the category Image
             ViewBag.categoryImage = categoryImageDict;
 
-            ViewBag.Bookings = bookings;
+            ViewBag.Bookings = pagedBookings;
             ViewBag.BreakfastServices = breakfastDict;
             ViewBag.LunchServices = lunchDict;
             ViewBag.DinnerServices = dinnerDict;
             ViewBag.RoomServices = roomDict;
 
-            return View();
+            if (Request.IsAjax())
+            {
+                return PartialView("History", pagedBookings);
+            }
+
+            return View(pagedBookings);
         }
 
         // POST: Generate receipt pdf
