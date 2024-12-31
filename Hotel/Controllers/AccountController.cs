@@ -49,7 +49,7 @@ namespace Hotel.Controllers
             // (2) Custom validation -> verify password
             if (u == null || !hp.VerifyPassword(u.Password, vm.Password))
             {
-                TempData["Info"] = "Invalid Password";
+                TempData["Info"] = "Invalid Email or Password";
                 return View();
             }
 
