@@ -4,19 +4,22 @@
 }
 <link rel="stylesheet" href="/css/BookingHistory.css" asp-append-version="true">
 
-<div class="profile-container">
-    <aside class="sidebar">
-        <h1>My Account</h1>
-        <ul>
-            <li><a href="Profile">Profile</a></li>
-            <li><a href="UpdatePassword">Change Password</a></li>
-            <li><a href="BookingHistory">My Booking</a></li>
-        </ul>
-    </aside>
-    <div class="history-container">
+<div class="container">
+    <div class="profile-container">
+        <aside class="sidebar">
+            <h1>My Account</h1>
+            <ul>
+                <li><a href="Profile">Profile</a></li>
+                <li><a href="UpdatePassword">Change Password</a></li>
+                <li><a href="BookingHistory">My Booking</a></li>
+            </ul>
+        </aside>
+        <div class="history-container">
 
-        <div id="target">
-            <partial name="History">
+            <div id="target">
+                <partial name="History">
+            </div>
         </div>
     </div>
+
 </div>

@@ -4,10 +4,15 @@
     padding: 0;
 }
 
+.container {
+    min-height: 90vh;
+    display: flex;
+}
+
 .profile-container {
     display: flex;
-    margin: 150px auto;
-    max-width: 1200px;
+    margin: auto;
+    min-width: 1200px;
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);

@@ -6,40 +6,42 @@
 }
 <link rel="stylesheet" href="/css/Account.css" asp-append-version="true">
 
-<div class="profile-container">
-    <aside class="sidebar">
-        <h1>My Account</h1>
-        <ul>
-            <li><a href="Profile">Profile</a></li>
-            <li><a href="UpdatePassword">Change Password</a></li>
-            <li><a href="BookingHistory">My Booking</a></li>
-        </ul>
-    </aside>
-    <main class="content">
-        <h2>My Profile</h2>
-        <div class="profile-content">
-            <div class="profile-form">
-                <div class="form-group">
-                    <label asp-for="Name"></label>
-                    <input asp-for="Name" readonly>
+<div class="container">
+    <div class="profile-container">
+        <aside class="sidebar">
+            <h1>My Account</h1>
+            <ul>
+                <li><a href="Profile">Profile</a></li>
+                <li><a href="UpdatePassword">Change Password</a></li>
+                <li><a href="BookingHistory">My Booking</a></li>
+            </ul>
+        </aside>
+        <main class="content">
+            <h2>My Profile</h2>
+            <div class="profile-content">
+                <div class="profile-form">
+                    <div class="form-group">
+                        <label asp-for="Name"></label>
+                        <input asp-for="Name" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PhoneNumber"></label>
+                        <input asp-for="PhoneNumber" readonly>
+                    </div>
+                    <button data-get="/Account/EditProfile" class="save-btn">Edit Profile</button>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Email"></label>
-                    <input asp-for="Email" readonly>
-                </div>
-                <div class="form-group">
-                    <label asp-for="PhoneNumber"></label>
-                    <input asp-for="PhoneNumber" readonly>
-                </div>
-                <button data-get="/Account/EditProfile" class="save-btn">Edit Profile</button>
-            </div>
 
-            <div class="profile-picture">
-                <label class="upload">
-                    <img src="/photos/@Model.UserImage" class="picture-placeholder">
-                </label>
-                <label>@Model.Name</label>
+                <div class="profile-picture">
+                    <label class="upload">
+                        <img src="/photos/@Model.UserImage" class="picture-placeholder">
+                    </label>
+                    <label>@Model.Name</label>
+                </div>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
 </div>
