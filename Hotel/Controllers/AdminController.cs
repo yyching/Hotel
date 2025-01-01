@@ -157,6 +157,7 @@ public class AdminController : Controller
 
     // Admin Profile - Change Password | Get
     [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult ChangePassword()
     {
         var userId = User.FindFirst("UserID")?.Value;
@@ -175,6 +176,7 @@ public class AdminController : Controller
 
     // Admin Profile - Change Password | Post
     [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public IActionResult ChangePassword(UpdatePasswordVM vm)
     {
@@ -212,6 +214,8 @@ public class AdminController : Controller
     // =======================================================================================================================================
     // Room Category                        ==================================================================================================
     // =======================================================================================================================================
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult RoomCategory(string? name, int page = 1)
     {
         // Searching ------------------------
@@ -242,6 +246,8 @@ public class AdminController : Controller
     }
 
     // Room Category - Add | Get
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult AddRoomCategory()
     {
         return View();
@@ -249,6 +255,8 @@ public class AdminController : Controller
 
     // Room Category - Add | Post
     [HttpPost]
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult AddRoomCategory(AddRoomCategoryVM vm)
     {
         if (vm.Photos != null && vm.Photos.Any())
@@ -314,6 +322,8 @@ public class AdminController : Controller
     }
 
     // Room Category - Update | Get
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult UpdateRoomCategory(string? id)
     {
         var rc = db.Categories
@@ -343,6 +353,8 @@ public class AdminController : Controller
 
     // Room Category - Update | Post
     [HttpPost]
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult UpdateRoomCategory(UpdateRoomCategoryVM vm)
     {
         var rc = db.Categories.Find(vm.categoryID);
@@ -420,6 +432,8 @@ public class AdminController : Controller
 
     // Room Category - Terminate | Post
     [HttpPost]
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult TerminateRoomCategory(string? id)
     {
         var rc = db.Categories.Find(id);
@@ -436,6 +450,8 @@ public class AdminController : Controller
 
     // Room Category - Activate | Post
     [HttpPost]
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult ActivateRoomCategory(string? id)
     {
         var rc = db.Categories.Find(id);
@@ -452,6 +468,8 @@ public class AdminController : Controller
 
     //Import - RoomCategory Function
     [HttpPost]
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult Import_RoomCategory(IFormFile file)
     {
         if (file != null
@@ -590,6 +608,8 @@ public class AdminController : Controller
     // =======================================================================================================================================
     // Room                                 ==================================================================================================
     // =======================================================================================================================================
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult Rooms(string? name, int page = 1)
     {
         // Searching ------------------------
@@ -621,6 +641,8 @@ public class AdminController : Controller
     }
 
     // Room - Add | Get
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult _AddRoom()
     {
         var activeCategories = db.Categories
@@ -638,6 +660,8 @@ public class AdminController : Controller
 
     // Room - Add | Post
     [HttpPost]
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult _AddRoom(AddRoomVMs vm)
     {
         if (ModelState.IsValid)
@@ -665,6 +689,8 @@ public class AdminController : Controller
     }
 
     // Room - Update | Get
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult _UpdateRoom(string? id)
     {
         var rm = db.Rooms.Find(id);
@@ -696,6 +722,8 @@ public class AdminController : Controller
 
     // Room - Update | Post
     [HttpPost]
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult _UpdateRoom(UpdateRoomVMs vm)
     {
         var rm = db.Rooms.Find(vm.RoomID);
@@ -715,6 +743,8 @@ public class AdminController : Controller
 
     // Room - Terminate | Post
     [HttpPost]
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult TerminateRoom(string? id)
     {
         var rc = db.Rooms.Find(id);
@@ -732,6 +762,8 @@ public class AdminController : Controller
 
     // Room - Activate | Post
     [HttpPost]
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult ActivateRoom(string? id)
     {
         var rc = db.Rooms.Find(id);
@@ -752,6 +784,8 @@ public class AdminController : Controller
     // =======================================================================================================================================
     // Service                              ==================================================================================================
     // =======================================================================================================================================
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult Services(string? name, int page = 1)
     {
         // (1) Searching ------------------------
@@ -781,6 +815,8 @@ public class AdminController : Controller
     }
 
     // Service - Get Category
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult GetCategories(string serviceType)
     {
         List<string> categories = new List<string>();
@@ -800,6 +836,8 @@ public class AdminController : Controller
     }
 
     // Service - Add | Get
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult _AddService() 
     {
         return View();
@@ -807,6 +845,8 @@ public class AdminController : Controller
 
     // Service - Add | Post
     [HttpPost]
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult _AddService(AddServiceVM vm)
     {
         if (ModelState.IsValid)
@@ -837,6 +877,8 @@ public class AdminController : Controller
     }
 
     // Service - Update | Get
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult _UpdateService(string? id)
     {
         var sr = db.Services.Find(id);
@@ -861,6 +903,8 @@ public class AdminController : Controller
 
     // Service - Update | Post
     [HttpPost]
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult _UpdateService(UpdateServiceVM vm)
     {
         var sr = db.Services.Find(vm.serviceID);
@@ -883,6 +927,8 @@ public class AdminController : Controller
 
     // Service - Terminate | Post
     [HttpPost]
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult TerminateService(string? id)
     {
         var sr = db.Services.Find(id);
@@ -899,6 +945,8 @@ public class AdminController : Controller
 
     // Service - Activate | Post
     [HttpPost]
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult ActivateService(string? id)
     {
         var sr = db.Services.Find(id);
@@ -915,6 +963,8 @@ public class AdminController : Controller
 
     //Import - Service Function
     [HttpPost]
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult Import_Service(IFormFile file)
     {
         if (file != null
@@ -991,6 +1041,8 @@ public class AdminController : Controller
     // =======================================================================================================================================
     // Booking                              ==================================================================================================
     // =======================================================================================================================================
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult Bookings(string? name, int page = 1)
     {
         // (1) Searching ------------------------
@@ -1018,6 +1070,8 @@ public class AdminController : Controller
         return View(m);
     }
 
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult BookingDetail(string? id)
     {
         // Fetch the booking based on BookingID
@@ -1112,6 +1166,8 @@ public class AdminController : Controller
     // =======================================================================================================================================
     // User                                 ==================================================================================================
     // =======================================================================================================================================
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult Users(string? name, int page = 1)
     {
         // Searching ------------------------
@@ -1143,6 +1199,8 @@ public class AdminController : Controller
 
     // User - Terminate | Post
     [HttpPost]
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult TerminateUser(string? id)
     {
         var u = db.Users.Find(id);
@@ -1159,6 +1217,8 @@ public class AdminController : Controller
 
     // User - Activate | Post
     [HttpPost]
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult ActivateUser(string? id)
     {
         var u = db.Users.Find(id);
