@@ -11,10 +11,15 @@ html {
     justify-content: center;
 }
 
+.payment-container{
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+}
+
 .checkout-container {
-    margin: 20px auto;
-    max-width: 70%;
-    height: auto;
+    margin: 30px auto;
+    width: 65%;
     display: grid;
     grid-template-columns: 1fr 1fr;
     justify-content: center;
@@ -78,21 +83,27 @@ hr {
     margin-bottom: 1rem;
 }
 
-    .receipt .back {
-        position: absolute;
-        margin: 0 0 0 480px;
-        font-size: 24px;
-        line-height: 1;
-        color: #4c616b;
-        text-decoration: none;
-        padding: 5px 10px;
-        transition: color 0.2s ease;
+    .receipt .back-button{
+        display:flex;
+        text-align: right;
+        justify-content: right;
     }
 
-        .receipt .back:hover {
-            color: #a3a0a0;
+        .receipt .back-button .back {
+            position: absolute;
+            text-align: center;
+            font-size: 24px;
+            line-height: 1;
+            color: #4c616b;
             text-decoration: none;
+            padding: 5px 10px;
+            transition: color 0.2s ease;
         }
+
+            .receipt .back-button .back:hover {
+                color: #a3a0a0;
+                text-decoration: none;
+            }
 
 .receipt-heading {
     font-size: 1.6rem;
