@@ -111,6 +111,7 @@ p {
     transform: translate(-50%, 0);
     top: -100px;
     opacity: 0;
+    z-index: 1000;
 }
 
 .info:not(:empty) {

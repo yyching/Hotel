@@ -29,6 +29,14 @@
             <a href="/Home/AboutUs">About Us</a>
         </div>
         <div class="nav-login">
+            @if (User.IsInRole("Admin"))
+            {
+                TempData["Info"] = "You do not have permission to access this page.";
+                <script>
+                    window.location.href = '/Admin/Dashboard';
+                </script>
+            }
+
             @if (User.IsInRole("Member"))
             {
                 <label for="dropdownToggle" class="more-icon">
@@ -43,7 +51,7 @@
                         {
                             var user = db.Users.FirstOrDefault(u => u.Email == User.Identity.Name);
 
-                            if (user != null)
+                            if (user != null && user.Status == "Active")
                             {
                                 <div class="profile-info">
                                     <div class="image">
@@ -51,6 +59,12 @@
                                     </div>
                                     <label class="js-acc-btn">@user.Name</label>
                                 </div>
+                            }
+                            else
+                            {
+                                <script>
+                                    window.location.href = '/Account/checkOut';
+                                </script>
                             }
                         }
                     </div>

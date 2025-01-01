@@ -53,6 +53,12 @@ namespace Hotel.Controllers
                 return View();
             }
 
+            if (u.Status != "Active")
+            {
+                TempData["Info"] = "Account is deactived";
+                return View();
+            }
+
             if (ModelState.IsValid)
             {
                 TempData["Info"] = "Login successfully.";
@@ -82,6 +88,16 @@ namespace Hotel.Controllers
         public IActionResult Logout(string? returnURL)
         {
             TempData["Info"] = "Logout successfully.";
+
+            // Sign out
+            hp.SignOut();
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult checkOut(string? returnURL)
+        {
+            TempData["Info"] = "Account is deactived";
 
             // Sign out
             hp.SignOut();
