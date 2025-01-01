@@ -7,6 +7,9 @@
 .container {
     min-height: 90vh;
     display: flex;
+    background-image: url('/img/account_background.jpg');
+    background-size: cover;
+    background-attachment: fixed;
 }
 
 .profile-container {
