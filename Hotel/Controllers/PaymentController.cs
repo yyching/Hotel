@@ -202,7 +202,7 @@ public class PaymentController : Controller
         }
 
         // Check the available room
-        var isRoomAvailable = !db.Bookings.Where(b => b.RoomID == roomId)
+        var isRoomAvailable = !db.Bookings.Where(b => b.RoomID == roomId && b.Room.Status == "Terminate" && b.Room.Category.Status == "Terminate")
                                           .Any(b => (checkIn < b.CheckOutDate && b.CheckInDate < checkOut));
         if (!isRoomAvailable)
         {
@@ -464,8 +464,7 @@ public class PaymentController : Controller
     {
         var RoomCategory = TempData["RoomCategory"];
         var categiryId = db.Categories.Where(c => c.CategoryName == RoomCategory).Select(c => c.CategoryID).FirstOrDefault();
-        ViewBag.categoryID = categiryId;
-
+       
         var foodNames = TempData["FoodNames"] as string[];
         List<string> foodIds = new List<string>();
         if (foodNames != null && foodNames.Length > 0)
@@ -494,36 +493,19 @@ public class PaymentController : Controller
             }
         }
 
-        ViewBag.foodServiceIds = foodIds;
-        ViewBag.foodQuantities = TempData["FoodQuantities"];
-        ViewBag.roomServiceIds = roomIds;
-        ViewBag.roomQuantities = TempData["RoomQuantities"];
-
-
-        ViewBag.availableRoomID = TempData["RoomId"];
-        ViewBag.roomCategory = RoomCategory;
-        ViewBag.checkIn = TempData["CheckIn"];
-        ViewBag.checkOut = TempData["CheckOut"];
-        ViewBag.roomPrice = double.Parse(TempData["RoomPrice"]?.ToString());
-        ViewBag.numberOfDays = int.Parse(TempData["NumberOfDays"]?.ToString());
-        ViewBag.roomTotalPrice = double.Parse(TempData["RoomTotalPrice"]?.ToString());
-        ViewBag.Total = double.Parse(TempData["Total"]?.ToString());
-        ViewBag.Subtotal = double.Parse(TempData["Subtotal"]?.ToString());
-        ViewBag.Tax = double.Parse(TempData["Tax"]?.ToString());
-
-        if (TempData["FoodServices"] != null)
-        {
-            ViewBag.SelectedFoodServices = JsonSerializer.Deserialize<List<ServiceItem>>(
-                TempData["FoodServices"].ToString());
-        }
-
-        if (TempData["RoomServices"] != null)
-        {
-            ViewBag.SelectedRoomServices = JsonSerializer.Deserialize<List<ServiceItem>>(
-                TempData["RoomServices"].ToString());
-        }
+        var checkIn = DateOnly.FromDateTime(DateTime.Parse(TempData["CheckIn"]?.ToString()));
+        var checkOut = DateOnly.FromDateTime(DateTime.Parse(TempData["CheckOut"]?.ToString()));
 
         TempData["Info"] = "Payment cancelled.";
-        return View("PaymentPage");
+        return RedirectToAction("RoomDetailsPage", "Home", new
+        {
+            CategoryID = categiryId,
+            CheckInDate = checkIn.ToString("yyyy-MM-dd"),
+            CheckOutDate = checkOut.ToString("yyyy-MM-dd"),
+            FoodServiceIds = foodIds,
+            FoodQuantities = TempData["FoodQuantities"],
+            RoomServiceIds = roomIds,
+            RoomQuantities = TempData["RoomQuantities"]
+        });
     }
 }
