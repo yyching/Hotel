@@ -60,7 +60,7 @@
     background: white;
 }
 
-h4{
+.records{
     margin-bottom: 10px;
 }
 
@@ -117,11 +117,33 @@ h4{
     flex: 1;
 }
 
+    .middle-section h4,
+    .middle-section p {
+        margin-bottom: 5px;
+    }
+
 .right-section {
     margin-left: 20px;
-    margin-top: 5px;
+    margin-top: 0px;
     flex: 1;
 }
+
+    .right-section p {
+        margin: 0 0 10px; 
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .right-section ul {
+        list-style: disc inside;
+        padding: 0;
+        margin: 10px 0;
+    }
+
+        .right-section ul li {
+            margin: 5px 0;
+            font-size: 14px;
+        }
 
 .action-buttons {
     margin: 0;
