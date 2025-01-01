@@ -106,28 +106,6 @@ namespace Hotel.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reviews",
-                columns: table => new
-                {
-                    ReviewID = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    RatingValue = table.Column<int>(type: "int", nullable: false),
-                    ReviewText = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ReviewDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserID = table.Column<string>(type: "nvarchar(100)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Reviews", x => x.ReviewID);
-                    table.ForeignKey(
-                        name: "FK_Reviews_Users_UserID",
-                        column: x => x.UserID,
-                        principalTable: "Users",
-                        principalColumn: "UserID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Tokens",
                 columns: table => new
                 {
@@ -218,11 +196,6 @@ namespace Hotel.Migrations
                 column: "CategoryID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_UserID",
-                table: "Reviews",
-                column: "UserID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Rooms_CategoryID",
                 table: "Rooms",
                 column: "CategoryID");
@@ -248,9 +221,6 @@ namespace Hotel.Migrations
         {
             migrationBuilder.DropTable(
                 name: "CategoryImages");
-
-            migrationBuilder.DropTable(
-                name: "Reviews");
 
             migrationBuilder.DropTable(
                 name: "ServiceBooking");

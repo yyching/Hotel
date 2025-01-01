@@ -126,37 +126,6 @@ namespace Hotel.Migrations
                     b.ToTable("CategoryImages");
                 });
 
-            modelBuilder.Entity("Hotel.Models.Review", b =>
-                {
-                    b.Property<string>("ReviewID")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("RatingValue")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ReviewDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ReviewText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("ReviewID");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("Reviews");
-                });
-
             modelBuilder.Entity("Hotel.Models.Room", b =>
                 {
                     b.Property<string>("RoomID")
@@ -338,17 +307,6 @@ namespace Hotel.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Hotel.Models.Review", b =>
-                {
-                    b.HasOne("Hotel.Models.User", "User")
-                        .WithMany("Reviews")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Hotel.Models.Room", b =>
                 {
                     b.HasOne("Hotel.Models.Category", "Category")
@@ -415,8 +373,6 @@ namespace Hotel.Migrations
             modelBuilder.Entity("Hotel.Models.User", b =>
                 {
                     b.Navigation("Bookings");
-
-                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }
