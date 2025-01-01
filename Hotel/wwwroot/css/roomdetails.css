@@ -198,6 +198,12 @@ td, th {
         padding: 8px;
         border: 1px solid #ccc;
         border-radius: 5px;
+        color: black;
+    }
+
+    .form-group span {
+        color: red;
+        display: block;
     }
 
 input,
