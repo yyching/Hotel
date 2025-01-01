@@ -5,30 +5,67 @@
     ViewBag.Title = "Bookings";
 }
 
-<link href="/css/BookingHistory.css" rel="stylesheet" />
+<link href="/css/bookingDetail.css" rel="stylesheet" />
 
 <div class="history-container">
-    <div class="history-header">
+    <div class="history-header" style="border-bottom : 1px solid black;">
         <h2>Hotel Paradise</h2>
         <p>@Model.bookingID</p>
+    </div>
+    <div class="history-header">
+        <p>@Model.userName</p>
+        <p>@Model.roomNumber</p>
     </div>
     <h3 class="price">RM @Model.totalAmount</h3>
     <div class="content-section">
         <div class="image-container">
-            <img src="../img/RoomImg/double_nature.jpg" alt="Item Image">
+            <img src="/uploads/@Model.imagePath" alt="Item Image">
         </div>
         <div class="info-section">
             <h1><strong>Booking Date:</strong> @Model.bookingDate</h1>
             <p><strong>Check-in:</strong> @Model.checkInDate</p>
             <p><strong>Check-out:</strong> @Model.checkOutDate</p>
-            <h1><strong>Food</strong></h1>
-            <p><strong>Breakfast:</strong> Classic Omelette(Quantity: 1), Pancake Stack(Quantity: 2)</p>
-            <p><strong>Lunch:</strong> None</p>
-            <p><strong>Dinner:</strong> None</p>
-            <h1><strong>Add On</strong></h1>
-            <p><strong>Extra Bed:</strong> 1</p>
-            <p><strong>Extra Sheets:</strong> 0</p>
-            <p><strong>Extra Pillows:</strong> 1</p>
+            @if (ViewBag.BreakfastServices.ContainsKey(@Model.bookingID) ||
+            ViewBag.LunchServices.ContainsKey(@Model.bookingID) ||
+            ViewBag.DinnerServices.ContainsKey(@Model.bookingID))
+            {
+                <p><strong>Food Services:</strong></p>
+                <ul>
+                    @if (ViewBag.BreakfastServices.ContainsKey(@Model.bookingID))
+                    {
+                        @foreach (var service in ViewBag.BreakfastServices[@Model.bookingID])
+                        {
+                            <li>@service.Key: @service.Value</li>
+                        }
+                    }
+                    @if (ViewBag.LunchServices.ContainsKey(@Model.bookingID))
+                    {
+                        @foreach (var service in ViewBag.LunchServices[@Model.bookingID])
+                        {
+                            <li>@service.Key: @service.Value</li>
+                        }
+                    }
+                    @if (ViewBag.DinnerServices.ContainsKey(@Model.bookingID))
+                    {
+                        @foreach (var service in ViewBag.DinnerServices[@Model.bookingID])
+                        {
+                            <li>@service.Key: @service.Value</li>
+                        }
+                    }
+                </ul>
+            }
+            @if (ViewBag.RoomServices.ContainsKey(@Model.bookingID))
+            {
+                <p><strong>Room Services:</strong></p>
+                <ul>
+                    @foreach (var service in ViewBag.RoomServices[@Model.bookingID])
+                    {
+                        <li>@service.Key: @service.Value</li>
+                    }
+                </ul>
+            }
+            <!-- Close Button -->
+            <button class="close-button" onclick="window.location.href='/Admin/Bookings'">Close</button>
         </div>
     </div>
 </div>

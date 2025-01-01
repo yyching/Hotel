@@ -15,7 +15,6 @@ public class DB : DbContext
     public DbSet<Category> Categories { get; set; }
     public DbSet<CategoryImage> CategoryImages { get; set; }
     public DbSet<Room> Rooms { get; set; }
-    public DbSet<Review> Reviews { get; set; }
     public DbSet<Booking> Bookings { get; set; }
     public DbSet<Service> Services { get; set; }
     public DbSet<ServiceBooking> ServiceBooking { get; set; }
@@ -40,7 +39,6 @@ public class User
     public string Status { get; set; }
 
     // Navigation
-    public List<Review> Reviews { get; set; }
     public List<Booking> Bookings { get; set; }
 }
 
@@ -104,23 +102,6 @@ public class Room
     // Navigation
     public Category Category { get; set; }
     public List<Booking> Bookings { get; set; }
-}
-
-public class Review
-{
-    // Column
-    [Key, MaxLength(100)]
-    public string ReviewID { get; set; }
-    public int RatingValue { get; set; }
-    public string ReviewText { get; set; }
-    public DateTime ReviewDate { get; set; }
-    public string Status { get; set; }
-
-    // Foreign Key
-    public string UserID { get; set; }
-
-    // Navigation
-    public User User { get; set; }
 }
 
 public class Booking

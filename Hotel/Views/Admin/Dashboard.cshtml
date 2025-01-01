@@ -1,23 +1,24 @@
 ﻿@{
     Layout = "_NavigationBar";
-    ViewBag.Title = "DashBoard";
+    ViewBag.Title = "Dashboard";
 }
 
-<!-- MAIN CONTENT-->
+<!-- MAIN CONTENT -->
 <div class="main-content">
     <div class="section__content section__content--p30">
         <div class="container-fluid">
             <div class="row m-t-25">
+                <!-- Total Bookings -->
                 <div class="col-sm-6 col-lg-3">
                     <div class="overview-item overview-item--c1">
                         <div class="overview__inner">
                             <div class="overview-box clearfix">
                                 <div class="icon">
-                                    <i class="zmdi zmdi-account-o"></i>
+                                    <i class="zmdi zmdi-book"></i>
                                 </div>
                                 <div class="text">
-                                    <h2>10368</h2>
-                                    <span>members online</span>
+                                    <h2>@ViewBag.TotalBookings</h2>
+                                    <span>Total Bookings</span>
                                 </div>
                             </div>
                             <div class="overview-chart">
@@ -26,16 +27,18 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Total Revenue -->
                 <div class="col-sm-6 col-lg-3">
                     <div class="overview-item overview-item--c2">
                         <div class="overview__inner">
                             <div class="overview-box clearfix">
                                 <div class="icon">
-                                    <i class="zmdi zmdi-shopping-cart"></i>
+                                    <i class="zmdi zmdi-money"></i>
                                 </div>
                                 <div class="text">
-                                    <h2>388,688</h2>
-                                    <span>items solid</span>
+                                    <h2>@ViewBag.TotalRevenue</h2>
+                                    <span>Total Revenue</span>
                                 </div>
                             </div>
                             <div class="overview-chart">
@@ -44,16 +47,18 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Available Rooms -->
                 <div class="col-sm-6 col-lg-3">
                     <div class="overview-item overview-item--c3">
                         <div class="overview__inner">
                             <div class="overview-box clearfix">
                                 <div class="icon">
-                                    <i class="zmdi zmdi-calendar-note"></i>
+                                    <i class="zmdi zmdi-hotel"></i>
                                 </div>
                                 <div class="text">
-                                    <h2>1,086</h2>
-                                    <span>this week</span>
+                                    <h2>@ViewBag.AvailableRooms</h2>
+                                    <span>Available Rooms</span>
                                 </div>
                             </div>
                             <div class="overview-chart">
@@ -62,16 +67,18 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Total Services Booked -->
                 <div class="col-sm-6 col-lg-3">
                     <div class="overview-item overview-item--c4">
                         <div class="overview__inner">
                             <div class="overview-box clearfix">
                                 <div class="icon">
-                                    <i class="zmdi zmdi-money"></i>
+                                    <i class="zmdi zmdi-wrench"></i>
                                 </div>
                                 <div class="text">
-                                    <h2>$1,060,386</h2>
-                                    <span>total earnings</span>
+                                    <h2>@ViewBag.TotalServicesBooked</h2>
+                                    <span>Total Services Booked</span>
                                 </div>
                             </div>
                             <div class="overview-chart">
@@ -81,6 +88,67 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Chart Section -->
+            <div class="chart-container-custom">
+                <h3 class="chart-title-custom">Sales Performance</h3>
+                <canvas class="chart-canvas" id="salesChart"></canvas>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Fetch the chart data from ViewBag
+    var salesData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.SalesData));
+    var months = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Months));
+
+    // Chart.js configuration for the sales performance chart
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    const salesChart = new Chart(ctx, {
+        type: 'bar',  // You can change this to 'line', 'pie', etc.
+        data: {
+            labels: months,  // Months from the ViewBag
+            datasets: [{
+                label: 'Monthly Sales Performance',
+                data: salesData,  // Sales data for each month
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',  // Light greenish color
+                borderColor: 'rgba(75, 192, 192, 1)',  // Darker green color
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',  // Position of the legend
+                },
+                title: {
+                    display: true,
+                    text: 'Sales Performance Over Time',  // Title of the chart
+                    font: {
+                        size: 18  // Font size for the title
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Month'  // X axis title
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Revenue ($)'  // Y axis title
+                    },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
