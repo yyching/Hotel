@@ -1,4 +1,15 @@
-﻿.profile-container {
+﻿* {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    min-height: 90vh;
+    display: flex;
+}
+
+.profile-container {
     display: flex;
     min-width: 1200px;
     margin: 100px auto;
@@ -47,7 +58,10 @@
     flex: 1;
     padding: 20px;
     background: white;
-    margin-top: 75px;
+}
+
+.records{
+    margin-bottom: 10px;
 }
 
 .history-title {
@@ -92,8 +106,8 @@
 }
 
 .room-image {
-    width: 180px;
-    height: 250px;
+    width: 170px;
+    height: 200px;
     border-radius: 8px;
 }
 
@@ -103,11 +117,33 @@
     flex: 1;
 }
 
+    .middle-section h4,
+    .middle-section p {
+        margin-bottom: 5px;
+    }
+
 .right-section {
     margin-left: 20px;
-    margin-top: 5px;
+    margin-top: 0px;
     flex: 1;
 }
+
+    .right-section p {
+        margin: 0 0 10px; 
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .right-section ul {
+        list-style: disc inside;
+        padding: 0;
+        margin: 10px 0;
+    }
+
+        .right-section ul li {
+            margin: 5px 0;
+            font-size: 14px;
+        }
 
 .action-buttons {
     margin: 0;

@@ -5,146 +5,151 @@
 <link rel="stylesheet" href="/css/payment.css" asp-append-version="true">
 
 
-<div class="checkout-container">
-    <div class="left-side">
-        <div class="text-box">
-            <h1 class="home-heading">EASYSTAYS</h1>
-            <p class="home-des"><em>Where Comfort and Memories Are Made </em></p>
-            <hr class="left-hr" />
-        </div>
-    </div>
-
-    <form class="right-side" method="post" action="/Payment/CreateCheckoutSession">
-        <div class="receipt">
-            <div>
-                @{
-                    var url = $"/Home/RoomDetailsPage?CategoryID={ViewBag.categoryID}&CheckInDate={ViewBag.checkIn:yyyy-MM-dd}&CheckOutDate={ViewBag.checkOut:yyyy-MM-dd}";
-
-                    var parameters = new System.Text.StringBuilder();
-
-                    if (ViewBag.foodServiceIds != null)
-                    {
-                        foreach (var id in ViewBag.foodServiceIds)
-                        {
-                            parameters.Append("&FoodServiceIds=").Append(id);
-                        }
-                    }
-
-                    if (ViewBag.foodQuantities != null)
-                    {
-                        foreach (var q in ViewBag.foodQuantities)
-                        {
-                            parameters.Append("&FoodQuantities=").Append(q);
-                        }
-                    }
-
-                    if (ViewBag.roomServiceIds != null)
-                    {
-                        foreach (var id in ViewBag.roomServiceIds)
-                        {
-                            parameters.Append("&RoomServiceIds=").Append(id);
-                        }
-                    }
-
-                    if (ViewBag.roomQuantities != null)
-                    {
-                        foreach (var q in ViewBag.roomQuantities)
-                        {
-                            parameters.Append("&RoomQuantities=").Append(q);
-                        }
-                    }
-                }
-                <a href="@(url + parameters.ToString())" class="back">X</a>
-
-                <h2 class="receipt-heading">Receipt Summary</h2>
-                <h3>
-                    @ViewBag.roomCategory
-                </h3>
-                <p>
-                    @ViewBag.checkIn.ToString("yyyy-MM-dd") to
-                    @ViewBag.checkOut.ToString("yyyy-MM-dd")
-                </p>
+<div class="payment-container">
+    <div class="checkout-container">
+        <div class="left-side">
+            <div class="text-box">
+                <h1 class="home-heading">EASYSTAYS</h1>
+                <p class="home-des"><em>Where Comfort and Memories Are Made </em></p>
+                <hr class="left-hr" />
             </div>
-            <div>
-                <table class="table">
-                    <tr>
-                        <td>RM @ViewBag.roomPrice x @ViewBag.numberOfDays nights</td>
-                        <td class="price">RM @ViewBag.roomTotalPrice</td>
-                    </tr>
-                    @if (ViewBag.SelectedFoodServices != null)
-                    {
-                        foreach (var f in ViewBag.SelectedFoodServices)
+        </div>
+
+        <form class="right-side" method="post" action="/Payment/CreateCheckoutSession">
+            <div class="receipt">
+                <div>
+                    @{
+                        var url = $"/Home/RoomDetailsPage?CategoryID={ViewBag.categoryID}&CheckInDate={ViewBag.checkIn:yyyy-MM-dd}&CheckOutDate={ViewBag.checkOut:yyyy-MM-dd}";
+
+                        var parameters = new System.Text.StringBuilder();
+
+                        if (ViewBag.foodServiceIds != null)
                         {
-                            <tr>
-                                <td>@f.category: @f.serviceName x @f.quantity</td>
-                                <td class="price">RM @f.price</td>
-                            </tr>
+                            foreach (var id in ViewBag.foodServiceIds)
+                            {
+                                parameters.Append("&FoodServiceIds=").Append(id);
+                            }
+                        }
+
+                        if (ViewBag.foodQuantities != null)
+                        {
+                            foreach (var q in ViewBag.foodQuantities)
+                            {
+                                parameters.Append("&FoodQuantities=").Append(q);
+                            }
+                        }
+
+                        if (ViewBag.roomServiceIds != null)
+                        {
+                            foreach (var id in ViewBag.roomServiceIds)
+                            {
+                                parameters.Append("&RoomServiceIds=").Append(id);
+                            }
+                        }
+
+                        if (ViewBag.roomQuantities != null)
+                        {
+                            foreach (var q in ViewBag.roomQuantities)
+                            {
+                                parameters.Append("&RoomQuantities=").Append(q);
+                            }
                         }
                     }
-                    @if (ViewBag.SelectedRoomServices != null)
-                    {
-                        foreach (var r in ViewBag.SelectedRoomServices)
-                        {
-                            <tr>
-                                <td>@r.category: @r.serviceName x @r.quantity</td>
-                                <td class="price">RM @r.price</td>
-                            </tr>
-                        }
-                    }
-                    <tr>
-                        <td>Subtotal</td>
-                        <td class="price">RM @ViewBag.Subtotal</td>
-                    </tr>
-                    <tr>
-                        <td>Tax</td>
-                        <td class="price">RM @ViewBag.Tax</td>
-                    </tr>
-                    <tr class="total">
-                        <td>Total</td>
-                        <td class="price">RM @ViewBag.Total</td>
+                    <div class="back-button">
+                        <a href="@(url + parameters.ToString())" class="back">X</a>
+                    </div>
 
-                        <!-- Hidden inputs for form submission -->
-                        <input type="hidden" name="roomId" value="@ViewBag.availableRoomID" />
-                        <input type="hidden" name="roomCategory" value="@ViewBag.roomCategory" />
-                        <input type="hidden" name="checkIn" value="@ViewBag.checkIn.ToString("yyyy-MM-dd")" />
-                        <input type="hidden" name="checkOut" value="@ViewBag.checkOut.ToString("yyyy-MM-dd")" />
-                        <input type="hidden" name="roomPrice" value="@ViewBag.roomPrice" />
-                        <input type="hidden" name="numberOfDays" value="@ViewBag.numberOfDays" />
-                        <input type="hidden" name="roomTotalPrice" value="@ViewBag.roomTotalPrice" />
-                        <input type="hidden" name="total" value="@ViewBag.Total" />
-                        <input type="hidden" name="subtotal" value="@ViewBag.Subtotal" />
-                        <input type="hidden" name="tax" value="@ViewBag.Tax" />
-
+                    <h2 class="receipt-heading">Receipt Summary</h2>
+                    <h3>
+                        @ViewBag.roomCategory
+                    </h3>
+                    <p>
+                        @ViewBag.checkIn.ToString("yyyy-MM-dd") to
+                        @ViewBag.checkOut.ToString("yyyy-MM-dd")
+                    </p>
+                </div>
+                <div>
+                    <table class="table">
+                        <tr>
+                            <td>RM @ViewBag.roomPrice x @ViewBag.numberOfDays nights</td>
+                            <td class="price">RM @ViewBag.roomTotalPrice</td>
+                        </tr>
                         @if (ViewBag.SelectedFoodServices != null)
                         {
-                            for (int i = 0; i < ViewBag.SelectedFoodServices.Count; i++)
+                            foreach (var f in ViewBag.SelectedFoodServices)
                             {
-                                var f = ViewBag.SelectedFoodServices[i];
-                                <input type="hidden" name="foodNames[@i]" value="@f.serviceName" />
-                                <input type="hidden" name="foodQuantities[@i]" value="@f.quantity" />
-                                <input type="hidden" name="foodPrices[@i]" value="@f.price" />
-                                <input type="hidden" name="foodCategories[@i]" value="@f.category" />
+                                <tr>
+                                    <td>@f.category: @f.serviceName x @f.quantity</td>
+                                    <td class="price">RM @f.price</td>
+                                </tr>
                             }
                         }
-
                         @if (ViewBag.SelectedRoomServices != null)
                         {
-                            for (int i = 0; i < ViewBag.SelectedRoomServices.Count; i++)
+                            foreach (var r in ViewBag.SelectedRoomServices)
                             {
-                                var r = ViewBag.SelectedRoomServices[i];
-                                <input type="hidden" name="roomNames[@i]" value="@r.serviceName" />
-                                <input type="hidden" name="roomQuantities[@i]" value="@r.quantity" />
-                                <input type="hidden" name="roomPrices[@i]" value="@r.price" />
-                                <input type="hidden" name="roomCategories[@i]" value="@r.category" />
+                                <tr>
+                                    <td>@r.category: @r.serviceName x @r.quantity</td>
+                                    <td class="price">RM @r.price</td>
+                                </tr>
                             }
                         }
-                    </tr>
-                </table>
-            </div>
-        </div>
+                        <tr>
+                            <td>Subtotal</td>
+                            <td class="price">RM @ViewBag.Subtotal</td>
+                        </tr>
+                        <tr>
+                            <td>Tax</td>
+                            <td class="price">RM @ViewBag.Tax</td>
+                        </tr>
+                        <tr class="total">
+                            <td>Total</td>
+                            <td class="price">RM @ViewBag.Total</td>
 
-        <div class="payment-info">
-            <button class="btn" type="submit">Pay Now</button>
-        </div>
-    </form>
+                            <!-- Hidden inputs for form submission -->
+                            <input type="hidden" name="roomId" value="@ViewBag.availableRoomID" />
+                            <input type="hidden" name="roomCategory" value="@ViewBag.roomCategory" />
+                            <input type="hidden" name="checkIn" value="@ViewBag.checkIn.ToString("yyyy-MM-dd")" />
+                            <input type="hidden" name="checkOut" value="@ViewBag.checkOut.ToString("yyyy-MM-dd")" />
+                            <input type="hidden" name="roomPrice" value="@ViewBag.roomPrice" />
+                            <input type="hidden" name="numberOfDays" value="@ViewBag.numberOfDays" />
+                            <input type="hidden" name="roomTotalPrice" value="@ViewBag.roomTotalPrice" />
+                            <input type="hidden" name="total" value="@ViewBag.Total" />
+                            <input type="hidden" name="subtotal" value="@ViewBag.Subtotal" />
+                            <input type="hidden" name="tax" value="@ViewBag.Tax" />
+
+                            @if (ViewBag.SelectedFoodServices != null)
+                            {
+                                for (int i = 0; i < ViewBag.SelectedFoodServices.Count; i++)
+                                {
+                                    var f = ViewBag.SelectedFoodServices[i];
+                                    <input type="hidden" name="foodNames[@i]" value="@f.serviceName" />
+                                    <input type="hidden" name="foodQuantities[@i]" value="@f.quantity" />
+                                    <input type="hidden" name="foodPrices[@i]" value="@f.price" />
+                                    <input type="hidden" name="foodCategories[@i]" value="@f.category" />
+                                }
+                            }
+
+                            @if (ViewBag.SelectedRoomServices != null)
+                            {
+                                for (int i = 0; i < ViewBag.SelectedRoomServices.Count; i++)
+                                {
+                                    var r = ViewBag.SelectedRoomServices[i];
+                                    <input type="hidden" name="roomNames[@i]" value="@r.serviceName" />
+                                    <input type="hidden" name="roomQuantities[@i]" value="@r.quantity" />
+                                    <input type="hidden" name="roomPrices[@i]" value="@r.price" />
+                                    <input type="hidden" name="roomCategories[@i]" value="@r.category" />
+                                }
+                            }
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="payment-info">
+                <button class="btn" type="submit">Pay Now</button>
+            </div>
+        </form>
+    </div>
+
 </div>
