@@ -299,6 +299,7 @@ namespace Hotel.Controllers
         }
 
         // POST: Account/EditProfile
+        [Authorize]
         [Authorize(Roles = "Member")]
         [HttpPost]
         public IActionResult EditProfile(UpdateProfileVM vm)

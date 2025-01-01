@@ -13,6 +13,7 @@ using iText.Layout;
 using iText.Html2pdf;
 using iText.Kernel.Pdf;
 using iText.IO.Font;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hotel.Controllers;
 
@@ -33,6 +34,8 @@ public class PaymentController : Controller
     }
 
     // GET: Payment/PaymentPage
+    [Authorize]
+    [Authorize(Roles = "Member")]
     public IActionResult PaymentPage(string categoryID, DateOnly checkIn, DateOnly checkOut, string[]? foodServiceIds, int[]? foodQuantities, string[]? roomServiceIds, int[]? roomQuantities)
     {
         // Data for the back to RoomDetailsPage
@@ -139,6 +142,8 @@ public class PaymentController : Controller
     }
 
     //POST: Payment/PaymentPage
+    [Authorize]
+    [Authorize(Roles = "Member")]
     public IActionResult CreateCheckoutSession(
         string roomId,
         string roomCategory,
@@ -319,6 +324,8 @@ public class PaymentController : Controller
     }
 
     // GET: Payment/Success
+    [Authorize]
+    [Authorize(Roles = "Member")]
     public IActionResult Success()
     {
         // Booking Data
@@ -460,6 +467,8 @@ public class PaymentController : Controller
     }
 
     // GET: Payment/Cancel
+    [Authorize]
+    [Authorize(Roles = "Member")]
     public IActionResult Cancel()
     {
         var RoomCategory = TempData["RoomCategory"];
