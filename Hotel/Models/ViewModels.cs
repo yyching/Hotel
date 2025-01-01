@@ -286,3 +286,14 @@ public class UpdateServiceVM
     public string serviceType { get; set; }
     public string category { get; set; }
 }
+
+public class ViewBookingDetail
+{
+    public string bookingID { get; set; }
+    public string bookingDate { get; set; }
+    public string checkInDate { get; set; }
+    public string checkOutDate { get; set; }
+    public string totalAmount { get; set; }
+    public string userName { get; set; }
+    public string roomNumber { get; set; }
+}

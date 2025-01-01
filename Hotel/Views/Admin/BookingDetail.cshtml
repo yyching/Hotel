@@ -1,1 +1,34 @@
-﻿
+﻿@model ViewBookingDetail
+
+@{
+    Layout = "_NavigationBar";
+    ViewBag.Title = "Bookings";
+}
+
+<link href="/css/BookingHistory.css" rel="stylesheet" />
+
+<div class="history-container">
+    <div class="history-header">
+        <h2>Hotel Paradise</h2>
+        <p>@Model.bookingID</p>
+    </div>
+    <h3 class="price">RM @Model.totalAmount</h3>
+    <div class="content-section">
+        <div class="image-container">
+            <img src="../img/RoomImg/double_nature.jpg" alt="Item Image">
+        </div>
+        <div class="info-section">
+            <h1><strong>Booking Date:</strong> @Model.bookingDate</h1>
+            <p><strong>Check-in:</strong> @Model.checkInDate</p>
+            <p><strong>Check-out:</strong> @Model.checkOutDate</p>
+            <h1><strong>Food</strong></h1>
+            <p><strong>Breakfast:</strong> Classic Omelette(Quantity: 1), Pancake Stack(Quantity: 2)</p>
+            <p><strong>Lunch:</strong> None</p>
+            <p><strong>Dinner:</strong> None</p>
+            <h1><strong>Add On</strong></h1>
+            <p><strong>Extra Bed:</strong> 1</p>
+            <p><strong>Extra Sheets:</strong> 0</p>
+            <p><strong>Extra Pillows:</strong> 1</p>
+        </div>
+    </div>
+</div>
