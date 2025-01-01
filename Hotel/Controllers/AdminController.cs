@@ -27,6 +27,8 @@ public class AdminController : Controller
     }
 
     // Dashboard
+    [Authorize]
+    [Authorize(Roles = "Admin")]
     public IActionResult Dashboard()
     {
         // Total Bookings
