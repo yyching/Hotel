@@ -1,4 +1,15 @@
-﻿.profile-container {
+﻿* {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    min-height: 90vh;
+    display: flex;
+}
+
+.profile-container {
     display: flex;
     min-width: 1200px;
     margin: 100px auto;
@@ -47,7 +58,10 @@
     flex: 1;
     padding: 20px;
     background: white;
-    margin-top: 75px;
+}
+
+h4{
+    margin-bottom: 10px;
 }
 
 .history-title {
