@@ -1,0 +1,81 @@
+﻿/* Main chart container styling */
+.chart-container-custom {
+    width: 100%; /* Ensures the chart takes up full width */
+    max-width: 900px; /* Restricts the maximum width */
+    margin: 30px auto; /* Centers the chart with margin */
+    padding: 30px;
+    background-color: #f5f5f5; /* Light grey background */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+    border: 1px solid #ddd; /* Adds border around the chart container */
+}
+
+/* Chart title styling */
+.chart-title-custom {
+    font-size: 26px; /* Slightly larger title font */
+    font-weight: bold; /* Bold title */
+    text-align: center; /* Center align the title */
+    margin-bottom: 20px; /* Space between title and chart */
+    color: #444; /* Darker text color for contrast */
+}
+
+/* Styling for the canvas element */
+.chart-canvas {
+    display: block; /* Ensures the canvas is displayed as a block element */
+    max-width: 100%; /* Ensures the chart doesn't overflow */
+    height: 400px; /* Set fixed height for the chart */
+    border-radius: 10px; /* Rounded corners for canvas */
+    background-color: #ffffff; /* White background for the chart */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Soft shadow around the chart */
+}
+
+/* Responsive Design: Adjust for smaller screens */
+@media (max-width: 768px) {
+    .chart-container-custom {
+        padding: 20px; /* Adjust padding for smaller screens */
+        max-width: 100%; /* Allow chart to take full width */
+    }
+
+    .chart-title-custom {
+        font-size: 22px; /* Smaller title font size on mobile */
+    }
+}
+
+/* Overview section styling */
+.overview-item-custom {
+    border-radius: 8px;
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd; /* Border for each overview item */
+}
+
+.overview-box-custom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.icon-custom {
+    font-size: 35px;
+    color: #4CAF50; /* Green color for icons */
+}
+
+.text-custom h2 {
+    font-size: 30px;
+    font-weight: bold;
+    color: #333; /* Dark text color */
+}
+
+.text-custom span {
+    font-size: 14px;
+    color: #757575;
+}
+
+.overview-chart-custom {
+    width: 50%;
+    height: 50px;
+    margin-top: 20px; /* Space between text and chart */
+}

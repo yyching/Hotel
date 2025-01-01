@@ -296,4 +296,5 @@ public class ViewBookingDetail
     public string totalAmount { get; set; }
     public string userName { get; set; }
     public string roomNumber { get; set; }
+    public string imagePath { get; set; }
 }

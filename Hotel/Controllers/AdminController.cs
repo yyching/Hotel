@@ -2,6 +2,7 @@
 using System.Reflection.Emit;
 using Azure;
 using Hotel.Models;
+using iText.Commons.Actions.Contexts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -28,6 +29,33 @@ public class AdminController : Controller
     // Dashboard
     public IActionResult Dashboard()
     {
+        // Total Bookings
+        var totalBookings = db.Bookings.Count();
+        ViewBag.TotalBookings = totalBookings;
+
+        // Total Revenue
+        var totalRevenue = db.Bookings.Sum(b => b.TotalAmount);
+        ViewBag.TotalRevenue = totalRevenue.ToString("F2");
+
+        // Available Rooms
+        var availableRooms = db.Rooms.Count(r => r.Status != "Booked");
+        ViewBag.AvailableRooms = availableRooms;
+
+        // Total Services Booked
+        var totalServicesBooked = db.ServiceBooking.Count();
+        ViewBag.TotalServicesBooked = totalServicesBooked;
+
+        // Data for the Chart (Sales Data)
+        var salesData = db.Bookings
+                                 .GroupBy(b => new { b.BookingDate.Year, b.BookingDate.Month })
+                                 .Select(g => new { Year = g.Key.Year, Month = g.Key.Month, TotalAmount = g.Sum(b => b.TotalAmount) })
+                                 .OrderBy(x => x.Year).ThenBy(x => x.Month)
+                                 .ToList();
+
+        // Pass the data to the view for the chart
+        ViewBag.SalesData = salesData.Select(s => s.TotalAmount).ToList();
+        ViewBag.Months = salesData.Select(s => $"{s.Year}-{s.Month:D2}").ToList(); // Format as "YYYY-MM"
+
         return View();
     }
 
@@ -999,19 +1027,78 @@ public class AdminController : Controller
         }
 
         var user = db.Users.Find(bd.UserID);  
-        var room = db.Rooms.Find(bd.RoomID);  
+        var room = db.Rooms.Find(bd.RoomID);
+
+        var firstImagePath = db.CategoryImages
+                       .OrderBy(ci => ci.CategoryID) // Optional: Specify the ordering if needed
+                       .Select(ci => ci.ImagePath)
+                       .FirstOrDefault();
 
         // Prepare the view model to pass to the view
         var bookingDetail = new ViewBookingDetail
         {
             bookingID = bd.BookingID,
-            bookingDate = bd.BookingDate.ToString("yyyy-MM-dd"),  
-            checkInDate = bd.CheckInDate.ToString("yyyy-MM-dd"),  
-            checkOutDate = bd.CheckOutDate.ToString("yyyy-MM-dd"), 
-            totalAmount = bd.TotalAmount.ToString("C"),  
+            bookingDate = bd.BookingDate.ToString("yyyy-MM-dd"),
+            checkInDate = bd.CheckInDate.ToString("yyyy-MM-dd"),
+            checkOutDate = bd.CheckOutDate.ToString("yyyy-MM-dd"),
+            totalAmount = bd.TotalAmount.ToString("F2"),
             userName = user?.Name,
-            roomNumber = room?.RoomNumber
+            roomNumber = room?.RoomNumber,
+            imagePath = firstImagePath // Set to the first image path
         };
+
+        var breakfastDict = new Dictionary<string, Dictionary<string, int>>();
+        var lunchDict = new Dictionary<string, Dictionary<string, int>>();
+        var dinnerDict = new Dictionary<string, Dictionary<string, int>>();
+        var roomDict = new Dictionary<string, Dictionary<string, int>>();
+
+        var serviceBooking = db.ServiceBooking
+                             .Include(s => s.Service)
+                             .ToList();
+
+        var services = serviceBooking
+                      .Where(s => s.BookingID == bd.BookingID)
+                      .ToList();
+
+        if (services.Any())
+        {
+            var breakfastServices = services
+            .Where(s => s.Service.ServiceType == "Food" && s.Service.Category == "Breakfast")
+            .ToDictionary(s => s.Service.ServiceName, s => s.Qty);
+            if (breakfastServices.Any())
+            {
+                breakfastDict[bd.BookingID] = breakfastServices;
+            }
+
+            var lunchServices = services
+            .Where(s => s.Service.ServiceType == "Food" && s.Service.Category == "Lunch")
+            .ToDictionary(s => s.Service.ServiceName, s => s.Qty);
+            if (lunchServices.Any())
+            {
+                lunchDict[bd.BookingID] = lunchServices;
+            }
+
+            var dinnerServices = services
+            .Where(s => s.Service.ServiceType == "Food" && s.Service.Category == "Dinner")
+            .ToDictionary(s => s.Service.ServiceName, s => s.Qty);
+            if (dinnerServices.Any())
+            {
+                dinnerDict[bd.BookingID] = dinnerServices;
+            }
+
+            var roomServices = services
+                .Where(s => s.Service.ServiceType == "Room" && s.Qty >= 1)
+                .ToDictionary(s => s.Service.ServiceName, s => s.Qty);
+            if (roomServices.Any())
+            {
+                roomDict[bd.BookingID] = roomServices;
+            }
+        }
+
+        ViewBag.BreakfastServices = breakfastDict;
+        ViewBag.LunchServices = lunchDict;
+        ViewBag.DinnerServices = dinnerDict;
+        ViewBag.RoomServices = roomDict;
 
         // Pass the model to the view
         return View(bookingDetail);
