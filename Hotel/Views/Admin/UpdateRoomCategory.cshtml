@@ -46,8 +46,14 @@
 
         <div class="form-row">
             <div class="form-group">
-                <label asp-for="bed">Bed Type</label>
-                <input asp-for="bed">
+                <label asp-for="bed">Bed:</label>
+                <select asp-for="bed" required>
+                    <option value="bed">@Model.bed</option>
+                    <option value="Double Bed">Double Bed</option>
+                    <option value="King Bed">King Bed</option>
+                    <option value="Queen Bed">Queen Bed</option>
+                    <option value="King Bed + 2 Single Beds	">King Bed + 2 Single Beds</option>
+                </select>
                 <span asp-validation-for="bed"></span>
             </div>
             <div class="form-group">
@@ -59,7 +65,7 @@
 
         <div class="form-group">
             <div class="form-group">
-                <label asp-for="description">Desciption</label>
+                <label asp-for="description">Description</label>
                 <input asp-for="description">
                 <span asp-validation-for="description"></span>
             </div>
@@ -70,22 +76,23 @@
             <!-- Display existing images -->
             @foreach (var image in Model.CategoryImages)
             {
-                <label asp-for="Photos" hidden>Photos</label>
-                <div id="photo-upload-container" class="photo-upload-container">
-                    <div class="photo-upload-item">
-                        <label class="upload">
-                            <input name="Photos" type="file" accept="image/jpeg,image/png" hidden>
-                            <img src="/uploads/@image.ImagePath" class="picture-placeholder">
-                        </label>
-                        <input type="hidden" name="PhotosToKeep" value="@image.ImagePath" />
-                        <button type="button" class="btn-remove-photo" disabled>&times;</button>
-                    </div>
+                <div class="photo-upload-item">
+                    <label class="upload">
+                        <input type="file" name="Photos" accept="image/jpeg,image/png" style="display:none;">
+                        <img src="/uploads/@image.ImagePath" class="picture-placeholder" onclick="this.previousElementSibling.click();">
+                    </label>
+                    <!-- Hidden input for keeping the old images -->
+                    <input type="hidden" name="PhotosToKeep" value="@image.ImagePath" />
+                    <!-- Remove button for deleting the image -->
+                    <button type="button" class="btn-remove-photo" onclick="removeImage('@image.ImagePath')">&times;</button>
                 </div>
             }
+            <!-- Add button for adding new photos -->
+            <div id="photo-upload-container" class="photo-upload-container"></div>
         </div>
 
-        <!-- Add button for adding new photos -->
-        <div id="photo-upload-container" class="photo-upload-container"></div>
+        <!-- Hidden input to store removed image paths -->
+        <input type="hidden" id="RemoveImagePaths" name="RemoveImagePaths" value="" />
 
         <!-- Form Actions -->
         <div class="form-actions">
@@ -166,4 +173,30 @@
         // Initial check for the Add Photo button visibility
         checkAddButtonVisibility();
     });
+
+    // Remove image from the list to delete
+    function removeImage(imagePath) {
+        // Create hidden input for the image path to mark it for removal
+        const hiddenInput = document.createElement("input");
+        hiddenInput.type = "hidden";
+        hiddenInput.name = "RemoveImagePaths"; // Ensure this matches the parameter name in the controller
+        hiddenInput.value = imagePath;
+        document.querySelector("form").appendChild(hiddenInput);
+
+        // Hide the image and remove it from the UI (it will be marked for deletion in the form submission)
+        event.target.closest('.photo-upload-item').style.display = 'none';
+    }
+
+    // Add a validation function for form submission
+    document.querySelector("form").addEventListener("submit", function(event) {
+        const existingImages = document.querySelectorAll("input[name='PhotosToKeep']").length;
+        const newImages = document.querySelectorAll("input[name='Photos']").length;
+
+        // If no image input is added, show an alert and prevent form submission
+        if (existingImages === 0 && newImages === 0) {
+            alert("At least one image is required.");
+            event.preventDefault();
+        }
+    });
 </script>
+
