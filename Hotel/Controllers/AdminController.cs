@@ -388,8 +388,6 @@ public class AdminController : Controller
         return View(vm);
     }
 
-
-
     // Room Category - Terminate | Post
     [HttpPost]
     public IActionResult TerminateRoomCategory(string? id)
@@ -989,6 +987,36 @@ public class AdminController : Controller
 
         return View(m);
     }
+
+    public IActionResult BookingDetail(string? id)
+    {
+        // Fetch the booking based on BookingID
+        var bd = db.Bookings.Find(id);
+
+        if (bd == null)
+        {
+            return RedirectToAction("Services");
+        }
+
+        var user = db.Users.Find(bd.UserID);  
+        var room = db.Rooms.Find(bd.RoomID);  
+
+        // Prepare the view model to pass to the view
+        var bookingDetail = new ViewBookingDetail
+        {
+            bookingID = bd.BookingID,
+            bookingDate = bd.BookingDate.ToString("yyyy-MM-dd"),  
+            checkInDate = bd.CheckInDate.ToString("yyyy-MM-dd"),  
+            checkOutDate = bd.CheckOutDate.ToString("yyyy-MM-dd"), 
+            totalAmount = bd.TotalAmount.ToString("C"),  
+            userName = user?.Name,
+            roomNumber = room?.RoomNumber
+        };
+
+        // Pass the model to the view
+        return View(bookingDetail);
+    }
+
 
     // =======================================================================================================================================
 
