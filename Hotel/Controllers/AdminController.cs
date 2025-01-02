@@ -222,7 +222,8 @@ public class AdminController : Controller
         ViewBag.Name = name = name?.Trim() ?? "";
 
         var searched = db.Categories
-                .Where(rc => rc.CategoryName.Contains(name));
+                       .Where(rc => rc.CategoryName.Contains(name) || rc.CategoryID.ToString().Contains(name) || rc.Theme.Contains(name) || rc.Size.ToString().Contains(name)
+                                    || rc.Capacity.Contains(name) || rc.Bed.Contains(name) || rc.PricePerNight.ToString().Contains(name));
 
         // Paging ---------------------------
         if (page < 1)
@@ -478,6 +479,7 @@ public class AdminController : Controller
         {
             int n = ImportRoomCategory(file);
             ImportRoomCategoryImage(file);
+            ImportRoom(file);
             TempData["Info"] = $"{n} Room Category imported.";
         }
 
@@ -603,6 +605,59 @@ public class AdminController : Controller
         return db.SaveChanges();
     }
 
+    //Import - Room Logic
+    private int ImportRoom(IFormFile file)
+    {
+        using var stream = file.OpenReadStream();
+        using var reader = new StreamReader(stream);
+
+        int insertedCount = 0;
+
+        while (!reader.EndOfStream)
+        {
+            var line = reader.ReadLine()?.Trim() ?? "";
+
+            if (string.IsNullOrEmpty(line)) continue;
+
+            var data = line.Split("\t", StringSplitOptions.TrimEntries);
+
+            try
+            {
+                if (data.Length == 4)
+                {
+                    var existingroom = db.Rooms.FirstOrDefault(r => r.RoomID == data[0]);
+                    if (existingroom != null)
+                    {
+                        Console.WriteLine($"Room with ID {data[0]} already exists. Skipping.");
+                        continue;
+                    }
+
+                    var room = new Room
+                    {
+                        RoomID = data[0],
+                        RoomNumber = data[1],
+                        Status = data[2],
+                        CategoryID = data[3]
+                    };
+
+                    db.Rooms.Add(room);
+                    insertedCount++;
+
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid data format: {line}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing line: {line}. Error: {ex.Message}");
+            }
+        }
+
+        return db.SaveChanges();
+    }
+
     // =======================================================================================================================================
 
     // =======================================================================================================================================
@@ -617,7 +672,7 @@ public class AdminController : Controller
 
         var searched = db.Rooms
                        .Include(rm => rm.Category)
-                       .Where(rm => rm.RoomNumber.Contains(name) || rm.Category.CategoryName.Contains(name));
+                       .Where(rm => rm.RoomNumber.Contains(name) || rm.Category.CategoryName.Contains(name) || rm.RoomID.ToString().Contains(name));
 
         // Paging ---------------------------
         if (page < 1)
@@ -791,7 +846,8 @@ public class AdminController : Controller
         // (1) Searching ------------------------
         ViewBag.Name = name = name?.Trim() ?? "";
 
-        var searched = db.Services.Where(s => s.ServiceName.Contains(name));
+        var searched = db.Services.Where(s => s.ServiceName.Contains(name) || s.ServiceID.ToString().Contains(name) || s.UnitPrice.ToString().Contains(name)
+                                              || s.ServiceType.Contains(name) || s.Category.Contains(name));
 
         // (2) Paging ---------------------------
         if (page < 1)
@@ -1048,7 +1104,8 @@ public class AdminController : Controller
         // (1) Searching ------------------------
         ViewBag.Name = name = name?.Trim() ?? "";
 
-        var searched = db.Bookings.Include(b => b.User).Where(b => b.BookingID.Contains(name));
+        var searched = db.Bookings.Include(b => b.User)
+                       .Where(b => b.BookingID.Contains(name) || b.BookingDate.ToString().Contains(name) );
 
         // (2) Paging ---------------------------
         if (page < 1)
@@ -1174,7 +1231,8 @@ public class AdminController : Controller
         ViewBag.Name = name = name?.Trim() ?? "";
 
         var searched = db.Users
-                .Where(u => u.Role == "Member" && u.Name.Contains(name));
+                       .Where(u => u.Role == "Member" && (u.Name.Contains(name) || u.UserID.ToString().Contains(name)
+                                   || u.Email.Contains(name) || u.PhoneNumber.ToString().Contains(name)));
 
         // Paging ---------------------------
         if (page < 1)
