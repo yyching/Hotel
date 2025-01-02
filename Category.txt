@@ -1,13 +1,14 @@
 category:
 
-RCT001	Single Room	City	25	1	Double Bed	WIFI, Television, Bathroom	199.0	Active
-RCT002	Double Room	City	30	2	King Bed	WIFI, Television, Bathroom	159.0	Active
-RCT003	Family Room	City	35	5	Queen Bed	WIFI, Television, Bathroom, Mini Bar	198.0	Active
-RCT004	Premium King Room	City	45	6	King Bed + 2 Single Beds	WIFI, Television, Bathroom, Balcony	299.0	Active
-RCT005	Single Room	Nature	25	1	Double Bed	WIFI, Television, Bathroom	199.0	Active
-RCT006	Double Room	Nature	30	2	King Bed	WIFI, Television, Bathroom	159.0	Active
-RCT007	Family Room	Nature	35	5	Queen Bed	WIFI, Television, Bathroom, Mini Bar	198.0	Active
-RCT008	Premium King Room	Nature	45	6	King Bed + 2 Single Beds	WIFI, Television, Bathroom, Balcony	299.0	Active
+RCT001	Single Room	City	25	1	Double Bed	Cozy room ideal for solo travelers, featuring a comfortable double bed, modern amenities, and an ensuite bathroom.	119.0	Active
+RCT002	Double Room	City	30	2	King Bed	Spacious room perfect for couples, offering a luxurious king-sized bed and all essential amenities for a comfortable stay.	199.0	Active
+RCT003	Family Room	City	35	5	Queen Bed	Designed for families, this room includes a queen-sized bed, ample space, and a mini bar for added convenience.	239.0	Active
+RCT004	Premium King Room	City	45	6	King Bed + 2 Single Beds	Luxurious room with a balcony, featuring a king-sized bed, two single beds, and a stylish modern design for ultimate relaxation.	299.0	Active
+RCT005	Single Room	Nature	25	1	Double Bed	Peaceful retreat with nature views, a cozy double bed, and modern facilities for a relaxing stay.	119.0	Active
+RCT006	Double Room	Nature	30	2	King Bed	Perfect for couples seeking tranquility, this room offers a king-sized bed and scenic surroundings.	199.0	Active
+RCT007	Family Room	Nature	35	5	Queen Bed	Ideal for families, this spacious room includes a queen-sized bed and amenities designed for comfort and convenience.	239.0	Active
+RCT008	Premium King Room	Nature	45	6	King Bed + 2 Single Beds	Exclusive room with stunning nature views, featuring a king-sized bed, two single beds, and a private balcony for an unforgettable experience.	299.0	Active
+
 
 Category Image:
 
