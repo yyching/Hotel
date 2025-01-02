@@ -1,5 +1,5 @@
 User :
 
 USR553	weihan	teowh-wm22@student.tarc.edu.my	AQAAAAIAAYagAAAAELr5aLDoCiSgG5JxtwOI7fLNWKn+v/Zojx2BfQnm30FXjlKJlOUcFKxFXn3aiapnpQ==	1234567890	Member		Active
-USR701	raynold	raynoldtyr-wm22@student.tarc.edumy	AQAAAAIAAYagAAAAELr5aLDoCiSgG5JxtwOI7fLNWKn+v/Zojx2BfQnm30FXjlKJlOUcFKxFXn3aiapnpQ==	0123456789	Member		Active
+USR701	raynold	raynoldtyr-wm22@student.tarc.edu.my	AQAAAAIAAYagAAAAELr5aLDoCiSgG5JxtwOI7fLNWKn+v/Zojx2BfQnm30FXjlKJlOUcFKxFXn3aiapnpQ==	0123456789	Member		Active
 USR984	yongyan	chingyy-wm22@student.tarc.edu.my	AQAAAAIAAYagAAAAELr5aLDoCiSgG5JxtwOI7fLNWKn+v/Zojx2BfQnm30FXjlKJlOUcFKxFXn3aiapnpQ==	1234567890	Admin		Active
